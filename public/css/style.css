@@ -1,5 +1,6 @@
 :root {
     --brand-color: #013755;
+    --primary-color:#73edff;
 }
 
 .navbar {
@@ -9,4 +10,15 @@
 .btn-primary {
     background-color: var(--brand-color);
     border-color: var(--brand-color);
+}
+
+
+/*CUSTOM CSS*/
+.bck-primary {
+    background-color: var(--primary-color);
+}
+
+.img-logo {
+    max-width: 20%;
+    margin: 2% 2% 2% 2%;
 }
