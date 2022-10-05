@@ -1,13 +1,15 @@
 {
-    "name": "laminas/laminas-mvc-skeleton",
-    "description": "Laminas MVC Skeleton Application",
+    "name": "Portal de Ofertas para Trabajos Fin de Máster",
+    "description": "Trabajo Fin de Máster UOC",
     "type": "project",
     "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "mvc",
         "skeleton",
-        "framework"
+        "framework",
+        "uoc",
+        "TFM"
     ],
     "require": {
         "php": "^7.4 || ~8.0.0 || ~8.1.0",

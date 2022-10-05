@@ -13,5 +13,8 @@
  */
 
 return [
-    // ...
+    'db' => [
+        'driver' => 'Pdo',
+        'dsn'    => 'mysql:dbname=tfm;host=localhost;charset=utf8',
+    ],
 ];
