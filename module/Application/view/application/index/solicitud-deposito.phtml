@@ -1,0 +1,48 @@
+<?php
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+?>
+<div class="container bck-primary">
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p><b>Bienvenido al portal de Ofertas de Trabajo Fin de Máster de la UOC</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-lg">
+    <form action="solicitud" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="name"
+                   value="<?= $this->estudiante['NOMBRE'] . ' ' . $this->estudiante['APELLIDO1'] ?>" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"
+                   value="<?= $this->estudiante['USUARIO'] . '@uoc.edu'; ?>" readonly>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="estudios" class="form-label">Estudios</label>
+            <select class="form-control" aria-label="Default select example" name="estudios" for="estudios">
+                <option selected>Seleccione</option>
+                <option value="1">Máster en desarrollo de sitios y aplicaciones web</option>
+                <option value="2">Grado en ingeniería del software</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Propuesta de TFM</label>
+            <textarea name="propuesta" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input check-normativa" id="normativa">
+            <label class="form-check-label" for="normativa">He leído la normativa de TFM.</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>

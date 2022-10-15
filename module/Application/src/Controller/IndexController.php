@@ -18,11 +18,28 @@ class IndexController extends MasterController
     {
         //var_dump(getenv('APPLICATION_ENV'));DIE;
         $estudiante = $this->daoService->getEstudianteDAO()->getEstudiante('estrella.parrilla');
-
         return new ViewModel(['estudiante' => $estudiante]);
     }
 
-    public function solicitudAction()
+    public function propuestaOfertaAction()
+    {
+        $estudiante = $this->daoService->getEstudianteDAO()->getEstudiante('estrella.parrilla');
+
+        $request = $this->getRequest();
+        $post = $request->getPost();
+        return new ViewModel(['estudiante' => $estudiante]);
+    }
+
+    public function solicitudDepositoAction()
+    {
+
+        $request = $this->getRequest();
+        $post = $request->getPost();
+        var_dump($post);
+        die;
+    }
+
+    public function trabajosOfertadosAction()
     {
 
         $request = $this->getRequest();

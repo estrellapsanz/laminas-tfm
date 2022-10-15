@@ -54,6 +54,36 @@ return [
                     ],
                 ],
             ],
+            'trabajos-ofertados' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/trabajos-ofertados',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'trabajos-ofertados',
+                    ],
+                ],
+            ],
+            'propuesta-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/propuesta-oferta',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'propuesta-oferta',
+                    ],
+                ],
+            ],
+            'solicitud-deposito' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/solicitud-deposito',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'solicitud-deposito',
+                    ],
+                ],
+            ],
             'application' => [
                 'type' => Segment::class,
                 'options' => [
