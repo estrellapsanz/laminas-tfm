@@ -14,20 +14,28 @@ class IndexController extends MasterController
         return new ViewModel();
     }
 
-    public function welcomeAction()
+    public function miPerfilAction()
     {
-        //var_dump(getenv('APPLICATION_ENV'));DIE;
-        $estudiante = $this->daoService->getEstudianteDAO()->getEstudiante('estrella.parrilla');
-        return new ViewModel(['estudiante' => $estudiante]);
+        //var_dump(getenv('APPLICATION_ENV'));
+        //die;
+
+        $login_estudiante = 'estrella.parrilla';
+        $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($login_estudiante);
+        foreach ($perfil_estudiante as &$plan_estudiante) {
+            $plan_estudiante['ASIGNATURAS'] = $this->daoService->getEstudianteDAO()->dameAsignaturasEstudiante($plan_estudiante['COD_PLAN'], $plan_estudiante['NUMORD']);
+        }
+
+
+        return new ViewModel(['estudiante' => $perfil_estudiante]);
     }
 
     public function propuestaOfertaAction()
     {
-        $estudiante = $this->daoService->getEstudianteDAO()->getEstudiante('estrella.parrilla');
-
+        $estudiante = 'estrella.parrilla';
+        $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($estudiante);
         $request = $this->getRequest();
         $post = $request->getPost();
-        return new ViewModel(['estudiante' => $estudiante]);
+        return new ViewModel(['estudiante' => $perfil_estudiante]);
     }
 
     public function solicitudDepositoAction()
@@ -44,7 +52,13 @@ class IndexController extends MasterController
 
         $request = $this->getRequest();
         $post = $request->getPost();
-        var_dump($post);
-        die;
+        $login_estudiante = 'estrella.parrilla';
+        $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($login_estudiante);
+        foreach ($perfil_estudiante as &$plan_estudiante) {
+            $plan_estudiante['ASIGNATURAS'] = $this->daoService->getEstudianteDAO()->dameAsignaturasEstudiante($plan_estudiante['COD_PLAN'], $plan_estudiante['NUMORD']);
+        }
+
+
+        return new ViewModel(['estudiante' => $perfil_estudiante]);
     }
 }

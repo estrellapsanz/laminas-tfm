@@ -13,10 +13,14 @@ class Estudiante extends MasterEntity
         return parent::__construct('XXX', $adapter, $databaseSchema, $selectResulPrototype);
     }
 
-    public function getEstudiante($usuario)
+    /**
+     * @param $usuario
+     * @return array
+     */
+    public function damePerfilEstudiante($usuario)
     {
-        $query = "SELECT EXP.COD_PLAN, P.NOMBRE_PLAN,E.DOCUMENTO, 
-                  E.NOMBRE, E.APELLIDO1, E.APELLIDO2, E.USUARIO
+        $query = "SELECT EXP.COD_PLAN, EXP.NUMORD, P.NOMBRE_PLAN,E.DOCUMENTO, 
+                  E.NOMBRE, E.APELLIDO1, E.APELLIDO2, E.USUARIO, E.TELEFONO1    
                   FROM 
                   TFM_ESTUDIANTE E , 
                   TFM_EXPEDIENTE EXP,
@@ -25,7 +29,32 @@ class Estudiante extends MasterEntity
                   E.USUARIO=:P_USUARIO AND 
                   E.DOCUMENTO=EXP.DOCUMENTO_ESTUDIANTE AND
                   EXP.COD_PLAN=P.COD_PLAN";
-        return $this->executeQueryRow($query, [':P_USUARIO' => $usuario]);
+        return $this->executeQueryArray($query, [':P_USUARIO' => $usuario]);
+    }
+
+    /**
+     * @param $plan
+     * @param $expediente
+     * @return array
+     */
+    public function dameAsignaturasEstudiante($plan, $expediente)
+    {
+
+        $query = "SELECT 
+                  LIN.CURSO_ACADEMICO, 
+                  ROUND(LIN.NOTA_NUMERICA,2) NOTA_NUMERICA,
+                  LIN.NOTA_ALFANUMERICA,
+                  A.COD_ASIGNATURA, A.NOMBRE_ASIGNATURA, 
+                  LIN.CERRADO
+                  FROM 
+                  TFM_ASIGNATURA A,
+                  TFM_LINEAS_MATRICULA LIN
+                  WHERE 
+                  LIN.COD_PLAN=:P_COD_PLAN AND
+                  LIN.EXP_NUMORD=:P_EXP_NUMORD AND
+                  LIN.COD_ASIGNATURA=A.COD_ASIGNATURA
+                ";
+        return $this->executeQueryArray($query, [':P_COD_PLAN' => $plan, ':P_EXP_NUMORD' => $expediente]);
     }
 
 

@@ -34,13 +34,13 @@ return [
                     ],
                 ],
             ],
-            'welcome' => [
+            'mi-perfil' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/welcome',
+                    'route' => '/mi-perfil',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
-                        'action' => 'welcome',
+                        'action' => 'mi-perfil',
                     ],
                 ],
             ],
