@@ -20,15 +20,18 @@ class Estudiante extends MasterEntity
     public function damePerfilEstudiante($usuario)
     {
         $query = "SELECT EXP.COD_PLAN, EXP.NUMORD, P.NOMBRE_PLAN,E.DOCUMENTO, 
-                  E.NOMBRE, E.APELLIDO1, E.APELLIDO2, E.USUARIO, E.TELEFONO1    
+                  E.NOMBRE, E.APELLIDO1, E.APELLIDO2, E.USUARIO, E.TELEFONO1,
+                  A.COD_AREA, A.NOMBRE_AREA
                   FROM 
                   TFM_ESTUDIANTE E , 
                   TFM_EXPEDIENTE EXP,
-                  TFM_PLANES P
+                  TFM_PLANES P, 
+                  TFM_AREA A
                   WHERE 
                   E.USUARIO=:P_USUARIO AND 
                   E.DOCUMENTO=EXP.DOCUMENTO_ESTUDIANTE AND
-                  EXP.COD_PLAN=P.COD_PLAN";
+                  EXP.COD_PLAN=P.COD_PLAN AND
+                  P.COD_AREA=A.COD_AREA";
         return $this->executeQueryArray($query, [':P_USUARIO' => $usuario]);
     }
 

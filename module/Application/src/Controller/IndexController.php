@@ -50,15 +50,18 @@ class IndexController extends MasterController
     public function trabajosOfertadosAction()
     {
 
-        $request = $this->getRequest();
-        $post = $request->getPost();
+        //  $request = $this->getRequest();
+        //  $post = $request->getPost();
         $login_estudiante = 'estrella.parrilla';
+        $ofertas = [];
         $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($login_estudiante);
-        foreach ($perfil_estudiante as &$plan_estudiante) {
-            $plan_estudiante['ASIGNATURAS'] = $this->daoService->getEstudianteDAO()->dameAsignaturasEstudiante($plan_estudiante['COD_PLAN'], $plan_estudiante['NUMORD']);
+        foreach ($perfil_estudiante as $i => $plan_estudiante) {
+            if (!isset($ofertas[$plan_estudiante['NOMBRE_AREA']])) {
+                $ofertas[$plan_estudiante['NOMBRE_AREA']] = $this->daoService->getOfertaDAO()->dameOfertasArea($plan_estudiante['COD_AREA']);
+
+            }
         }
-
-
-        return new ViewModel(['estudiante' => $perfil_estudiante]);
+      
+        return new ViewModel(['ofertas' => $ofertas, 'curso' => '2022-23']);
     }
 }

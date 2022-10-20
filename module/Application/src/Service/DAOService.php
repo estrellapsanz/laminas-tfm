@@ -3,6 +3,7 @@
 namespace Application\Service;
 
 use Application\Model\Entity\Estudiante;
+use Application\Model\Entity\Oferta;
 use Laminas\Db\Adapter\Adapter;
 
 class DAOService implements DAOServiceInterface
@@ -14,6 +15,11 @@ class DAOService implements DAOServiceInterface
      * @var Estudiante
      */
     private $estudianteDAO;
+
+    /**
+     * @var Oferta
+     */
+    private $ofertaDAO;
 
     /**
      * DAOService constructor.
@@ -31,5 +37,15 @@ class DAOService implements DAOServiceInterface
         if (!$this->estudianteDAO)
             $this->estudianteDAO = new Estudiante($this->dbAdapter);
         return $this->estudianteDAO;
+    }
+
+    /**
+     * @return Oferta
+     */
+    public function getOfertaDAO()
+    {
+        if (!$this->ofertaDAO)
+            $this->ofertaDAO = new Oferta($this->dbAdapter);
+        return $this->ofertaDAO;
     }
 }
