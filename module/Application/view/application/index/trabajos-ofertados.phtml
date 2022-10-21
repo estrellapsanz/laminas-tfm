@@ -66,27 +66,28 @@
                                 <th> <?= $oferta['NOMBRE_AREA'] ?></th>
                                 <th><?php
                                     if ($oferta['ESTADO_ESTUDIANTE'] == 'Anulado')
-                                        echo '<span class="bg-danger text-white">Anulada</span>';
+                                        echo '<span class="badge bg-danger text-white">Anulada</span>';
                                     else if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
-                                        echo '<span class="bg-success text-white">Validada</span>';
+                                        echo '<span class="badge bg-success text-white">Validada</span>';
                                     else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
-                                        echo '<span class="bg-primary text-white">Pendiente</span>'; ?>
+                                        echo '<span class="badge bg-warning text-white">Pendiente</span>'; ?>
                                 </th>
                                 <th>
-                                    <?php if ($oferta['FLG_EDITAR']) { ?>
-                                        <button type="button" class="btn btn-danger btn-accion"
-                                                data-accion="anular"
-                                                data-cod="<?= $oferta['COD_OFERTA']; ?>">
-                                            Anular
-                                        </button>
-                                    <?php } else { ?>
-                                        <button type="button" class="btn btn-primary btn-accion"
-                                                data-accion="solicitar"
-                                                data-cod="<?= $oferta['COD_OFERTA']; ?>"
-                                        >Solicitar
-                                        </button>
-                                    <?php } ?>
-
+                                    <div class="d-grid gap-2">
+                                        <?php if ($oferta['FLG_EDITAR']) { ?>
+                                            <button type="button" class="btn btn-danger btn-sm btn-accion"
+                                                    data-accion="anular"
+                                                    data-cod="<?= $oferta['COD_OFERTA']; ?>">
+                                                Anular
+                                            </button>
+                                        <?php } else { ?>
+                                            <button type="button" class="btn btn-primary btn-sm btn-accion"
+                                                    data-accion="solicitar"
+                                                    data-cod="<?= $oferta['COD_OFERTA']; ?>"
+                                            >Solicitar
+                                            </button>
+                                        <?php } ?>
+                                    </div>
                                 </th>
                             </tr>
                         <?php } ?>
