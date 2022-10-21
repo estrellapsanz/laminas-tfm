@@ -55,12 +55,23 @@ return [
                 ],
             ],
             'trabajos-ofertados' => [
-                'type' => Literal::class,
+                'type' => Segment::class,
                 'options' => [
-                    'route' => '/trabajos-ofertados',
+                    'route' => '/trabajos-ofertados[/:exito]',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action' => 'trabajos-ofertados',
+                    ],
+                ],
+            ],
+
+            'guardar-solicitud-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/guardar-solicitud-oferta',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'guardar-solicitud-oferta',
                     ],
                 ],
             ],

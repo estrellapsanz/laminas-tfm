@@ -31,20 +31,20 @@ var TableDatatablesResponsive = function () {
             retrieve: true,
             // Internationalisation. For more info refer to http://datatables.net/manual/i18n
             // Or you can use remote translation file
-            //  "language": {
-            //      url: '/plantilla/assets/global/plugins/datatables/traduccion.json'
-            //  },
+            "language": {
+                url: '//cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json'
+            },
             fixedHeader: {
                 header: true,
                 headerOffset: fixedHeaderOffset
             },
             // setup buttons extentension: http://datatables.net/extensions/buttons/
             buttons: [
-                /*
-                    { extend: 'print', className: 'btn dark btn-outline', text: 'Imprimir' },
-                    //{ extend: 'pdf', className: 'btn green btn-outline' },
-                    //{ extend: 'excel', className: 'btn purple btn-outline ' }
-                    */
+
+                /*  {extend: 'print', className: 'btn dark btn-outline', text: 'Imprimir'},
+                  {extend: 'pdf', className: 'btn green btn-outline'},
+                  {extend: 'excel', className: 'btn purple btn-outline '}
+  */
             ],
             // setup responsive extension: http://datatables.net/extensions/responsive/
             responsive: {

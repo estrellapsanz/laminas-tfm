@@ -1,7 +1,10 @@
 :root {
     --brand-color: #013755;
-    --primary-color:#73edff;
+    --primary-color: #73edff;
+    --bs-font-sans-serif: 'Roboto', sans-serif;;
+   
 }
+
 
 .navbar {
     background-color: var(--brand-color);
@@ -21,4 +24,8 @@
 .img-logo {
     max-width: 20%;
     margin: 2% 2% 2% 2%;
+}
+
+.dt-buttons {
+    margin-top: -10%;
 }
