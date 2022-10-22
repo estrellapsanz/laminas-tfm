@@ -2,13 +2,13 @@
   "name": "vendor/tfm",
   "description": "Trabajo Fin de Máster UOC",
   "type": "project",
-  "license": "BSD-3-Clause",
   "repositories": [
     {
       "type": "vcs",
       "url": "https://github.com/estrellapsanz/laminas-tfm.git"
     }
   ],
+  "license": "BSD-3-Clause",
   "keywords": [
     "laminas",
     "mvc",
