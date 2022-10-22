@@ -29,6 +29,20 @@ class MasterEntity extends TableGateway
         parent::__construct($table, $adapter, $features, $resultSetPrototype);
     }
 
+    /**
+     * @param array $set
+     * @param string|array|\Closure $where
+     * @param null|array $joins
+     * @return int
+     */
+    public function update($set, $where = null, array $joins = null)
+    {
+        /* if ($this->userExist()) {
+             $set['FECHA_MODIFICACION'] = $this->formatTimeStamp();
+             $set['ID_USULDAP_MOD'] = $this->user;
+         }*/
+        return parent::update($set, $where);
+    }
 
     /**
      * @param string $query
@@ -108,8 +122,6 @@ class MasterEntity extends TableGateway
         }
     }
 
-
-
     /**
      * @param string $fecha
      * @return Expression
@@ -152,6 +164,19 @@ class MasterEntity extends TableGateway
     }
 
     /**
+     * formateo basico de php para trabajar con el numero
+     * @param int|string|null $numero
+     * @return float|null
+     */
+    protected function formatNumberToPhp($numero)
+    {
+        if ($numero === '' || empty($numero))
+            return 0;
+        else
+            return round(str_replace(',', '.', $numero), 2);
+    }
+
+    /**
      * para insert en consulta mediante zend
      * @param int|null $numero
      * @return Expression|string
@@ -178,39 +203,11 @@ class MasterEntity extends TableGateway
     }
 
     /**
-     * formateo basico de php para trabajar con el numero
-     * @param int|string|null $numero
-     * @return float|null
-     */
-    protected function formatNumberToPhp($numero)
-    {
-        if ($numero === '' || empty($numero))
-            return 0;
-        else
-            return round(str_replace(',', '.', $numero), 2);
-    }
-
-    /**
      * @param string $fecha
      * @return string|Expression
      */
     protected function toDateBD($fecha)
     {
         return (!empty($fecha)) ? new Expression("TO_DATE('" . $fecha . "','" . Constantes::MASCARA_FECHA_ORACLE_TIMESTAMP . "')") : '';
-    }
-
-    /**
-     * @param array $set
-     * @param string|array|\Closure $where
-     * @param null|array $joins
-     * @return int
-     */
-    public function update($set, $where = null, array $joins = null)
-    {
-        if ($this->userExist()) {
-            $set['FECHA_MODIFICACION'] = $this->formatTimeStamp();
-            $set['ID_USULDAP_MOD'] = $this->user;
-        }
-        return parent::update($set, $where);
     }
 }

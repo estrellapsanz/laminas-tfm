@@ -34,13 +34,13 @@ return [
                     ],
                 ],
             ],
-            'welcome' => [
+            'mi-perfil' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/welcome',
+                    'route' => '/mi-perfil',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
-                        'action' => 'welcome',
+                        'action' => 'mi-perfil',
                     ],
                 ],
             ],
@@ -51,6 +51,47 @@ return [
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
                         'action' => 'solicitud',
+                    ],
+                ],
+            ],
+            'trabajos-ofertados' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/trabajos-ofertados[/:exito]',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'trabajos-ofertados',
+                    ],
+                ],
+            ],
+
+            'guardar-solicitud-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/guardar-solicitud-oferta',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'guardar-solicitud-oferta',
+                    ],
+                ],
+            ],
+            'propuesta-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/propuesta-oferta',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'propuesta-oferta',
+                    ],
+                ],
+            ],
+            'solicitud-deposito' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/solicitud-deposito',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'solicitud-deposito',
                     ],
                 ],
             ],

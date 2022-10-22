@@ -1,0 +1,121 @@
+<?php
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+?>
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<?= $this->url('home') ?>">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Trabajos ofertados</li>
+    </ol>
+</nav>
+
+
+<div class="container bck-primary">
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p><b>Trabajos Ofertados</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="d-flex">
+        <div class="flex-grow-1 ms-3">
+            <h1>Trabajos ofertados curso <?= $curso ?></h1>
+            <div class="mb-3">
+                <?php foreach ($this->ofertas as $area => $ofertas_area) { ?>
+                    <br>
+
+                    <?php if (!empty($exito_accion)) { ?>
+                        <?php if ($exito_accion) { ?>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                Se ha realizado la acción con éxito.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        <?php } else { ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                Ha habido un error al realizar la operación.
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+
+                    <label for="estudios" class="form-label"><b> <?= $area ?></b></label>
+                    <hr>
+                    <table class="table table-striped" id="table_extensible">
+                        <thead>
+                        <tr>
+                            <th scope="col">Título</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Tutor</th>
+                            <th scope="col">Área</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($ofertas_area as $oferta) { ?>
+                            <tr>
+                                <th scope="row" class="col-md-3"> <?= $oferta['TITULO'] ?></th>
+                                <th> <?= $oferta['DESCRIPCION'] ?></th>
+                                <th> <?= '<a href="mailto:' . $oferta['USUARIO'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $oferta['NOMBRE'] . ' ' . $oferta['APELLIDO1'] . ' ' . $oferta['APELLIDO2'] ?></th>
+                                <th> <?= $oferta['NOMBRE_AREA'] ?></th>
+                                <th><?php
+                                    if ($oferta['ESTADO_ESTUDIANTE'] == 'Anulado')
+                                        echo '<span class="badge bg-danger text-white">Anulada</span>';
+                                    else if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
+                                        echo '<span class="badge bg-success text-white">Validada</span>';
+                                    else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
+                                        echo '<span class="badge bg-warning text-white">Pendiente</span>'; ?>
+                                </th>
+                                <th>
+                                    <div class="d-grid gap-2">
+                                        <?php if ($oferta['FLG_EDITAR']) { ?>
+                                            <button type="button" class="btn btn-danger btn-sm btn-accion"
+                                                    data-accion="anular"
+                                                    data-cod="<?= $oferta['COD_OFERTA']; ?>">
+                                                Anular
+                                            </button>
+                                        <?php } else { ?>
+                                            <button type="button" class="btn btn-primary btn-sm btn-accion"
+                                                    data-accion="solicitar"
+                                                    data-cod="<?= $oferta['COD_OFERTA']; ?>"
+                                            >Solicitar
+                                            </button>
+                                        <?php } ?>
+                                    </div>
+                                </th>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+
+                <?php } ?>
+            </div>
+
+
+            <!--<div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Propuesta de TFM</label>
+                <textarea name="propuesta" class="form-control" id="exampleFormControlTextarea1"
+                          rows="3"></textarea>
+            </div>-->
+            <!-- <div class="mb-3 form-check">
+                 <input type="checkbox" class="form-check-input check-normativa" id="normativa">
+                 <label class="form-check-label" for="normativa">He leído la normativa de TFM.</label>
+             </div>-->
+
+            <!--<button type="submit" class="btn btn-primary">Enviar</button>-->
+
+        </div>
+    </div>
+</div>
+
+<form method="post" name="solicitudForm" action="">
+    <input type="hidden" name="accion" value="">
+    <input type="hidden" name="cod_oferta" value="">
+</form>
+
