@@ -3,46 +3,104 @@
  * @var Laminas\View\Renderer\PhpRenderer $this
  */
 ?>
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<?= $this->url('home') ?>">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Proponer oferta</li>
+    </ol>
+</nav>
+
+
 <div class="container bck-primary">
     <div class="container text-center">
         <div class="row align-items-start">
             <div class="col">
-                <p><b>Bienvenido al portal de Ofertas de Trabajo Fin de Máster de la UOC</b></p>
+                <p><b>Proponer Oferta de Trabajo Fin de Estudios</b></p>
             </div>
         </div>
     </div>
 </div>
 <div class="container-lg">
-    <form action="solicitud" method="post">
-        <div class="mb-3">
-            <label for="name" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="name"
-                   value="<?= $this->estudiante['NOMBRE'] . ' ' . $this->estudiante['APELLIDO1'] ?>" readonly>
-        </div>
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"
-                   value="<?= $this->estudiante['USUARIO'] . '@uoc.edu'; ?>" readonly>
-        </div>
+    <form action="propuesta-oferta" method="post">
 
-
+        <br>
+        <h2>Proponer Trabajo</h2>
         <div class="mb-3">
-            <label for="estudios" class="form-label">Estudios</label>
-            <select class="form-control" aria-label="Default select example" name="estudios" for="estudios">
+            <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
+            <select for="estudios" class="form-control" aria-label="Default select example" name="estudios">
                 <option selected>Seleccione</option>
-                <option value="1">Máster en desarrollo de sitios y aplicaciones web</option>
-                <option value="2">Grado en ingeniería del software</option>
+                <?php foreach ($this->estudiante as $estudio) { ?>
+                    <option value="<?= $estudio['COD_PLAN'] ?>#<?= $estudio['COD_AREA'] ?>>"><?= $estudio['NOMBRE_PLAN'] ?></option>
+                <?php } ?>
             </select>
         </div>
 
+
         <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Propuesta de TFM</label>
-            <textarea name="propuesta" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <label for="titulo" class="form-label">Título del trabajo</label>
+            <input type="text" name="titulo" class="form-control" id="titulo">
         </div>
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input check-normativa" id="normativa">
-            <label class="form-check-label" for="normativa">He leído la normativa de TFM.</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <div class="mb-3">
+
+
+            <div class="mb-3">
+                <label for="descripción" class="form-label">Descripción del Trabajo</label>
+                <textarea name="descripcion" class="form-control" id="descripcion" rows="3"></textarea>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input check-normativa" name="normativa" id="normativa">
+                <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
+
+
+    <?php if (!empty($propuestas)) { ?>
+        <hr>
+        <h2>Mis propuestas de Trabajos Fin de Estudios</h2>
+        <table class="table table-striped" id="table_extensible">
+            <thead>
+            <tr>
+                <th scope="col">Curso</th>
+                <th class="col-md-3" scope="col">Título</th>
+                <th scope="col">Plan</th>
+                <th scope="col">Docente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($propuestas as $trabajo) { ?>
+                <tr>
+                    <th scope="row"> <?= $trabajo['CURSO_ACADEMICO'] ?></th>
+                    <th class="col-md-3"> <?= $trabajo['TITULO'] ?></th>
+                    <th class="col-md-3"> <?= $trabajo['NOMBRE_PLAN'] ?></th>
+                    <th></th>
+                    <th>   <?php
+                        if ($trabajo['ESTADO'] == 'Denegada')
+                            echo '<span class="badge bg-danger text-white">Anulada</span>';
+                        else if ($trabajo['ESTADO'] == 'Aceptada')
+                            echo '<span class="badge bg-success text-white">Validada</span>';
+                        else if ($trabajo['ESTADO'] == 'Pendiente')
+                            echo '<span class="badge bg-primary text-white">Pendiente</span>'; ?>
+                    </th>
+                    <th class="col-md-2">
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-sm btn-accion btn-danger"
+                                    data-accion="anular"
+                                    data-cod="<?= $trabajo['COD_OFERTA']; ?>">
+                                Anular
+                            </button>
+
+                        </div>
+                    </th>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    <?php } ?>
+
 </div>
+

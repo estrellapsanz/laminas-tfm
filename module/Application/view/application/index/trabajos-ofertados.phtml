@@ -64,25 +64,28 @@
                                 <th> <?= $oferta['DESCRIPCION'] ?></th>
                                 <th> <?= '<a href="mailto:' . $oferta['USUARIO'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $oferta['NOMBRE'] . ' ' . $oferta['APELLIDO1'] . ' ' . $oferta['APELLIDO2'] ?></th>
                                 <th> <?= $oferta['NOMBRE_AREA'] ?></th>
-                                <th><?php
+                                <th>
+                                    <?php
                                     if ($oferta['ESTADO_ESTUDIANTE'] == 'Anulado')
                                         echo '<span class="badge bg-danger text-white">Anulada</span>';
                                     else if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
                                         echo '<span class="badge bg-success text-white">Validada</span>';
                                     else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
-                                        echo '<span class="badge bg-warning text-white">Pendiente</span>'; ?>
+                                        echo '<span class="badge bg-primary text-white">Pendiente</span>'; ?>
                                 </th>
                                 <th>
                                     <div class="d-grid gap-2">
                                         <?php if ($oferta['FLG_EDITAR']) { ?>
-                                            <button type="button" class="btn btn-danger btn-sm btn-accion"
+                                            <button type="button" class="btn btn-sm btn-accion btn-danger"
                                                     data-accion="anular"
+                                                    data-flg="<?= $oferta['FLG_EDITAR']; ?>"
                                                     data-cod="<?= $oferta['COD_OFERTA']; ?>">
                                                 Anular
                                             </button>
                                         <?php } else { ?>
-                                            <button type="button" class="btn btn-primary btn-sm btn-accion"
+                                            <button type="button" class="btn btn-sm  btn-accion  btn-primary"
                                                     data-accion="solicitar"
+                                                    data-flg="<?= $oferta['FLG_EDITAR']; ?>"
                                                     data-cod="<?= $oferta['COD_OFERTA']; ?>"
                                             >Solicitar
                                             </button>
@@ -117,5 +120,6 @@
 <form method="post" name="solicitudForm" action="">
     <input type="hidden" name="accion" value="">
     <input type="hidden" name="cod_oferta" value="">
+    <input type="hidden" name="flg" value="">
 </form>
 
