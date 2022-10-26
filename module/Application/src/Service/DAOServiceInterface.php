@@ -3,9 +3,11 @@
 namespace Application\Service;
 
 use Application\Model\Entity\DatosAcademicos;
+use Application\Model\Entity\Deposito;
 use Application\Model\Entity\Estudiante;
 use Application\Model\Entity\EstudianteOferta;
 use Application\Model\Entity\Oferta;
+use Application\Model\Entity\Parametros;
 
 interface DAOServiceInterface
 {
@@ -25,5 +27,15 @@ interface DAOServiceInterface
      * @return DatosAcademicos
      */
     public function getDatosAcademicosDAO();
+
+    /**
+     * @return Parametros
+     */
+    public function getParametrosDAO();
+
+    /**
+     * @return Deposito
+     */
+    public function getDepositoDAO();
 
 }

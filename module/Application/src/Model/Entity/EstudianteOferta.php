@@ -35,52 +35,6 @@ class EstudianteOferta extends MasterEntity
         }
     }
 
-    /**
-     * @param $cod_oferta
-     * @param $estado
-     * @param $usuario
-     * @return int
-     */
-    public function insertaEstudianteOferta($curso, $cod_oferta, $estado, $usuario, $cod_plan)
-    {
-        /*echo('<pre>');
-        var_dump($curso, $cod_oferta, $estado, $usuario, $cod_plan);
-        echo('</pre>');
-        die;*/
-        $data = ['CURSO_ACADEMICO' => $curso, 'COD_OFERTA' => $cod_oferta, 'ESTADO' => $estado, 'USUARIO_ESTUDIANTE' => $usuario,
-            'COD_PLAN' => $cod_plan];
-        try {
-            return $this->insert($data);
-
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            die;
-            return -1;
-        }
-    }
-
-    /**
-     * @param $usuario
-     * @param $cod_oferta
-     * @return bool
-     */
-    public function existeAsociacion($usuario, $cod_oferta = null, $cod_plan = null)
-    {
-
-        if (!empty($cod_oferta) && empty($cod_plan))
-            $where = ['COD_OFERTA' => $cod_oferta, 'USUARIO_ESTUDIANTE' => $usuario];
-
-        else if (empty($cod_oferta) && !empty($cod_plan))
-            $where = ['COD_PLAN' => $cod_plan, 'USUARIO_ESTUDIANTE' => $usuario, 'ESTADO' => ['Validado', 'Pendiente']];
-
-        try {
-            return !empty($this->select($where)->toArray());
-
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
 
     /**
      * @param $curso
@@ -117,8 +71,95 @@ class EstudianteOferta extends MasterEntity
             die;
             return null;
         }
+    }
+
+
+    /**
+     * @param $usuario
+     * @param $curso
+     * @return array
+     */
+    public function dameMisOfertasVigentes($usuario)
+    {
+
+        $query = "SELECT OFERTAS.*, DEF.COD_SOLICITUD FROM
+    (SELECT ALU.COD_PLAN, UPPER(O.TITULO) AS TITULO, UPPER(O.DESCRIPCION) AS DESCRIPCION,
+            D.USUARIO AS USUARIO_DOCENTE, CONCAT(D.NOMBRE,' ', D.APELLIDO1, ' ', D.APELLIDO2) AS NOMBRE_DOCENTE,
+            CONCAT(E.NOMBRE,' ', E.APELLIDO1, ' ', E.APELLIDO2) AS NOMBRE_ESTUDIANTE,
+            P.NOMBRE_PLAN, P.COD_AREA, A.NOMBRE_AREA, O.COD_OFERTA, E.USUARIO AS USUARIO_ESTUDIANTE
+     FROM
+         TFM_ESTUDIANTE_OFERTA ALU,
+         TFM_OFERTAS O,
+         TFM_PLANES P,
+         TFM_DOCENTE D,
+         TFM_ESTUDIANTE E,
+         TFM_AREA A
+     WHERE
+             E.USUARIO=ALU.USUARIO_ESTUDIANTE AND
+             ALU.USUARIO_ESTUDIANTE=:P_USUARIO AND
+             P.COD_AREA=A.COD_AREA AND
+             ALU.ESTADO='Validado' AND
+             ALU.COD_OFERTA=O.COD_OFERTA AND
+             O.ESTADO='Validada' AND
+             ALU.COD_PLAN=P.COD_PLAN AND
+             O.USUARIO_DOCENTE=D.USUARIO
+    ) OFERTAS LEFT JOIN TFM_SOLICITUD_DEFENSA DEF ON
+                OFERTAS.COD_OFERTA=DEF.COD_OFERTA AND
+                (DEF.ESTADO=NULL OR DEF.ESTADO<>'Denegada') AND
+                DEF.CURSO_ACADEMICO=(SELECT VALOR FROM TFM_PARAMETROS WHERE NOMBRE='CURSO_ACADEMICO')";
+
+        return $this->executeQueryArray($query, [':P_USUARIO' => $usuario]);
 
 
     }
+
+
+    /**
+     * @param $usuario
+     * @param $cod_oferta
+     * @return bool
+     */
+    public function existeAsociacion($usuario, $cod_oferta = null, $cod_plan = null)
+    {
+
+        if (!empty($cod_oferta) && empty($cod_plan))
+            $where = ['COD_OFERTA' => $cod_oferta, 'USUARIO_ESTUDIANTE' => $usuario];
+
+        else if (empty($cod_oferta) && !empty($cod_plan))
+            $where = ['COD_PLAN' => $cod_plan, 'USUARIO_ESTUDIANTE' => $usuario, 'ESTADO' => ['Validado', 'Pendiente']];
+
+        try {
+            return !empty($this->select($where)->toArray());
+
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * @param $cod_oferta
+     * @param $estado
+     * @param $usuario
+     * @return int
+     */
+    public function insertaEstudianteOferta($curso, $cod_oferta, $estado, $usuario, $cod_plan)
+    {
+        /*echo('<pre>');
+        var_dump($curso, $cod_oferta, $estado, $usuario, $cod_plan);
+        echo('</pre>');
+        die;*/
+        $data = ['CURSO_ACADEMICO' => $curso, 'COD_OFERTA' => $cod_oferta, 'ESTADO' => $estado, 'USUARIO_ESTUDIANTE' => $usuario,
+            'COD_PLAN' => $cod_plan];
+        try {
+            return $this->insert($data);
+
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            die;
+            return -1;
+        }
+    }
+
 
 }

@@ -14,6 +14,18 @@ class Oferta extends MasterEntity
     }
 
     /**
+     * @param $cod_oferta
+     * @param $estado
+     * @return int
+     */
+    public function actualizaEstado($cod_oferta, $estado)
+    {
+        $set = ['ESTADO' => $estado];
+        $where = ['COD_OFERTA' => $cod_oferta];
+        return $this->update($set, $where);
+    }
+
+    /**
      * @param $cod_area
      * @return array
      * @example Devuelve las ofertas asociadas a un área concreta, junto con la inforamción del docente.
@@ -45,40 +57,6 @@ class Oferta extends MasterEntity
         ";
         return $this->executeQueryArray($query, [':P_COD_AREA' => $cod_area]);
     }
-
-
-    /**
-     * @param $curso
-     * @param $cod_oferta
-     * @param $estado
-     * @param $usuario
-     * @return int|void
-     */
-    public function insertaOferta($curso, $titulo, $descripcion, $usuario_creacion)
-    {
-
-        //todo ver que pasa con el estado
-        $data = ['CURSO_ACADEMICO' => $curso, 'TITULO' => $titulo, 'DESCRIPCION' => $descripcion,
-            'ESTADO' => 'Pendiente', 'USUARIO_CREACION' => $usuario_creacion];
-        try {
-
-            $exito = $this->insert($data);
-
-            if ($exito) {
-                return $this->select(
-                    ['CURSO_ACADEMICO' => $curso,
-                        'TITULO' => $titulo,
-                        'USUARIO_CREACION' => $usuario_creacion,
-                        'ESTADO' => 'Pendiente'
-                    ])->toArray()[0]['COD_OFERTA'];
-            } else
-                return -1;
-
-        } catch (\Exception $e) {
-            return -1;
-        }
-    }
-
 
     /**
      * @param $usuario
@@ -113,16 +91,37 @@ class Oferta extends MasterEntity
         }
     }
 
+
     /**
+     * @param $curso
      * @param $cod_oferta
      * @param $estado
-     * @return int
+     * @param $usuario
+     * @return int|void
      */
-    public function actualizaEstado($cod_oferta, $estado)
+    public function insertaOferta($curso, $titulo, $descripcion, $usuario_creacion)
     {
-        $set = ['ESTADO' => $estado];
-        $where = ['COD_OFERTA' => $cod_oferta];
-        return $this->update($set, $where);
+
+        //todo ver que pasa con el estado
+        $data = ['CURSO_ACADEMICO' => $curso, 'TITULO' => $titulo, 'DESCRIPCION' => $descripcion,
+            'ESTADO' => 'Pendiente', 'USUARIO_CREACION' => $usuario_creacion];
+        try {
+
+            $exito = $this->insert($data);
+
+            if ($exito) {
+                return $this->select(
+                    ['CURSO_ACADEMICO' => $curso,
+                        'TITULO' => $titulo,
+                        'USUARIO_CREACION' => $usuario_creacion,
+                        'ESTADO' => 'Pendiente'
+                    ])->toArray()[0]['COD_OFERTA'];
+            } else
+                return -1;
+
+        } catch (\Exception $e) {
+            return -1;
+        }
     }
 
 

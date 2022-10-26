@@ -9,11 +9,17 @@ use Laminas\View\Model\ViewModel;
 
 class IndexController extends MasterController
 {
+    /**
+     * @return ViewModel
+     */
     public function indexAction()
     {
         return new ViewModel();
     }
 
+    /**
+     * @return ViewModel
+     */
     public function miPerfilAction()
     {
         //var_dump(getenv('APPLICATION_ENV'));
@@ -29,6 +35,9 @@ class IndexController extends MasterController
         return new ViewModel(['estudiante' => $perfil_estudiante]);
     }
 
+    /**
+     * @return ViewModel
+     */
     public function propuestaOfertaAction()
     {
         $usuario_logueado = 'estrella.parrilla';
@@ -78,13 +87,74 @@ class IndexController extends MasterController
 
     }
 
+    /**
+     * @return ViewModel
+     */
     public function solicitudDepositoAction()
     {
 
+
+        $usuario_logueado = 'estrella.parrilla';
+
+        $curso = $this->daoService->getParametrosDAO()->dameParametroNombre('CURSO_ACADEMICO');
+        $misOfertasValidadas = $cod_deposito = null;
+
+        /* echo('<pre>');
+       var_dump($misOfertasValidadas);
+       echo('</pre>');
+       die;*/
+
         $request = $this->getRequest();
-        $post = $request->getPost();
-        var_dump($post);
-        die;
+
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            $files = $request->getFiles();
+
+            /*echo('<pre>');
+            var_dump($post);
+            var_dump($files);
+            echo('</pre>');
+            die;*/
+
+            $flg_normativa = $post['normativa'];
+
+            if ($flg_normativa == 'on') {
+                $cod_oferta = $post['cod_oferta'];
+                $error_file = $files['archivo']['error'] != 0 ? 1 : 0;
+
+                if (!$error_file) {
+                    $ruta_servidor = $this->daoService->getParametrosDAO()->dameParametroNombre('RUTA_SERVIDOR');
+                    $nombre_fichero = "TFM_COD_" . $cod_oferta . '_CUR_' . $curso . '_USU_' . $usuario_logueado;
+                    $extension_fichero = explode('/', $files['archivo']['type']);
+
+                    //todo: mejora implementar servicio subir fichero
+                    $ruta_fichero = trim($ruta_servidor . ' /' . $curso . '/' . $nombre_fichero . '.' . $extension_fichero[1]);
+                    $cod_deposito = $this->daoService->getDepositoDAO()->insertaDeposito($curso, $cod_oferta, $ruta_fichero, $usuario_logueado);
+
+                    if ($cod_deposito == -1) {
+                        //todo redirect error
+                    }
+
+                }
+
+            } else {
+                //todo redirect error
+            }
+        }
+
+
+        $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($usuario_logueado);
+        $misOfertasValidadas = $this->daoService->getEstudianteOfertaDAO()->dameMisOfertasVigentes($usuario_logueado);
+        $misDepositos = $this->daoService->getDepositoDAO()->dameMisDepositos($curso, $usuario_logueado);
+
+        return new ViewModel(
+            [
+                'estudiante' => $perfil_estudiante,
+                'misOfertas' => $misOfertasValidadas,
+                'misSolicitudes' => $misDepositos
+            ]);
+
+
     }
 
     public function trabajosOfertadosAction()

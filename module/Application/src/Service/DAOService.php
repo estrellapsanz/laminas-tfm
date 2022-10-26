@@ -3,9 +3,11 @@
 namespace Application\Service;
 
 use Application\Model\Entity\DatosAcademicos;
+use Application\Model\Entity\Deposito;
 use Application\Model\Entity\Estudiante;
 use Application\Model\Entity\EstudianteOferta;
 use Application\Model\Entity\Oferta;
+use Application\Model\Entity\Parametros;
 use Laminas\Db\Adapter\Adapter;
 
 class DAOService implements DAOServiceInterface
@@ -33,6 +35,15 @@ class DAOService implements DAOServiceInterface
      * @var DatosAcademicos
      */
     private $datosAcademicosDAO;
+
+    /**
+     * @var Parametros
+     */
+    private $parametrosDAO;
+    /**
+     * @var Deposito
+     */
+    private $depositoDAO;
 
     /**
      * DAOService constructor.
@@ -80,5 +91,25 @@ class DAOService implements DAOServiceInterface
         if (!$this->datosAcademicosDAO)
             $this->datosAcademicosDAO = new DatosAcademicos($this->dbAdapter);
         return $this->datosAcademicosDAO;
+    }
+
+    /**
+     * @return Parametros
+     */
+    public function getParametrosDAO()
+    {
+        if (!$this->getParametrosDAO)
+            $this->getParametrosDAO = new Parametros($this->dbAdapter);
+        return $this->getParametrosDAO;
+    }
+
+    /**
+     * @return Deposito
+     */
+    public function getDepositoDAO()
+    {
+        if (!$this->getDepositoDAO)
+            $this->getDepositoDAO = new Deposito($this->dbAdapter);
+        return $this->getDepositoDAO;
     }
 }
