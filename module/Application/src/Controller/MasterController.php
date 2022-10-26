@@ -32,8 +32,6 @@ class MasterController extends AbstractActionController
     public function onDispatch(MvcEvent $e)
     {
         /** @var Request $request */
-        //$request = $this->getRequest();
-        //$this->layout()->{Constantes::PRUEBAS} = $this->isDev($request->getUri());
         return parent::onDispatch($e);
     }
 

@@ -2,6 +2,7 @@
 
 namespace Application\Service;
 
+use Application\Model\Entity\DatosAcademicos;
 use Application\Model\Entity\Estudiante;
 use Application\Model\Entity\EstudianteOferta;
 use Application\Model\Entity\Oferta;
@@ -19,5 +20,10 @@ interface DAOServiceInterface
      * @return EstudianteOferta
      */
     public function getEstudianteOfertaDAO();
+
+    /**
+     * @return DatosAcademicos
+     */
+    public function getDatosAcademicosDAO();
 
 }

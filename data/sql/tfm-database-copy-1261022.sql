@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 19-10-2022 a las 19:52:44
+-- Tiempo de generación: 26-10-2022 a las 18:01:57
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tfm`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `TFM_AREA`
+--
+
+CREATE TABLE `TFM_AREA` (
+  `COD_AREA` int(11) NOT NULL,
+  `NOMBRE_AREA` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `TFM_AREA`
+--
+
+INSERT INTO `TFM_AREA` (`COD_AREA`, `NOMBRE_AREA`) VALUES
+(1, 'ÁREA INGENIERÍA Y MULTIMEDIA.'),
+(2, 'CIENCIAS JURÍDICAS Y SOCIALES'),
+(3, 'HUMANIDADES'),
+(4, 'ARTES'),
+(5, 'ECONOMÍA Y EMPRESA'),
+(6, 'IDIOMAS');
 
 -- --------------------------------------------------------
 
@@ -61,7 +84,10 @@ CREATE TABLE `TFM_DOCENTE` (
 --
 
 INSERT INTO `TFM_DOCENTE` (`NOMBRE`, `APELLIDO1`, `APELLIDO2`, `USUARIO`, `DOCUMENTO`) VALUES
-('FERNANDO', 'SANZ', 'HOLGADO', 'fernando.sanz', '53100692V');
+('EDISA', 'PÉREZ', 'PÉREZ', 'edisa.perez', '52100982V'),
+('FERNANDO', 'SANZ', 'HOLGADO', 'fernando.sanz', '53100692V'),
+('JESÚS', 'BRUMA ', 'LÓPEZ', 'jesus.bruma', '48749573B'),
+('MICAEL', 'LÓPEZ', 'VÁZQUEZ', 'micael.lopez', '12345213B');
 
 -- --------------------------------------------------------
 
@@ -80,7 +106,8 @@ CREATE TABLE `TFM_DOCENTE_PLAN` (
 --
 
 INSERT INTO `TFM_DOCENTE_PLAN` (`CURSO_ACADEMICO`, `USUARIO_DOCENTE`, `COD_PLAN`) VALUES
-('2022-23', 'fernando.sanz', '2000');
+('2022-23', 'fernando.sanz', '2000'),
+('2022-23', 'jesus.bruma', '2000');
 
 -- --------------------------------------------------------
 
@@ -114,6 +141,7 @@ INSERT INTO `TFM_ESTUDIANTE` (`USUARIO`, `NOMBRE`, `APELLIDO1`, `DOCUMENTO`, `AP
 CREATE TABLE `TFM_ESTUDIANTE_OFERTA` (
   `CURSO_ACADEMICO` varchar(7) NOT NULL,
   `COD_OFERTA` int(11) NOT NULL,
+  `COD_PLAN` varchar(4) NOT NULL,
   `USUARIO_ESTUDIANTE` varchar(300) NOT NULL,
   `FECHA_ALTA` timestamp NOT NULL DEFAULT current_timestamp(),
   `ESTADO` varchar(50) NOT NULL DEFAULT 'Validado'
@@ -123,8 +151,12 @@ CREATE TABLE `TFM_ESTUDIANTE_OFERTA` (
 -- Volcado de datos para la tabla `TFM_ESTUDIANTE_OFERTA`
 --
 
-INSERT INTO `TFM_ESTUDIANTE_OFERTA` (`CURSO_ACADEMICO`, `COD_OFERTA`, `USUARIO_ESTUDIANTE`, `FECHA_ALTA`, `ESTADO`) VALUES
-('2022-23', 1, 'estrella.parrilla', '2022-10-14 22:00:00', 'Validado');
+INSERT INTO `TFM_ESTUDIANTE_OFERTA` (`CURSO_ACADEMICO`, `COD_OFERTA`, `COD_PLAN`, `USUARIO_ESTUDIANTE`, `FECHA_ALTA`, `ESTADO`) VALUES
+('2022-23', 1, '2000', 'estrella.parrilla', '2022-10-26 14:32:57', 'Anulado'),
+('2022-23', 2, '6000', 'estrella.parrilla', '2022-10-26 14:43:07', 'Anulado'),
+('2022-23', 3, '2000', 'estrella.parrilla', '2022-10-26 14:44:57', 'Anulado'),
+('2022-23', 22, '2000', 'estrella.parrilla', '2022-10-26 15:02:45', 'Validado'),
+('2022-23', 27, '6000', 'estrella.parrilla', '2022-10-26 15:52:47', 'Pendiente');
 
 -- --------------------------------------------------------
 
@@ -207,7 +239,8 @@ CREATE TABLE `TFM_OFERTAS` (
   `COD_OFERTA` int(10) NOT NULL,
   `TITULO` varchar(250) NOT NULL,
   `DESCRIPCION` varchar(500) NOT NULL,
-  `USUARIO_DOCENTE` varchar(200) NOT NULL,
+  `USUARIO_DOCENTE` varchar(200) DEFAULT NULL,
+  `USUARIO_CREACION` varchar(250) DEFAULT NULL,
   `FECHA_ALTA` date NOT NULL DEFAULT current_timestamp(),
   `ESTADO` varchar(50) NOT NULL DEFAULT 'Validada'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -216,9 +249,12 @@ CREATE TABLE `TFM_OFERTAS` (
 -- Volcado de datos para la tabla `TFM_OFERTAS`
 --
 
-INSERT INTO `TFM_OFERTAS` (`CURSO_ACADEMICO`, `COD_OFERTA`, `TITULO`, `DESCRIPCION`, `USUARIO_DOCENTE`, `FECHA_ALTA`, `ESTADO`) VALUES
-('2022-23', 1, 'APLICACIÓN WEB PARA LA MONITORIZACIÓN DE BASES DE DATOS', 'bla bla bla', 'fernando.sanz', '2022-10-15', 'Validada'),
-('2022-23', 2, 'Dockerizar aplicaciones desde 0', '---', 'jesus.bruma', '2022-10-19', 'Validada');
+INSERT INTO `TFM_OFERTAS` (`CURSO_ACADEMICO`, `COD_OFERTA`, `TITULO`, `DESCRIPCION`, `USUARIO_DOCENTE`, `USUARIO_CREACION`, `FECHA_ALTA`, `ESTADO`) VALUES
+('2022-23', 1, 'APLICACIÓN WEB PARA LA MONITORIZACIÓN DE BASES DE DATOS', 'bla bla bla', 'fernando.sanz', 'fernando.sanz', '2022-10-15', 'Validada'),
+('2022-23', 2, 'Dockerizar aplicaciones desde 0', '---', 'jesus.bruma', 'jesus.bruma', '2022-10-19', 'Validada'),
+('2022-23', 3, 'Estudio de las redes sociales en el tiempo con herramientas web.', 'dasdasdasdasd', 'fernando.sanz', 'fernando.sanz', '2022-10-21', 'Validada'),
+('2022-23', 22, 'Rebaja en los impuestos', 'rtertertertertertertert', 'fernando.sanz', 'estrella.parrilla', '2022-10-26', 'Validada'),
+('2022-23', 27, 'test master', 'test master', NULL, 'estrella.parrilla', '2022-10-26', 'Pendiente');
 
 -- --------------------------------------------------------
 
@@ -229,6 +265,7 @@ INSERT INTO `TFM_OFERTAS` (`CURSO_ACADEMICO`, `COD_OFERTA`, `TITULO`, `DESCRIPCI
 CREATE TABLE `TFM_PLANES` (
   `COD_PLAN` varchar(4) NOT NULL,
   `NOMBRE_PLAN` varchar(400) NOT NULL,
+  `COD_AREA` int(11) DEFAULT NULL,
   `VIGENTE` varchar(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -236,9 +273,9 @@ CREATE TABLE `TFM_PLANES` (
 -- Volcado de datos para la tabla `TFM_PLANES`
 --
 
-INSERT INTO `TFM_PLANES` (`COD_PLAN`, `NOMBRE_PLAN`, `VIGENTE`) VALUES
-('2000', 'GRADO EN INGENIERÍA INFORMÁTICA', 'S'),
-('6000', 'MÁSTER EN DESARROLLO DE SITIOS Y APLICACIONES WEB', 'S');
+INSERT INTO `TFM_PLANES` (`COD_PLAN`, `NOMBRE_PLAN`, `COD_AREA`, `VIGENTE`) VALUES
+('2000', 'GRADO EN INGENIERÍA INFORMÁTICA', 1, 'S'),
+('6000', 'MÁSTER EN DESARROLLO DE SITIOS Y APLICACIONES WEB', 1, 'S');
 
 -- --------------------------------------------------------
 
@@ -250,6 +287,7 @@ CREATE TABLE `TFM_SOLICITUD_DEFENSA` (
   `CURSO_ACADEMICO` varchar(7) NOT NULL,
   `COD_SOLICITUD` bigint(20) UNSIGNED NOT NULL,
   `COD_OFERTA` int(11) NOT NULL,
+  `COD_ASIGNATURA` varchar(7) NOT NULL,
   `USUARIO_ESTUDIANTE` int(200) NOT NULL,
   `FECHA_SOLICITUD` date NOT NULL DEFAULT current_timestamp(),
   `ESTADO` varchar(50) NOT NULL,
@@ -261,10 +299,22 @@ CREATE TABLE `TFM_SOLICITUD_DEFENSA` (
 --
 
 --
+-- Indices de la tabla `TFM_AREA`
+--
+ALTER TABLE `TFM_AREA`
+  ADD PRIMARY KEY (`COD_AREA`);
+
+--
 -- Indices de la tabla `TFM_ASIGNATURA`
 --
 ALTER TABLE `TFM_ASIGNATURA`
   ADD PRIMARY KEY (`COD_ASIGNATURA`);
+
+--
+-- Indices de la tabla `TFM_DOCENTE`
+--
+ALTER TABLE `TFM_DOCENTE`
+  ADD PRIMARY KEY (`USUARIO`);
 
 --
 -- Indices de la tabla `TFM_ESTUDIANTE`
@@ -314,10 +364,16 @@ ALTER TABLE `TFM_SOLICITUD_DEFENSA`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `TFM_AREA`
+--
+ALTER TABLE `TFM_AREA`
+  MODIFY `COD_AREA` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT de la tabla `TFM_OFERTAS`
 --
 ALTER TABLE `TFM_OFERTAS`
-  MODIFY `COD_OFERTA` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `COD_OFERTA` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `TFM_SOLICITUD_DEFENSA`

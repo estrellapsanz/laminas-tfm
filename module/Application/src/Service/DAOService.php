@@ -2,6 +2,7 @@
 
 namespace Application\Service;
 
+use Application\Model\Entity\DatosAcademicos;
 use Application\Model\Entity\Estudiante;
 use Application\Model\Entity\EstudianteOferta;
 use Application\Model\Entity\Oferta;
@@ -26,6 +27,12 @@ class DAOService implements DAOServiceInterface
      * @var EstudianteOferta
      */
     private $estudianteOfertaDAO;
+
+
+    /**
+     * @var DatosAcademicos
+     */
+    private $datosAcademicosDAO;
 
     /**
      * DAOService constructor.
@@ -63,5 +70,15 @@ class DAOService implements DAOServiceInterface
         if (!$this->estudianteOfertaDAO)
             $this->estudianteOfertaDAO = new EstudianteOferta($this->dbAdapter);
         return $this->estudianteOfertaDAO;
+    }
+
+    /**
+     * @return DatosAcademicos
+     */
+    public function getDatosAcademicosDAO()
+    {
+        if (!$this->datosAcademicosDAO)
+            $this->datosAcademicosDAO = new DatosAcademicos($this->dbAdapter);
+        return $this->datosAcademicosDAO;
     }
 }
