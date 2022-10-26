@@ -67,29 +67,42 @@
                                 <th>
                                     <?php
                                     if ($oferta['ESTADO_ESTUDIANTE'] == 'Anulado')
-                                        echo '<span class="badge bg-danger text-white">Anulada</span>';
+                                        echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta anulada.">Anulada</span>';
                                     else if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
-                                        echo '<span class="badge bg-success text-white">Validada</span>';
+                                        echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta validada.">Validada</span>';
                                     else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
-                                        echo '<span class="badge bg-primary text-white">Pendiente</span>'; ?>
+                                        echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta pendiente de aceptación.">Pendiente</span>'; ?>
                                 </th>
                                 <th>
                                     <div class="d-grid gap-2">
                                         <?php if ($oferta['FLG_EDITAR']) { ?>
                                             <button type="button" class="btn btn-sm btn-accion btn-danger"
                                                     data-accion="anular"
+                                                    data-plan_trabajo="<?= $oferta['COD_PLAN'] ?>"
                                                     data-flg="<?= $oferta['FLG_EDITAR']; ?>"
                                                     data-cod="<?= $oferta['COD_OFERTA']; ?>">
                                                 Anular
                                             </button>
                                         <?php } else { ?>
-                                            <button type="button" class="btn btn-sm  btn-accion  btn-primary"
-                                                    data-accion="solicitar"
-                                                    data-flg="<?= $oferta['FLG_EDITAR']; ?>"
-                                                    data-cod="<?= $oferta['COD_OFERTA']; ?>"
-                                            >Solicitar
-                                            </button>
-                                        <?php } ?>
+                                            <?php if ($this->flg_elegir_plan) { ?>
+                                                <button type="button" class="btn btn-sm btn-primary btn-modal-solicitar"
+                                                        data-bs-toggle="modal" data-bs-target="#solicitarOferta"
+                                                        data-accion="solicitar"
+                                                        data-flg="<?= $oferta['FLG_EDITAR']; ?>"
+                                                        data-cod="<?= $oferta['COD_OFERTA']; ?>"
+                                                >Solicitar
+                                                </button>
+                                            <?php } else { ?>
+                                                <button type="button" class="btn btn-sm  btn-accion  btn-primary"
+                                                        data-bs-toggle="modal" data-bs-target="#solicitarOferta"
+                                                        data-accion="solicitar"
+                                                        data-flg="<?= $oferta['FLG_EDITAR']; ?>"
+                                                        data-cod="<?= $oferta['COD_OFERTA']; ?>"
+                                                        data-plan_trabajo=<?= $this->planes_estudiante[0]['COD_PLAN']; ?>
+                                                >Solicitar
+                                                </button>
+                                            <?php }
+                                        } ?>
                                     </div>
                                 </th>
                             </tr>
@@ -117,9 +130,12 @@
     </div>
 </div>
 
+<?= $this->partial('partials/modal-solicitar-oferta.phtml', ['planes' => $this->planes_estudiante]); ?>
+
 <form method="post" name="solicitudForm" action="">
     <input type="hidden" name="accion" value="">
     <input type="hidden" name="cod_oferta" value="">
+    <input type="hidden" name="plan_trabajo" value="">
     <input type="hidden" name="flg" value="">
 </form>
 

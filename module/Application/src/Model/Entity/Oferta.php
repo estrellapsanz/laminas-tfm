@@ -61,11 +61,20 @@ class Oferta extends MasterEntity
         $data = ['CURSO_ACADEMICO' => $curso, 'TITULO' => $titulo, 'DESCRIPCION' => $descripcion,
             'ESTADO' => 'Pendiente', 'USUARIO_CREACION' => $usuario_creacion];
         try {
-            return $this->insert($data);
+
+            $exito = $this->insert($data);
+
+            if ($exito) {
+                return $this->select(
+                    ['CURSO_ACADEMICO' => $curso,
+                        'TITULO' => $titulo,
+                        'USUARIO_CREACION' => $usuario_creacion,
+                        'ESTADO' => 'Pendiente'
+                    ])->toArray()[0]['COD_OFERTA'];
+            } else
+                return -1;
 
         } catch (\Exception $e) {
-            var_dump($e);
-            die;
             return -1;
         }
     }
@@ -78,13 +87,42 @@ class Oferta extends MasterEntity
     public function dameMisOfertasPropuestas($usuario)
     {
 
-        $where = ['USUARIO_CREACION' => $usuario];
+        $query = "SELECT OO.*, 
+                    CONCAT(D.NOMBRE,' ',D.APELLIDO1,' ',D.APELLIDO2) AS NOMBRE_DOCENTE,
+                    D.USUARIO AS USUARIO_DOCENTE
+                    FROM (
+                      SELECT O.*,O.ESTADO AS ESTADO_OFERTA, ALU.COD_PLAN, P.NOMBRE_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE
+                      FROM 
+                          TFM_OFERTAS O, TFM_ESTUDIANTE_OFERTA ALU, TFM_PLANES P
+                      WHERE     
+                          O.COD_OFERTA=ALU.COD_OFERTA AND
+                          ALU.COD_PLAN=P.COD_PLAN AND
+                          O.USUARIO_CREACION=:P_USER 
+                      ) 
+                          OO 
+                  LEFT JOIN  TFM_DOCENTE D  ON 
+                  OO.USUARIO_DOCENTE=D.USUARIO";
+
         try {
-            return $this->select($where);
+            return $this->executeQueryArray($query, [':P_USER' => $usuario]);
 
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            die;
             return null;
         }
+    }
+
+    /**
+     * @param $cod_oferta
+     * @param $estado
+     * @return int
+     */
+    public function actualizaEstado($cod_oferta, $estado)
+    {
+        $set = ['ESTADO' => $estado];
+        $where = ['COD_OFERTA' => $cod_oferta];
+        return $this->update($set, $where);
     }
 
 

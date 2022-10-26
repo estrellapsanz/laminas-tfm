@@ -37,19 +37,34 @@ class IndexController extends MasterController
 
         $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($usuario_logueado);
         $misPropuestas = $this->daoService->getOfertaDAO()->dameMisOfertasPropuestas($usuario_logueado);
+
+        /*echo('<pre>');
+        var_dump($misPropuestas);
+        echo('</pre>');
+        die;*/
         $request = $this->getRequest();
 
         if ($request->isPost()) {
             $post = $request->getPost();
-
             $estudios = explode('#', $post['estudios']); //plan, area
-            $plan = $estudios[0];
-            $area = $estudios[1];
-            $normativa = $post['normativa'];
+            $cod_plan = $estudios[0];
+            //$area = $estudios[1];
             $titulo = $post['titulo'];
             $descripcion = $post['descripcion'];
-            $exito = $this->daoService->getOfertaDAO()->insertaOferta($curso, $titulo, $descripcion, $usuario_logueado);
 
+
+            //controlamos que sólo haya una oferta creada por un estudiante asociada a ese plan, el estado en principio, distinto de Anulada
+            $oferta_existente = $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, null, $cod_plan);
+
+            if (!$oferta_existente) {
+                $cod_oferta = $this->daoService->getOfertaDAO()->insertaOferta($curso, $titulo, $descripcion, $usuario_logueado);
+
+                if ($cod_oferta != -1) {
+                    //$cod_oferta = $this->daoService->getOfertaDAO()->dameCodigoOferta($curso, $cod_plan, $usuario_logueado, 'Pendiente');
+                    $exito = $this->daoService->getEstudianteOfertaDAO()->insertaEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado, $cod_plan);
+                }
+
+            }
         }
 
 
@@ -76,11 +91,15 @@ class IndexController extends MasterController
     {
         $usuario_logueado = 'estrella.parrilla';
         $ofertas = [];
+        $exito_accion = null;
         $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($usuario_logueado);
         foreach ($perfil_estudiante as $i => $plan_estudiante) {
+            $codigo_plan = $plan_estudiante['COD_PLAN'];
+            $datos_plan = $this->daoService->getDatosAcademicosDAO()->dameDatosPlan($codigo_plan);
+            $planes_modal[$i]['COD_PLAN'] = $codigo_plan;
+            $planes_modal[$i]['NOMBRE_PLAN'] = !empty($datos_plan) ? $datos_plan['NOMBRE_PLAN'] : 'DESCONOCIDO';
             if (!isset($ofertas[$plan_estudiante['NOMBRE_AREA']])) {
                 $ofertas[$plan_estudiante['NOMBRE_AREA']] = $this->daoService->getOfertaDAO()->dameOfertasArea($plan_estudiante['COD_AREA']);
-
             }
         }
 
@@ -92,14 +111,21 @@ class IndexController extends MasterController
             }
         }
 
+        /*echo('<pre>');
+        var_dump($planes_modal);
+        echo('</pre>');
+        die;*/
 
         //recogemos una posible accion
         $exito_accion = $this->params()->fromRoute('exito');
 
         return new ViewModel([
+            'flg_elegir_plan' => sizeof($planes_modal) > 1,
+            'planes_estudiante' => $planes_modal,
             'ofertas' => $ofertas,
             'exito_accion' => $exito_accion,
-            'curso' => '2022-23']);
+            'curso' => '2022-23'
+        ]);
     }
 
 
@@ -118,6 +144,7 @@ class IndexController extends MasterController
             $post = $request->getPost();
             $cod_oferta = $post['cod_oferta'];
             $accion = $post['accion'];
+            $plan_trabajo = $post['plan_trabajo'];
             $flag_pertenece = !empty($post['flg']) || $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, $cod_oferta);
 
             if ($accion == 'anular')
@@ -126,13 +153,25 @@ class IndexController extends MasterController
                 $nuevo_estado = 'Pendiente';
 
             if (!empty($nuevo_estado) && $flag_pertenece) {
+
+                //update estado asociacion estudiante-oferta
                 $exito = $this->daoService->getEstudianteOfertaDAO()->actualizarEstadoEstudiante($cod_oferta, $nuevo_estado, $usuario_logueado);
+                if ($nuevo_estado == 'Anulado')
+                    $exito2 = $this->daoService->getOfertaDAO()->actualizaEstado($cod_oferta, 'Anulada');
+
+                /*VAR_DUMP(1);
+                VAR_DUMP($exito);
+                die;*/
             } else {
-                $exito = $this->daoService->getEstudianteOfertaDAO()->insertaEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado,);
+                //insert asociación estudiante - oferta
+                $exito = $this->daoService->getEstudianteOfertaDAO()->insertaEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado, $plan_trabajo);
+                /*VAR_DUMP(2);
+                VAR_DUMP($exito);
+                die;*/
             }
 
             //todo meter en sesion   lo que sea
-            $this->redirect()->toRoute('trabajos-ofertados/', ['exito' => $exito]);
+            $this->redirect()->toRoute('trabajos-ofertados', ['exito' => $exito]);
 
         }
     }
