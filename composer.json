@@ -28,12 +28,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Application\\": "module/Application/src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "ApplicationTest\\": "module/Application/test/"
+      "Tfe\\": "module/Tfe/src/"
     }
   },
   "config": {
