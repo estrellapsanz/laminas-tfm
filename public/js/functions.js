@@ -16,7 +16,10 @@ $(document).ready(function () {
             document.solicitudForm.flg.value = pertecenencia;
             document.solicitudForm.plan_trabajo.value = plan_trabajo;
             document.solicitudForm.action = 'guardar-solicitud-oferta';
-            document.solicitudForm.submit();
+
+            if (accion != 'anular') {
+                document.solicitudForm.submit();
+            }
         } else {
             alert('Error en la solicitud');
         }
@@ -46,5 +49,9 @@ $(document).ready(function () {
         document.solicitudForm.submit();
     })
 
+    $('.btn-submit-modal-proponer').click(function () {
+        document.proponerForm.submit();
+    })
 
 });
+

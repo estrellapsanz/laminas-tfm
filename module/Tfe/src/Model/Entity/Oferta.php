@@ -16,16 +16,16 @@ class Oferta extends MasterEntity
     /**
      * @param $cod_oferta
      * @param $estado
-     * @return int
+     * @return bool|int
      */
     public function actualizaEstado($cod_oferta, $estado)
     {
         $set = ['ESTADO' => $estado];
         $where = ['COD_OFERTA' => $cod_oferta];
         try {
-            return $this->update($set, $where);
+            return $this->update($set, $where) >= 0;
         } catch (\Exception $e) {
-            return -1;
+            return -false;
         }
     }
 
@@ -80,7 +80,9 @@ class Oferta extends MasterEntity
                       WHERE     
                           O.COD_OFERTA=ALU.COD_OFERTA AND
                           ALU.COD_PLAN=P.COD_PLAN AND
-                          O.USUARIO_CREACION=:P_USER 
+                          O.USUARIO_CREACION=:P_USER AND
+                          ALU.ESTADO<>'Anulado' AND 
+                          O.ESTADO<>'Anulada'
                       ) 
                           OO 
                   LEFT JOIN  TFM_DOCENTE D  ON 

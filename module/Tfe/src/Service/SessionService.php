@@ -58,4 +58,15 @@ class SessionService implements SessionServiceInterface
     }
 
 
+    public function setUrlInSession($url)
+    {
+        $this->offsetSet(Constantes::CURRENT_URL, $url);
+    }
+
+    public function getUrlInSession()
+    {
+        return $this->offsetGet(Constantes::CURRENT_URL);
+    }
+
+
 }

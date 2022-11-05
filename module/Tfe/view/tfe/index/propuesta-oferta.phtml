@@ -2,8 +2,12 @@
 /**
  * @var Laminas\View\Renderer\PhpRenderer $this
  */
+
+use Tfe\Util\Constantes;
+
 ?>
 
+<br>
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -14,57 +18,61 @@
 
 <?= $this->partial('partials/errores') ?>
 
-<div class="container bck-primary">
-    <div class="container text-center">
-        <div class="row align-items-start">
-            <div class="col">
-                <p><b>Proponer Oferta de Trabajo Fin de Estudios</b></p>
-            </div>
+
+<div class="container-lg">
+    <div class="bck-primary-ligth">
+        <div class="d-flex justify-content-center">
+            <p>
+            <h1><b>Propuesta de temas</b></h1></p>
         </div>
     </div>
-</div>
-<div class="container-lg">
-    <form action="propuesta-oferta" method="post">
+    <br>
+    <?php if (empty($propuestas)) { ?>
 
-        <br>
-        <h2>Proponer Trabajo</h2>
-        <div class="alert alert-info" role="alert">
-            <p>Puede realizar una propuesta de Trabajo Fin de Estudios completando el siguiente formulario. Debe
-                seleccionar la titulación
-                para la que quiere proponer la oferta. Podrá realizar una solicitud por plan de estudios y anular dicha
-                solicitud en caso de que ésta no tenga docente asociado. En caso de anular, podría realizar proponer
-                otra
-                oferta asociada al mismo plan de estudios.</p>
-        </div>
-        <div class="mb-3">
-            <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
-            <select for="estudios" class="form-control" aria-label="Default select example" name="estudios">
-                <option selected>Seleccione</option>
-                <?php foreach ($this->estudiante as $estudio) { ?>
-                    <option value="<?= $estudio['COD_PLAN'] ?>#<?= $estudio['COD_AREA'] ?>>"><?= $estudio['NOMBRE_PLAN'] ?></option>
-                <?php } ?>
-            </select>
-        </div>
-
-
-        <div class="mb-3">
-            <label for="titulo" class="form-label">Título del trabajo</label>
-            <input type="text" name="titulo" class="form-control" id="titulo">
-        </div>
-
-
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="descripción" class="form-label">Descripción del Trabajo</label>
-                <textarea name="descripcion" class="form-control" id="descripcion" rows="3"></textarea>
+        <form name="proponerForm" action="propuesta-oferta" method="post">
+            <br>
+            <h2>Proponer Trabajo</h2>
+            <div class="alert alert-info" role="alert">
+                <p>Puede realizar una propuesta de Trabajo Fin de Estudios completando el siguiente formulario. Debe
+                    seleccionar la titulación
+                    para la que quiere proponer la oferta. Podrá realizar una solicitud por plan de estudios y anular
+                    dicha
+                    solicitud en caso de que ésta no tenga docente asociado. En caso de anular, podría realizar proponer
+                    otra
+                    oferta asociada al mismo plan de estudios.</p>
             </div>
-            <!--<div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input check-normativa" name="normativa" id="normativa">
-                <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
-            </div>-->
-            <button type="submit" class="btn btn-primary">Enviar</button>
-    </form>
+            <div class="mb-3">
+                <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
+                <select for="estudios" class="form-control" aria-label="Default select example" name="estudios"
+                        required>
+                    <option selected>Seleccione</option>
+                    <?php foreach ($this->estudiante as $estudio) { ?>
+                        <option value="<?= $estudio['COD_PLAN'] ?>#<?= $estudio['COD_AREA'] ?>>"><?= $estudio['NOMBRE_PLAN'] ?></option>
+                    <?php } ?>
+                </select>
+            </div>
 
+
+            <div class="mb-3">
+                <label for="titulo" class="form-label">Título del trabajo</label>
+                <input type="text" name="titulo" class="form-control" id="titulo" required>
+            </div>
+
+
+            <div class="mb-3">
+                <div class="mb-3">
+                    <label for="descripción" class="form-label">Descripción del Trabajo</label>
+                    <textarea name="descripcion" class="form-control" id="descripcion" rows="3" required></textarea>
+                </div>
+                <!--<div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input check-normativa" name="normativa" id="normativa">
+                    <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
+                </div>-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#proponerModal">Enviar propuesta
+                </button>
+        </form>
+    <?php } ?>
 
     <hr>
     <br><br>
@@ -105,17 +113,19 @@
                         <?php } ?>
                     </th>
                     <th>  <?php
-                        if ($trabajo['ESTADO_OFERTA'] == 'Anulada')
-                            echo '<span class="badge bg-danger text-white">Anulada</span>';
+                        if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_ANULADA)
+                            echo '<span class="badge bg-danger text-white">' . Constantes::ESTADO_OFERTA_ANULADA . '</span>';
                         else if ($trabajo['ESTADO_OFERTA'] == 'Validada')
-                            echo '<span class="badge bg-success text-white">Validada</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == 'Pendiente')
-                            echo '<span class="badge bg-primary text-white">Pendiente</span>'; ?>
+                            echo '<span class="badge bg-success text-white">' . Constantes::ESTADO_OFERTA_VALIDADA . '</span>';
+                        else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_PENDIENTE)
+                            echo '<span class="badge bg-primary text-white">' . Constantes::ESTADO_OFERTA_PENDIENTE . '</span>'; ?>
                     </th>
                     <th class="col-md-1">
                         <div class="d-grid gap-1">
-                            <?php if (($trabajo['ESTADO_OFERTA'] <> 'Anulada')) { ?>
+                            <?php if (($trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_ANULADA)) { ?>
                                 <button type="button" class="btn btn-sm btn-accion btn-danger"
+                                        data-bs-toggle='modal'
+                                        data-bs-target="#confirmarModal"
                                         data-accion="anular"
                                         data-flg="1"
                                         data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
@@ -132,6 +142,11 @@
     </table>
 </div>
 <br>
+
+
+<?= $this->partial('partials/modal-proponer.phtml'); ?>
+
+<?= $this->partial('partials/modal-confirmar.phtml'); ?>
 
 <form method="post" name="solicitudForm" action="">
     <input type="hidden" name="accion" value="">

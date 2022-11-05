@@ -16,8 +16,10 @@ class IndexController extends MasterController
      */
     public function indexAction()
     {
+        $this->sesion->setUrlInSession(Constantes::RUTA_HOME_ESTUDIANTE);
         return new ViewModel();
     }
+
 
     /**
      * @return ViewModel
@@ -26,6 +28,7 @@ class IndexController extends MasterController
     {
 
         $this->informarSesion();
+        $this->sesion->setUrlInSession(Constantes::RUTA_PERFIL_ESTUDIANTE);
 
         $login_estudiante = 'estrella.parrilla';
         $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($login_estudiante);
@@ -36,7 +39,10 @@ class IndexController extends MasterController
         return new ViewModel(['estudiante' => $perfil_estudiante]);
     }
 
-    //todo borrar cuando se implemente AuthController
+    /**
+     * todo BORRAR CUANDO SE IMPLEMENTE AUTHCONTROLLER
+     * @return void
+     */
     public function informarSesion()
     {
         $this->sesion->offsetSet(Constantes::SESION_USUARIO, 'estrella.parrilla');
@@ -46,20 +52,21 @@ class IndexController extends MasterController
 
     }
 
+
     /**
      * @return ViewModel
+     * Solo se podrá proponer una oferta por cada plan que tenga matriculado.
      */
     public function propuestaOfertaAction()
     {
         //todo borrar al implementar AuthController
         $this->informarSesion();
-
-        //inicialización de variables
-        $misPropuestas = $exito = null;
+        $this->sesion->setUrlInSession(Constantes::RUTA_PROPONER_OFERTA_ESTUDIANTE);
 
         $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
-        $curso = $this->daoService->getParametrosDAO()->dameParametroNombre('CURSO_ACADEMICO');
+        $curso = $this->daoService->getParametrosDAO()->dameParametroNombre(Constantes::PARAMETRO_CURSO_ACADEMICO);
         $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($usuario_logueado);
+        $estado_operacion = false;
 
         /*echo('<pre>');
         var_dump($misPropuestas);
@@ -83,10 +90,12 @@ class IndexController extends MasterController
                 $cod_oferta = $this->daoService->getOfertaDAO()->insertaOferta($curso, $titulo, $descripcion, $usuario_logueado);
                 if ($cod_oferta != -1) {
                     $exito = $this->daoService->getEstudianteOfertaDAO()->insertaEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado, $cod_plan);
-                    $this->sesion->setEstadoOperacion($exito);
+                    $estado_operacion = $exito;
+
                 }
+                $this->informarEstadoOperacionSesion($estado_operacion);
             } else
-                $this->sesion->setEstadoOperacion(false);
+                $this->informarEstadoOperacionSesion($estado_operacion);
 
         }
 
@@ -100,16 +109,28 @@ class IndexController extends MasterController
     }
 
     /**
+     * @param bool $exito
+     * @return void
+     */
+    public function informarEstadoOperacionSesion(bool $exito): void
+    {
+        if ($exito)
+            $this->sesion->setEstadoOperacion(Constantes::ESTADO_OPERACION_OK);
+        else
+            $this->sesion->setEstadoOperacion(Constantes::ESTADO_OPERACION_ERROR);
+    }
+
+    /**
      * @return ViewModel
      */
     public function solicitudDepositoAction()
     {
         //todo borrar cuando se implemente AuthController
         $this->informarSesion();
-        $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
+        $this->sesion->setUrlInSession(Constantes::RUTA_SOLICITAR_OFERTA_ESTUDIANTE);
 
-        //inicialización de variables
-        $misOfertasValidadas = $cod_deposito = null;
+
+        $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
         $curso = $this->daoService->getParametrosDAO()->dameParametroNombre('CURSO_ACADEMICO');
 
 
@@ -159,11 +180,17 @@ class IndexController extends MasterController
 
     }
 
+    /**
+     * @return ViewModel
+     */
     public function trabajosOfertadosAction()
     {
 
         //todo borrar cuando se implemente AuthController
         $this->informarSesion();
+        $this->sesion->setUrlInSession(Constantes::RUTA_TRABAJOS_OFERTADOS);
+
+
         $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
 
         //inicialización de variables
@@ -200,7 +227,10 @@ class IndexController extends MasterController
         ]);
     }
 
-
+    /**
+     * Se podrán solicitar tantas ofertas como se quiera, y luego el profesor que primero la coja, anularía el resto de forma automática.
+     * @return void
+     */
     public function guardarSolicitudOfertaAction()
     {
 
@@ -221,31 +251,32 @@ class IndexController extends MasterController
             $plan_trabajo = $post['plan_trabajo'];
             $flag_pertenece = !empty($post['flg']) || $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, $cod_oferta);
 
-            if ($accion == 'anular')
-                $nuevo_estado = 'Anulado';
-            else if ($accion == 'solicitar')
-                $nuevo_estado = 'Pendiente';
+            if ($accion == Constantes::ACCION_ANULAR_OFERTA)
+                $nuevo_estado = Constantes::ESTADO_ESTUDIANTE_ANULADO;
+            else if ($accion == Constantes::ACCION_SOLICITAR_OFERTA)
+                $nuevo_estado = Constantes::ESTADO_ESTUDIANTE_PENDIENTE;
 
             if (!empty($nuevo_estado) && $flag_pertenece) {
 
                 //update estado asociacion estudiante-oferta
                 $exito = $this->daoService->getEstudianteOfertaDAO()->actualizarEstadoEstudiante($cod_oferta, $nuevo_estado, $usuario_logueado);
-                if ($nuevo_estado == 'Anulado')
-                    $exito2 = $this->daoService->getOfertaDAO()->actualizaEstado($cod_oferta, 'Anulada');
 
-                if ($exito != -1 && $exito2 != -1)
-                    $this->sesion->setEstadoOperacion(1);
-                else
-                    $this->sesion->setEstadoOperacion(0);
+                //si se anula la oferta, se libera para otro estudiante
+                if ($nuevo_estado == Constantes::ESTADO_ESTUDIANTE_ANULADO) {
+                    $exito2 = $this->daoService->getOfertaDAO()->actualizaEstado($cod_oferta, Constantes::ESTADO_OFERTA_VIGENTE);
+                }
+                $estado_operacion = !isset($exito2) ? $exito : $exito && $exito2;
+
             } else {
                 //insert asociación estudiante - oferta
-                $exito = $this->daoService->getEstudianteOfertaDAO()->insertaEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado, $plan_trabajo);
-                $this->sesion->setEstadoOperacion($exito);
+                $estado_operacion = $this->daoService->getEstudianteOfertaDAO()->insertaEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado, $plan_trabajo);
             }
 
-
-            //todo meter en sesion   lo que sea
-            $this->redirect()->toRoute('propuesta-oferta');
+            $this->informarEstadoOperacionSesion($estado_operacion);
+            if ($this->sesion->getUrlInSession() == Constantes::RUTA_TRABAJOS_OFERTADOS)
+                $this->redirect()->toRoute('trabajos-ofertados');
+            else
+                $this->redirect()->toRoute('propuesta-oferta');
 
         }
     }

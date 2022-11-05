@@ -17,7 +17,7 @@ class EstudianteOferta extends MasterEntity
      * @param $cod_oferta
      * @param $estado
      * @param $usuario
-     * @return array
+     * @return bool|void
      */
     public function actualizarEstadoEstudiante($cod_oferta, $estado, $usuario)
     {
@@ -26,12 +26,12 @@ class EstudianteOferta extends MasterEntity
         $set = ['ESTADO' => $estado];
         $where = ['COD_OFERTA' => $cod_oferta, 'USUARIO_ESTUDIANTE' => $usuario];
         try {
-            return $this->update($set, $where);
+            return $this->update($set, $where) >= 0;
 
         } catch (\Exception $e) {
-            //var_dump($e);
-            //die;
-            return -1;
+            // var_dump($e);
+            // die;
+            return false;
         }
     }
 
