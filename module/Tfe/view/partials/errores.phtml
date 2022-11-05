@@ -1,0 +1,28 @@
+<?php
+
+use Laminas\Session\Container;
+use Tfe\Util\Constantes;
+
+$sesion = new Container (Constantes::NOMBRE_SESION);
+
+
+if ($sesion->offsetExists(Constantes::ESTADO_OPERACION)) {
+    echo "<div class='row'><div class='col-md-12'>";
+
+    if ($sesion->offsetGet(Constantes::ESTADO_OPERACION) == Constantes::ESTADO_OPERACION_OK) {
+        echo "<div class='alert alert-success alert-dismissable fade show' role='alert'>"
+            . "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>"
+            . "<strong>¡Éxito!</strong> Operación realizada correctamente.</div>";
+
+    }
+
+    if ($sesion->offsetGet(Constantes::ESTADO_OPERACION) == Constantes::ESTADO_OPERACION_ERROR) {
+        echo "<div class='alert alert-danger alert-dismissable fade show' role='alert'>"
+            . "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>"
+            . "<strong>¡Error!</strong> Ha ocurrido un error al realizar la operación.</div>";
+    }
+
+    echo "</div></div>";
+    $sesion->offsetUnset(Constantes::ESTADO_OPERACION);
+}
+?>

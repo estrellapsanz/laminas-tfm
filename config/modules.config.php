@@ -11,5 +11,5 @@ return [
     'Laminas\Db', //uso de la bbdd
     'Laminas\Router',
     'Laminas\Validator',
-    'Application',
+    'Tfe',
 ];

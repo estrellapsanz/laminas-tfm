@@ -1,29 +1,50 @@
 :root {
     --brand-color: #013755;
     --primary-color: #73edff;
-    --bs-font-sans-serif: 'Roboto', sans-serif;;
-   
+    --ligth-primary-color: #d5faff;
+    --bs-font-sans-serif: 'Roboto', sans-serif;
 }
 
+
+/*CUSTOM CSS*/
 
 .navbar {
     background-color: var(--brand-color);
 }
 
-.btn-primary {
-    background-color: var(--brand-color);
-    border-color: var(--brand-color);
+nav ol.breadcrumb {
+    margin-top: 5%;
 }
 
+.menu-active {;
+    font-size: 1.1rem;
+    text-decoration: underline;
+}
 
-/*CUSTOM CSS*/
-.bck-primary {
+/*CUSTOM BACKGROUND COLORS*/
+.bck-primary-ligth {
     background-color: var(--primary-color);
 }
 
+.bck-primary {
+    background-color: var(--brand-color);
+}
+
+.bck-primary-ligth {
+    background-color: var(--ligth-primary-color);
+}
+
+/*LOGO */
 .img-logo {
-    max-width: 20%;
+    max-width: 10%;
     margin: 2% 2% 2% 2%;
+}
+
+
+/*CUSTOM BUTTONS*/
+.btn-primary {
+    background-color: var(--brand-color);
+    border-color: var(--brand-color);
 }
 
 .dt-buttons {

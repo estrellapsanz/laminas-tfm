@@ -1,0 +1,156 @@
+<?php
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+
+use Tfe\Util\Constantes;
+
+?>
+
+<br>
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<?= $this->url('home') ?>">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Proponer oferta</li>
+    </ol>
+</nav>
+
+<?= $this->partial('partials/errores') ?>
+
+
+<div class="container-lg">
+    <div class="bck-primary-ligth">
+        <div class="d-flex justify-content-center">
+            <p>
+            <h1><b>Propuesta de temas</b></h1></p>
+        </div>
+    </div>
+    <br>
+    <?php if (empty($propuestas)) { ?>
+
+        <form name="proponerForm" action="propuesta-oferta" method="post">
+            <br>
+            <h2>Proponer Trabajo</h2>
+            <div class="alert alert-info" role="alert">
+                <p>Puede realizar una propuesta de Trabajo Fin de Estudios completando el siguiente formulario. Debe
+                    seleccionar la titulación
+                    para la que quiere proponer la oferta. Podrá realizar una solicitud por plan de estudios y anular
+                    dicha
+                    solicitud en caso de que ésta no tenga docente asociado. En caso de anular, podría realizar proponer
+                    otra
+                    oferta asociada al mismo plan de estudios.</p>
+            </div>
+            <div class="mb-3">
+                <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
+                <select for="estudios" class="form-control" aria-label="Default select example" name="estudios"
+                        required>
+                    <option selected>Seleccione</option>
+                    <?php foreach ($this->estudiante as $estudio) { ?>
+                        <option value="<?= $estudio['COD_PLAN'] ?>#<?= $estudio['COD_AREA'] ?>>"><?= $estudio['NOMBRE_PLAN'] ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+
+
+            <div class="mb-3">
+                <label for="titulo" class="form-label">Título del trabajo</label>
+                <input type="text" name="titulo" class="form-control" id="titulo" required>
+            </div>
+
+
+            <div class="mb-3">
+                <div class="mb-3">
+                    <label for="descripción" class="form-label">Descripción del Trabajo</label>
+                    <textarea name="descripcion" class="form-control" id="descripcion" rows="3" required></textarea>
+                </div>
+                <!--<div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input check-normativa" name="normativa" id="normativa">
+                    <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
+                </div>-->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#proponerModal">Enviar propuesta
+                </button>
+        </form>
+    <?php } ?>
+
+    <hr>
+    <br><br>
+    <h2>Mis propuestas de Trabajos Fin de Estudios</h2>
+    <br>
+
+    <?php if (!empty($propuestas)) { ?>
+        <div class="alert alert-info" role="alert">
+            <p>Sólo podrá solicitar a través de la aplicación la anulación de la oferta en caso de que aún no esté
+                aceptada por
+                ningún docente. En caso contrario, tendrá que contactar con el docente por correo motivando la
+                solicitud.</p>
+        </div>
+    <?php } ?>
+
+    <table class="table table-striped" id="table_extensible">
+        <thead>
+        <tr>
+            <th scope="col">Curso</th>
+            <th class="col-md-3" scope="col">Título</th>
+            <th scope="col">Plan</th>
+            <th scope="col">Docente</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (!empty($propuestas)) { ?>
+            <?php foreach ($propuestas as $trabajo) { ?>
+                <tr>
+                    <th scope="row"> <?= $trabajo['CURSO_ACADEMICO'] ?></th>
+                    <th class="col-md-3"> <?= strtoupper($trabajo['TITULO']); ?></th>
+                    <th class="col-md-3"> <?= $trabajo['NOMBRE_PLAN'] ?></th>
+                    <th><?php
+                        if (!empty($trabajo['NOMBRE_DOCENTE'])) {
+                            ?>
+                            <?= '<a href="mailto:' . $trabajo['USUARIO_DOCENTE'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $trabajo['NOMBRE_DOCENTE'] ?>
+                        <?php } ?>
+                    </th>
+                    <th>  <?php
+                        if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_ANULADA)
+                            echo '<span class="badge bg-danger text-white">' . Constantes::ESTADO_OFERTA_ANULADA . '</span>';
+                        else if ($trabajo['ESTADO_OFERTA'] == 'Validada')
+                            echo '<span class="badge bg-success text-white">' . Constantes::ESTADO_OFERTA_VALIDADA . '</span>';
+                        else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_PENDIENTE)
+                            echo '<span class="badge bg-primary text-white">' . Constantes::ESTADO_OFERTA_PENDIENTE . '</span>'; ?>
+                    </th>
+                    <th class="col-md-1">
+                        <div class="d-grid gap-1">
+                            <?php if (($trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_ANULADA)) { ?>
+                                <button type="button" class="btn btn-sm btn-accion btn-danger"
+                                        data-bs-toggle='modal'
+                                        data-bs-target="#confirmarModal"
+                                        data-accion="anular"
+                                        data-flg="1"
+                                        data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
+                                        data-cod="<?= $trabajo['COD_OFERTA']; ?>">
+                                    Anular
+                                </button>
+                            <?php } ?>
+                        </div>
+                    </th>
+                </tr>
+            <?php }
+        } ?>
+        </tbody>
+    </table>
+</div>
+<br>
+
+
+<?= $this->partial('partials/modal-proponer.phtml'); ?>
+
+<?= $this->partial('partials/modal-confirmar.phtml'); ?>
+
+<form method="post" name="solicitudForm" action="">
+    <input type="hidden" name="accion" value="">
+    <input type="hidden" name="cod_oferta" value="">
+    <input type="hidden" name="plan_trabajo" value="">
+    <input type="hidden" name="flg" value="">
+</form>
