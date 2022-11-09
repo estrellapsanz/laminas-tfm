@@ -131,8 +131,8 @@ class IndexController extends MasterController
 
 
         $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
-        $curso = $this->daoService->getParametrosDAO()->dameParametroNombre('CURSO_ACADEMICO');
-
+        $curso = $this->daoService->getParametrosDAO()->dameParametroNombre(Constantes::PARAMETRO_CURSO_ACADEMICO);
+        $estado_operacion = false;
 
         $request = $this->getRequest();
 
@@ -154,15 +154,14 @@ class IndexController extends MasterController
                     $ruta_fichero = trim($ruta_servidor . ' /' . $curso . '/' . $nombre_fichero . '.' . $extension_fichero[1]);
                     $cod_deposito = $this->daoService->getDepositoDAO()->insertaDeposito($curso, $cod_oferta, $ruta_fichero, $usuario_logueado);
 
-                    if ($cod_deposito == -1) {
-                        //todo redirect error
+                    if ($cod_deposito > 0) {
+                        $estado_operacion = true;
                     }
-
                 }
-
-            } else {
-                //todo redirect error
             }
+
+            $this->informarEstadoOperacionSesion($estado_operacion);
+            $this->redirect()->toRoute('solicitud-deposito');
         }
 
 
@@ -176,7 +175,6 @@ class IndexController extends MasterController
                 'misOfertas' => $misOfertasValidadas,
                 'misSolicitudes' => $misDepositos
             ]);
-
 
     }
 

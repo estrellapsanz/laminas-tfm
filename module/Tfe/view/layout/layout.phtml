@@ -37,6 +37,7 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300&family=Roboto:wght@300&display=swap"
           rel="stylesheet">
+
     <!-- Scripts -->
     <?= $this->headScript()
         ->prependFile($this->basePath('js/datatables.js'))
@@ -80,7 +81,7 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
        href="<?= $this->url('home') ?>">Inicio</a>
     <a class="flex-sm-fill nav-link text-white <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == 'mi-perfil') echo 'menu-active'; ?>"
        href="<?= $this->url('mi-perfil') ?>">Mi
-        perfil</a>
+        expediente</a>
     <a class="flex-sm-fill nav-link text-white <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == 'trabajos-ofertados') echo 'menu-active'; ?>"
        href="<?= $this->url('trabajos-ofertados') ?>">Trabajos
         ofertados</a>

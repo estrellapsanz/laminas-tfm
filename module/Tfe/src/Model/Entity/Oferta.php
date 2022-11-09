@@ -93,8 +93,8 @@ class Oferta extends MasterEntity
             return $this->executeQueryArray($query, [':P_USER' => $usuario]);
 
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            die;
+            //var_dump($e->getMessage());
+            //die;
             return null;
         }
     }
