@@ -22,7 +22,9 @@ interface SessionServiceInterface
     public function setEstadoOperacion($value);
 
     public function getUrlInSession();
-    
+
     public function setUrlInSession($url);
+
+    public function regenerateId();
 
 }

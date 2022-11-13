@@ -60,5 +60,19 @@ class Estudiante extends MasterEntity
         return $this->executeQueryArray($query, [':P_COD_PLAN' => $plan, ':P_EXP_NUMORD' => $expediente]);
     }
 
+    /**
+     * @param $user
+     * @return false|mixed
+     */
+    public function getNombre($user)
+    {
+        $query = "SELECT * FROM TFM_ESTUDIANTE WHERE USUARIO=:P_USER";
+        $rs = $this->executeQueryRow($query, [':P_USER' => $user]);
+
+        if (!empty($rs))
+            return $rs['NOMBRE'] . ' ' . $rs['APELLIDO1'] . ' ' . $rs['APELLIDO2'];
+
+        return null;
+    }
 
 }

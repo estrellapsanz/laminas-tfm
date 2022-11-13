@@ -26,9 +26,10 @@ class Constantes
     const ESTADO_OFERTA_ANULADA = "Anulada";
     const ESTADO_OFERTA_VALIDADA = "Validada";
     const ESTADO_OFERTA_VIGENTE = 'Vigente';
-    const  ESTADO_OFERTA_PENDIENTE = 'Pendiente';
-    const ESTADO_ESTUDIANTE_ANULADO = "Anulado";
+    const ESTADO_OFERTA_PENDIENTE = 'Pendiente';
     const ESTADO_DENEGADA = "Denegada";
+    const ESTADO_ESTUDIANTE_ANULADO = "Anulado";
+    const ESTADO_ESTUDIANTE_VALIDADO = "Validado";
     const ESTADO_ESTUDIANTE_PENDIENTE = "Pendiente";
     const ESTADO_CANCELADO = "Cancelado";
 
@@ -41,11 +42,17 @@ class Constantes
 
     /*RUTAS*/
     const CURRENT_URL = 'current_url';
+    //ESTUDIANTE
     const RUTA_HOME_ESTUDIANTE = 'home';
-    const RUTA_PERFIL_ESTUDIANTE = 'mi-perfil';
+    const RUTA_EXPEDIENTE_ESTUDIANTE = 'mi-expediente';
     const RUTA_PROPONER_OFERTA_ESTUDIANTE = 'propuesta-oferta';
     const RUTA_SOLICITAR_OFERTA_ESTUDIANTE = 'solicitud-deposito';
     const RUTA_TRABAJOS_OFERTADOS = 'trabajos-ofertados';
+    //DOCENTE
+    const RUTA_ALTA_OFERTA_DOCENTE = 'docente-alta-oferta';
+    const RUTA_TRABAJOS_TUTORIZADOS_DOCENTE = 'docente-trabajos-tutorizados';
+    const RUTA_SOLICITUDES_DEPOSITO_DOCENTE = 'docente-solicitudes-deposito';
+    const RUTA_TRABAJOS_CALIFICADOS_DOCENTE = 'docente-trabajos-calificados';
 
 
     const RUTA_DEPOSITAR_ESTUDIANTE = 'solicitud-deposito';
@@ -61,10 +68,9 @@ class Constantes
 
 
     //NOMBRE SESION
-    const SESION_MENU_CLIENTE = "menuCliente";
-    const SITE_TLF = "telefono";
-    const SITE_EMAIL = "correo";
     const SITE_TITULO = "Laminas-TFM";
+    const NOMBRE_COOKIE = "uoc_login";
+    const DOMINIO_COOKIE = ".uoc.es";
 
 
     static function full_url()

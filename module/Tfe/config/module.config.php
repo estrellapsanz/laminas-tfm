@@ -24,23 +24,59 @@ return [
 
     'router' => [
         'routes' => [
-            'home' => [
+            /*LOGIN*/
+            'login' => [
                 'type' => Literal::class,
                 'options' => [
                     'route' => '/',
                     'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action' => 'index',
+                        'controller' => Controller\AuthController::class,
+                        'action' => 'login',
                     ],
                 ],
             ],
-            'mi-perfil' => [
+            'login-docente' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/mi-perfil',
+                    'route' => '/login-docente',
+                    'defaults' => [
+                        'controller' => Controller\AuthController::class,
+                        'action' => 'login',
+                    ],
+                ],
+            ],
+            'desconectar' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/desconectar',
+                    'defaults' => [
+                        'controller' => Controller\AuthController::class,
+                        'action' => 'desconectar',
+                    ],
+                ],
+            ],
+
+            /*FIN LOGIN*/
+
+
+            /*ESTUDIANTE*/
+            'home' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/home',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
-                        'action' => 'mi-perfil',
+                        'action' => 'home',
+                    ],
+                ],
+            ],
+            'mi-expediente' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/mi-expediente',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'mi-expediente',
                     ],
                 ],
             ],
@@ -95,6 +131,54 @@ return [
                     ],
                 ],
             ],
+
+            /*FIN ESTUDIANTE*/
+
+            /*DOCENTE*/
+            'docente-alta-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/alta-oferta',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'alta-oferta',
+                    ],
+                ],
+            ],
+
+            'docente-trabajos-tutorizados' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/trabajos-tutorizados',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'trabajos-tutorizados',
+                    ],
+                ],
+            ],
+
+            'docente-solicitudes-deposito' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/solicitudes-deposito',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'solicitudes-deposito',
+                    ],
+                ],
+            ],
+
+            'docente-trabajos-calificados' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/trabajos-calificados',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'trabajos-calificados',
+                    ],
+                ],
+            ],
+
             'application' => [
                 'type' => Segment::class,
                 'options' => [
@@ -110,7 +194,9 @@ return [
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\MasterControllerFactory::class,
-            Controller\MasterController::class => Controller\Factory\MasterControllerFactory::class
+            Controller\DocenteController::class => Controller\Factory\MasterControllerFactory::class,
+            Controller\MasterController::class => Controller\Factory\MasterControllerFactory::class,
+            Controller\AuthController::class => Controller\Factory\MasterControllerFactory::class
         ],
     ],
     'view_manager' => [
@@ -121,7 +207,7 @@ return [
         'exception_template' => 'error/index',
         'template_map' => [
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
-            'tfe/index/index' => __DIR__ . '/../view/tfe/index/index.phtml',
+            'tfe/index/index' => __DIR__ . '/../view/tfe/index/home.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
         ],

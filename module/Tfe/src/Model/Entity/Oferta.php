@@ -107,12 +107,19 @@ class Oferta extends MasterEntity
      * @param $usuario
      * @return int|void
      */
-    public function insertaOferta($curso, $titulo, $descripcion, $usuario_creacion)
+    public function insertaOferta($curso, $titulo, $subtitulo, $descripcion, $usuario_creacion)
     {
 
         //todo ver que pasa con el estado
-        $data = ['CURSO_ACADEMICO' => $curso, 'TITULO' => $titulo, 'DESCRIPCION' => $descripcion,
-            'ESTADO' => 'Pendiente', 'USUARIO_CREACION' => $usuario_creacion];
+        $data = [
+            'CURSO_ACADEMICO' => $curso,
+            'TITULO' => $titulo,
+            'SUBTITULO' => $subtitulo,
+            'DESCRIPCION' => $descripcion,
+            'ESTADO' => empty($subtitulo) ? 'Pendiente' : 'Vigente', //el docente manda subtitulo, por lo que el estado irá como Vigente
+            'USUARIO_CREACION' => $usuario_creacion,
+            'USUARIO_DOCENTE' => empty($subtitulo) ? null : $usuario_creacion
+        ];
         try {
 
             $exito = $this->insert($data);
@@ -122,7 +129,7 @@ class Oferta extends MasterEntity
                     ['CURSO_ACADEMICO' => $curso,
                         'TITULO' => $titulo,
                         'USUARIO_CREACION' => $usuario_creacion,
-                        'ESTADO' => 'Pendiente'
+                        'ESTADO' => empty($subtitulo) ? 'Pendiente' : 'Vigente'
                     ])->toArray()[0]['COD_OFERTA'];
             } else
                 return -1;
@@ -130,6 +137,25 @@ class Oferta extends MasterEntity
         } catch (\Exception $e) {
             return -1;
         }
+    }
+
+    public function dameOferta($cod_oferta)
+    {
+        $query = "SELECT * FROM TFM_OFERTAS WHERE COD_OFERTA=:P_COD";
+        return $this->executeQueryRow($query, [':P_COD' => $cod_oferta]);
+    }
+
+    public function actualizaOferta($cod_oferta, $titulo, $subtitulo, $descripcion, $area)
+    {
+
+        $set = ['TITULO' => $titulo,
+            'SUBTITULO' => $subtitulo,
+            'DESCRIPCION' => $descripcion
+        ];
+
+        $where = ['COD_OFERTA' => $cod_oferta];
+        return $this->update($set, $where) >= 0;
+
     }
 
 

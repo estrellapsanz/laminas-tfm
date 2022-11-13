@@ -1,0 +1,125 @@
+<?php
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+
+use Tfe\Util\Constantes;
+
+?>
+
+
+<br>
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">Docente</li>
+        <li class="breadcrumb-item active" aria-current="page">Trabajos tutorizados</li>
+    </ol>
+</nav>
+
+
+<div class="container-lg">
+
+    <div class="bck-primary-ligth">
+        <div class="d-flex justify-content-center">
+            <p>
+            <h1><b>Trabajos tutorizados</b></h1></p>
+        </div>
+    </div>
+
+    <br>
+    <!--<h2>Trabajos tutorizados</h2>-->
+    <div class="alert alert-default border-dark">
+        A continuación se muestran los trabajos tutorizados y las solicitudes de los trabajos dadas de alta. Puede
+        aceptar o denegar
+        al estudiante a través de los botones de acción.
+    </div>
+    <div class="mb-3">
+        <?php if (!empty($trabajos)) { ?>
+            <br>
+
+            <?= $this->partial('partials/errores') ?>
+
+            <table class="table table-striped" id="table_extensible">
+                <thead>
+                <tr>
+                    <th scope="col">Curso</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Subtítulo</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Área</th>
+                    <th scope="col">Estado estudiante</th>
+                    <th scope="col">Estudiante</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($trabajos as $trabajo) { ?>
+                    <tr>
+                        <th><?= $trabajo['CURSO_ACADEMICO'] ?></th>
+                        <th scope="row"> <?= $trabajo['TITULO'] ?></th>
+                        <th scope="row"> <?= $trabajo['SUBTITULO'] ?></th>
+                        <th> <?= $trabajo['DESCRIPCION'] ?></th>
+                        <th> <?= $trabajo['NOMBRE_AREA'] ?></th>
+                        <th>
+                            <?php
+                            if ($trabajo['ESTADO_ESTUDIANTE'] == 'Anulado')
+                                echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Estudiante anulado.">' . Constantes::ESTADO_ESTUDIANTE_ANULADO . '</span>';
+                            else
+                                if ($trabajo['ESTADO_ESTUDIANTE'] == 'Validado')
+                                    echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Estudiante validado.">' . Constantes::ESTADO_ESTUDIANTE_VALIDADO . '</span>';
+                                else if ($trabajo['ESTADO_ESTUDIANTE'] == 'Pendiente')
+                                    echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Estudiante pendiente.">' . Constantes::ESTADO_ESTUDIANTE_PENDIENTE . '</span>';
+                                else echo '<span class="badge bg-secondary text-white">Sin alumno</span>' ?>
+                        </th>
+                        <th> <?= '<a href="mailto:' . $trabajo['USUARIO_ESTUDIANTE'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $trabajo['NOMBRE_ESTUDIANTE'] ?></th>
+
+                        <th>
+                            <div class="d-grid gap-2">
+                                <form action="<?= $this->url('docente-alta-oferta') ?>" method="post">
+                                    <button type="submit" class="btn btn-sm btn-success"
+                                    <input type="hidden" name="cod_oferta" value="<?= $trabajo['COD_OFERTA']; ?>">
+                                    Editar <i class="bi bi-pencil"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-sm btn-danger btn-accion"
+                                        data-bs-toggle='modal'
+                                        data-bs-target="#confirmarModal"
+                                        data-accion="anular"
+                                        data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
+                                        data-cod="<?= $trabajo['COD_OFERTA']; ?>">
+                                    Anular <i class="bi bi-x-circle"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm  btn-accion  btn-primary"
+                                        data-bs-toggle="modal" data-bs-target="#solicitarOferta"
+                                        data-accion="solicitar"
+                                        data-cod="<?= $trabajo['COD_OFERTA']; ?>"
+                                >Solicitar<i class="bi bi-plus-square"></i>
+                                </button>
+                            </div>
+                        </th>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        <?php } ?>
+    </div>
+
+
+    <button type="button" data-bs-toggle="modal" data-bs-target="#confirmarModal" hidden>
+        Launch modal
+    </button>
+</div>
+
+<?= $this->partial('partials/modal-solicitar-oferta.phtml', ['planes' => $this->planes_estudiante]); ?>
+
+<?= $this->partial('partials/modal-confirmar.phtml'); ?>
+
+
+<form method="post" name="solicitudForm" action="">
+    <input type="hidden" name="accion" value="">
+    <input type="hidden" name="cod_oferta" value="">
+    <input type="hidden" name="plan_trabajo" value="">
+    <input type="hidden" name="flg" value="">
+</form>
+

@@ -68,5 +68,10 @@ class SessionService implements SessionServiceInterface
         return $this->offsetGet(Constantes::CURRENT_URL);
     }
 
+    public function regenerateId()
+    {
+        $this->getSesion()->getManager()->regenerateId();
+    }
+
 
 }
