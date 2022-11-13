@@ -1,0 +1,55 @@
+<?php
+
+use Laminas\Session\Container;
+use Tfe\Util\Constantes;
+
+$sesion = new Container (Constantes::NOMBRE_SESION);
+
+?>
+
+<div class="collapse navbar-collapse justify-content-lg-evenly" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link  <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_ALTA_OFERTA_DOCENTE) echo 'active'; ?>"
+                <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == 'home') echo 'aria-current="page"'; ?>
+               href="<?= $this->url('docente-alta-oferta') ?>">Alta oferta
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link  <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_TRABAJOS_TUTORIZADOS_DOCENTE) echo 'active'; ?>"
+                <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == 'home') echo 'aria-current="page"'; ?>
+               href="<?= $this->url('docente-trabajos-tutorizados') ?>">Trabajos tutorizados
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link
+                <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_SOLICITUDES_DEPOSITO_DOCENTE) echo 'active'; ?>"
+                <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_SOLICITUDES_DEPOSITO_DOCENTE) echo 'aria-current="page"'; ?>
+               href="<?= $this->url('docente-solicitudes-deposito') ?>">Solicitudes de depósito
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a class="nav-link  <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_TRABAJOS_CALIFICADOS_DOCENTE) echo 'active'; ?>"
+                <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_TRABAJOS_CALIFICADOS_DOCENTE) echo 'aria-current="page"'; ?>
+               href="<?= $this->url('docente-trabajos-calificados') ?>">Trabajos calificados
+            </a>
+        </li>
+    </ul>
+
+    <span class="navbar-text">
+        <?php if ($sesion->offsetExists(Constantes::SESION_NOMBRE_USUARIO)) { ?>
+            <i><?= $sesion->offsetGet(Constantes::SESION_NOMBRE_USUARIO); ?></i>
+        <?php } ?>
+        &nbsp&nbsp
+    </span>
+    <span class="navbar-text">
+        <a class="nav-link" href="<?= $this->url('desconectar') ?>">
+            Desconectar <i class="bi bi-box-arrow-in-right"></i>
+        </a>
+    </span>
+
+</div>

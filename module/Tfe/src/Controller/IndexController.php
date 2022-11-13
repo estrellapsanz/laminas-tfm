@@ -14,23 +14,34 @@ class IndexController extends MasterController
     /**
      * @return ViewModel
      */
-    public function indexAction()
+    public function homeAction()
     {
+        $this->controlLogueado();
         $this->sesion->setUrlInSession(Constantes::RUTA_HOME_ESTUDIANTE);
         return new ViewModel();
     }
 
+    /**
+     * @return void
+     */
+    public function controlLogueado()
+    {
+
+        if (!$this->sesion->offsetExists(Constantes::SESION_NOMBRE_USUARIO))
+            $this->redirect()->toRoute('desconectar');
+
+    }
 
     /**
      * @return ViewModel
      */
-    public function miPerfilAction()
+    public function miExpedienteAction()
     {
 
-        $this->informarSesion();
-        $this->sesion->setUrlInSession(Constantes::RUTA_PERFIL_ESTUDIANTE);
+        $this->controlLogueado();
+        $this->sesion->setUrlInSession(Constantes::RUTA_EXPEDIENTE_ESTUDIANTE);
 
-        $login_estudiante = 'estrella.parrilla';
+        $login_estudiante = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
         $perfil_estudiante = $this->daoService->getEstudianteDAO()->damePerfilEstudiante($login_estudiante);
         foreach ($perfil_estudiante as &$plan_estudiante) {
             $plan_estudiante['ASIGNATURAS'] = $this->daoService->getEstudianteDAO()->dameAsignaturasEstudiante($plan_estudiante['COD_PLAN'], $plan_estudiante['NUMORD']);
@@ -40,27 +51,13 @@ class IndexController extends MasterController
     }
 
     /**
-     * todo BORRAR CUANDO SE IMPLEMENTE AUTHCONTROLLER
-     * @return void
-     */
-    public function informarSesion()
-    {
-        $this->sesion->offsetSet(Constantes::SESION_USUARIO, 'estrella.parrilla');
-        $this->sesion->offsetSet(Constantes::SESION_NOMBRE_USUARIO, 'Estrella Parrilla Sanz');
-        $this->sesion->offsetSet(Constantes::SESION_ESTUDIANTE, true);
-        $this->sesion->offsetSet(Constantes::SESION_DOCENTE, false);
-
-    }
-
-
-    /**
      * @return ViewModel
      * Solo se podrá proponer una oferta por cada plan que tenga matriculado.
      */
     public function propuestaOfertaAction()
     {
-        //todo borrar al implementar AuthController
-        $this->informarSesion();
+
+        $this->controlLogueado();
         $this->sesion->setUrlInSession(Constantes::RUTA_PROPONER_OFERTA_ESTUDIANTE);
 
         $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
@@ -87,7 +84,7 @@ class IndexController extends MasterController
             $oferta_existente = $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, null, $cod_plan);
 
             if (!$oferta_existente) {
-                $cod_oferta = $this->daoService->getOfertaDAO()->insertaOferta($curso, $titulo, $descripcion, $usuario_logueado);
+                $cod_oferta = $this->daoService->getOfertaDAO()->insertaOferta($curso, $titulo, null, $descripcion, $usuario_logueado);
                 if ($cod_oferta != -1) {
                     $exito = $this->daoService->getEstudianteOfertaDAO()->insertaEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado, $cod_plan);
                     $estado_operacion = $exito;
@@ -125,8 +122,8 @@ class IndexController extends MasterController
      */
     public function solicitudDepositoAction()
     {
-        //todo borrar cuando se implemente AuthController
-        $this->informarSesion();
+
+        $this->controlLogueado();
         $this->sesion->setUrlInSession(Constantes::RUTA_SOLICITAR_OFERTA_ESTUDIANTE);
 
 
@@ -186,8 +183,8 @@ class IndexController extends MasterController
     public function trabajosOfertadosAction()
     {
 
-        //todo borrar cuando se implemente AuthController
-        $this->informarSesion();
+
+        $this->controlLogueado();
         $this->sesion->setUrlInSession(Constantes::RUTA_TRABAJOS_OFERTADOS);
 
 
@@ -234,8 +231,8 @@ class IndexController extends MasterController
     public function guardarSolicitudOfertaAction()
     {
 
-        //todo borrar cuando se implemente AuthController
-        $this->informarSesion();
+
+        $this->controlLogueado();
         $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
 
         //inicialización de variables

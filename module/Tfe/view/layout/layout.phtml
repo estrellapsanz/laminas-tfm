@@ -28,50 +28,71 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
         'href' => $this->basePath() . '/img/favicon.ico'
     ])
         ->prependStylesheet($this->basePath('css/style.css'))
-        // ->prependStylesheet($this->basePath('css/responsive.bootstrap5.min.css'))
         ->prependStylesheet($this->basePath('css/responsive.datatables.css'))
         ->prependStylesheet($this->basePath('css/datatables.css'))
         ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
+        ->prependStylesheet('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.1/font/bootstrap-icons.css')
     ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300&family=Roboto:wght@300&display=swap"
           rel="stylesheet">
     <!-- Scripts -->
+
     <?= $this->headScript()
         ->prependFile($this->basePath('js/datatables.js'))
         ->prependFile($this->basePath('js/table-datatables-responsive.js'))
         ->prependFile($this->basePath('js/functions.js'))
-        //->prependFile("https://kit.fontawesome.com/a9538ddc2f.js")
         ->prependFile($this->basePath('js/bootstrap.min.js'))
         ->prependFile($this->basePath('js/jquery-3.5.1.min.js')) ?>
 </head>
 <body class="d-flex flex-column h-100">
 
 
-<!--<nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+<nav class="navbar fixed-top navbar-expand-lg flex-column flex-lg-row
+ <?php if (!$sesion->offsetGet(Constantes::SESION_ESTUDIANTE)) echo 'navbar-default'; else echo 'navbar-dark' ?>">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img class="img-logo" src="<? //= $this->basePath('img/logo-uoc-default.png') ?>" alt="UOC-logo"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="<?= $this->url('home') ?>">UOC
+            <!--<img class="img-logo" src="<?= $this->basePath('img/logo-uoc-default.png') ?>"
+                 alt="UOC-logo">-->
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse d-flex justify-content-evenly" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="<? //= $this->url('home') ?>">Inicio</a>
-                <a class="nav-link" href="<? //= $this->url('mi-perfil') ?>">Mi expediente</a>
-                <a class="nav-link" href="<? //= $this->url('trabajos-ofertados') ?>">Oferta de
-                    temas</a>
-                <a class="nav-link" href="<? //= $this->url('propuesta-oferta') ?>">Proponer tema</a>
-                <a class="nav-link" href="<? //= $this->url('solicitud-deposito') ?>">Solicitud
-                    depósito</a>
-            </div>
-        </div>
+
+
+        <?php if ($sesion->offsetExists(Constantes::SESION_ESTUDIANTE) && $sesion->offsetExists(Constantes::SESION_USUARIO)) { ?>
+            <?= $this->partial('partials/menu-estudiante') ?>
+        <?php } else if ($sesion->offsetExists(Constantes::SESION_DOCENTE) && $sesion->offsetExists(Constantes::SESION_USUARIO_DOCENTE)) { ?>
+            <?= $this->partial('partials/menu-docente') ?>
+        <?php } ?>
+
+
+
+        <?php if ($sesion->offsetGet(Constantes::SESION_DOCENTE) && !$sesion->offsetExists(Constantes::SESION_USUARIO_DOCENTE)) { ?>
+            <span class="navbar-text">
+                    <a class="nav-link"
+                       href="<?= $this->url('login') ?>">
+                       Login estudiante <i class="bi bi-person"></i>
+                    </a>
+            </span>
+        <?php } ?>
+        <?php if ($sesion->offsetGet(Constantes::SESION_ESTUDIANTE) && !$sesion->offsetExists(Constantes::SESION_USUARIO)) { ?>
+            <span class="navbar-text">
+                    <a class="nav-link"
+                       href="<?= $this->url('login-docente') ?>">
+                    Login docente     <i class="bi bi-book"></i>
+                    </a>
+            </span>
+        <?php } ?>
+
     </div>
-</nav>-->
+</nav>
 
 
+<?PHP /*
 <nav class="navbar navbar-dark navbar-expand-lg fixed-top flex-column flex-lg-row" role="navigation">
     <a class="nav-link flex-sm-fill text-center" href="<?= $this->url('home') ?>">
         <img class="img-logo" src="<?= $this->basePath('img/logo-uoc-default.png') ?>" alt="UOC-logo">
@@ -90,7 +111,7 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
     <a class="flex-sm-fill nav-link text-white <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == 'solicitud-deposito') echo 'menu-active'; ?>"
        href="<?= $this->url('solicitud-deposito') ?>">Solicitud
         depósito</a>
-</nav>
+</nav> */ ?>
 
 <main class="flex-shrink-0">
     <div class="container">
@@ -99,9 +120,11 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
     </div>
 </main>
 
-<footer class="footer mt-auto py-3 bck-primary-ligth">
+<footer class="footer mt-auto py-3
+<?php if (!$sesion->offsetGet(Constantes::SESION_ESTUDIANTE)) echo 'bck-primary'; else echo 'bck-primary-ligth' ?>
+">
     <div class="container">
-        <p>
+        <p class="text-white">
             &copy; <?= date('Y') ?>
             <a target="_blank" href="https://github.com/estrellapsanz/laminas-tfm">UOC TFM </a> ESTRELLA
             PARRILLA

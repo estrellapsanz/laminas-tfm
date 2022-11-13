@@ -2,8 +2,10 @@
 
 namespace Tfe\Service;
 
+use Tfe\Model\Entity\Area;
 use Tfe\Model\Entity\DatosAcademicos;
 use Tfe\Model\Entity\Deposito;
+use Tfe\Model\Entity\Docente;
 use Tfe\Model\Entity\Estudiante;
 use Tfe\Model\Entity\EstudianteOferta;
 use Tfe\Model\Entity\Oferta;
@@ -37,5 +39,15 @@ interface DAOServiceInterface
      * @return Deposito
      */
     public function getDepositoDAO();
+
+    /**
+     * @return Docente
+     */
+    public function getDocenteDAO();
+
+    /**
+     * @return Area
+     */
+    public function getAreasDAO();
 
 }

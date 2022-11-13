@@ -3,8 +3,10 @@
 namespace Tfe\Service;
 
 use Laminas\Db\Adapter\Adapter;
+use Tfe\Model\Entity\Area;
 use Tfe\Model\Entity\DatosAcademicos;
 use Tfe\Model\Entity\Deposito;
+use Tfe\Model\Entity\Docente;
 use Tfe\Model\Entity\Estudiante;
 use Tfe\Model\Entity\EstudianteOferta;
 use Tfe\Model\Entity\Oferta;
@@ -15,6 +17,11 @@ class DAOService implements DAOServiceInterface
     /** @var Adapter */
     private $dbAdapter;
 
+    /**
+     * @var Area
+     */
+
+    private $areaDAO;
     /**
      * @var Estudiante
      */
@@ -44,6 +51,10 @@ class DAOService implements DAOServiceInterface
      * @var Deposito
      */
     private $depositoDAO;
+    /**
+     * @var Docente
+     */
+    private $docenteDAO;
 
     /**
      * DAOService constructor.
@@ -111,5 +122,25 @@ class DAOService implements DAOServiceInterface
         if (!$this->depositoDAO)
             $this->depositoDAO = new Deposito($this->dbAdapter);
         return $this->depositoDAO;
+    }
+
+    /**
+     * @return Docente
+     */
+    public function getDocenteDAO()
+    {
+        if (!$this->docenteDAO)
+            $this->docenteDAO = new Docente($this->dbAdapter);
+        return $this->docenteDAO;
+    }
+
+    /**
+     * @return Area
+     */
+    public function getAreasDAO()
+    {
+        if (!$this->areaDAO)
+            $this->areaDAO = new Area($this->dbAdapter);
+        return $this->areaDAO;
     }
 }
