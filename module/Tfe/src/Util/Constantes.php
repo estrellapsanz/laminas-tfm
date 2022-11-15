@@ -30,6 +30,7 @@ class Constantes
     const ESTADO_DENEGADA = "Denegada";
     const ESTADO_ESTUDIANTE_ANULADO = "Anulado";
     const ESTADO_ESTUDIANTE_VALIDADO = "Validado";
+    const ESTADO_ESTUDIANTE_DENEGADO = "Denegado";
     const ESTADO_ESTUDIANTE_PENDIENTE = "Pendiente";
     const ESTADO_CANCELADO = "Cancelado";
 
@@ -62,7 +63,7 @@ class Constantes
     const NOMBRE_SESION = 'sesionTfm';
     const SESION_USUARIO = "usuario";
     const SESION_NOMBRE_USUARIO = "nombreUsuario";
-    const SESION_USUARIO_DOCENTE = "usuarioDocentes";
+    const SESION_USUARIO_DOCENTE = "usuarioDocente";
     const SESION_ESTUDIANTE = "estudiante";
     const SESION_DOCENTE = "docente";
 

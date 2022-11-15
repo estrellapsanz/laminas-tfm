@@ -35,31 +35,30 @@ class DocenteController extends MasterController
             $cod_oferta = isset($post['cod_oferta']) ? $post['cod_oferta'] : null;
             $flg_editar = $post['flg_editar'];
             //var_dump('<pre>');
-            //var_dump($post);
+            // var_dump($post);
             // die;
             //var_dump('</pre>');
             //die;
 
+
             //alta oferta
-            if (empty($cod_oferta)) {
+            if (empty($cod_oferta) && !$flg_editar) {
                 $insert = $this->daoService->getOfertaDAO()->insertaOferta($curso, $titulo, $subtitulo, $descripcion, $login_docente);
                 $resultado = $insert > 0;
 
             } else {
                 if (!$flg_editar) {
-                    //editar oferta
+                    //editar oferta desde button editar-oferta
                     $oferta = $this->daoService->getOfertaDAO()->dameOferta($cod_oferta);
                 } else {
-
-                    //update oferta
+                    //update oferta desde alta-oferta
                     $update = $this->daoService->getOfertaDAO()->actualizaOferta($cod_oferta, $titulo, $subtitulo, $descripcion, $area);
                     $resultado = $update;
 
                 }
-
             }
-
         }
+
 
         if ($insert || $update) {
             $this->informarEstadoOperacionSesion($resultado);
@@ -120,6 +119,7 @@ class DocenteController extends MasterController
         //var_dump($trabajos);
         //var_dump('</pre>');
         // die;
+
         return new ViewModel(
             ['trabajos' => $trabajos]
         );
@@ -137,5 +137,25 @@ class DocenteController extends MasterController
         return new ViewModel();
     }
 
+    public function guardarTramitarEstudianteOfertaAction()
+    {
+        $this->controlLogueado();
+        $this->sesion->setUrlInSession(Constantes::RUTA_TRABAJOS_TUTORIZADOS_DOCENTE);
+        $login_docente = $this->sesion->offsetGet(Constantes::SESION_USUARIO_DOCENTE);
+
+        $request = $this->request;
+
+        if ($request->isPost()) {
+
+            $post = $request->getPost();
+            $cod_oferta = $post['cod_oferta'];
+            $estudiante = $post['estudiante'];
+            $estado = $post['estado'];
+
+            $update = $this->daoService->getEstudianteOfertaDAO()->actualizarEstadoEstudiante($cod_oferta, $estado, $estudiante);
+            $this->informarEstadoOperacionSesion($update);
+        }
+        return $this->redirect()->toRoute('docente-trabajos-tutorizados');
+    }
 
 }

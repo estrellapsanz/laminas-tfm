@@ -53,5 +53,16 @@ $(document).ready(function () {
         document.proponerForm.submit();
     })
 
+    $('.btn-tramitar-estudiante-oferta').click(function () {
+        var accion = $(this).data('accion');
+        var cod = $(this).data('cod');
+        var estudiante = $(this).data('estudiante');
+        document.solicitudForm.estado.value = accion;
+        document.solicitudForm.cod_oferta.value = cod;
+        document.solicitudForm.estudiante.value = estudiante;
+
+    })
+
+
 });
 

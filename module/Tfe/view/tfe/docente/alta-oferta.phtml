@@ -21,24 +21,30 @@
     <div class="bck-primary-ligth">
         <div class="d-flex justify-content-center">
             <p>
-            <h1><b><?php if (!empty($oferta['COD_OFERTA'])) echo 'Editar'; else 'Alta'; ?> oferta</b></h1></p>
+            <h1><b>Alta oferta</b></h1></p>
         </div>
     </div>
     <br>
     <form name="proponerForm" action="<?= $this->url('docente-alta-oferta') ?>" method="post">
         <br>
         <!--<h2>Proponer Trabajo</h2>-->
-        <div class="alert alert-default border-dark" role="alert">
-            <p>Para proponer un Trabajo Fin de Grado o Trabajo Fin de Máster debe indicar el área de estudios,
-                asignatura y realizar una breve descripción del mismo.</p>
-        </div>
+        <?php if (!empty($oferta['COD_OFERTA'])) { ?>
+            <div class="alert alert-warning" role="alert">
+                <p>Se dispone a editar una oferta de Trabajo Final.</p>
+            </div>
+        <?php } else { ?>
+            <div class="alert alert-default border-dark" role="alert">
+                <p>Para proponer un Trabajo Fin de Grado o Trabajo Fin de Máster debe indicar el área de estudios,
+                    asignatura y realizar una breve descripción del mismo.</p>
+            </div>
+        <?php } ?>
         <div class="mb-3">
             <label for="area" class="form-label">Área de conocimiento</label>
             <select for="area" class="form-control" aria-label="Default select example" name="area"
                     required>
                 <option selected>Seleccione</option>
                 <?php foreach ($this->areas as $area) { ?>
-                    <option value="<?= $area['COD_AREA'] ?>>"
+                    <option value="<?= $area['COD_AREA'] ?>"
                         <?php if (!empty($oferta)) { ?>
                             <?php if ($area['COD_AREA'] == $oferta['COD_OFERTA']) echo 'selected'; ?>
                         <?php } ?>
@@ -70,19 +76,18 @@
         <div class="mb-3">
             <div class="mb-3">
                 <label for="descripción" class="form-label">Descripción del Trabajo</label>
-                <textarea name="descripcion" class="form-control" id="descripcion" rows="3" required>
-                       <?php if (!empty($oferta)) { ?>
-                           <?= $oferta['DESCRIPCION'] ?>
-                       <?php } ?>
-                </textarea>
+                <textarea name="descripcion" class="form-control" id="descripcion" rows="3"
+                          required><?php if (!empty($oferta)) echo $oferta['DESCRIPCION']; ?></textarea>
             </div>
 
             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#docenteAltaModal">Enviar propuesta
             </button>
-
             <input type="hidden" name="flg_editar" value="<?php if (!empty($oferta['COD_OFERTA'])) echo 1; ?>">
+            <input type="hidden" name="cod_oferta"
+                   value="<?php if (!empty($oferta['COD_OFERTA'])) echo $oferta['COD_OFERTA']; else null; ?>">
     </form>
+
 
 </div>
 <br>
@@ -90,9 +95,10 @@
 
 <?= $this->partial('partials/modal-docente-alta.phtml'); ?>
 
+<!--
 <form method="post" name="solicitudForm" action="">
     <input type="hidden" name="accion" value="">
     <input type="hidden" name="cod_oferta" value="">
     <input type="hidden" name="plan_trabajo" value="">
     <input type="hidden" name="flg" value="">
-</form>
+</form> -->

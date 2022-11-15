@@ -157,6 +157,19 @@ return [
                 ],
             ],
 
+
+            'docente-guardar-tramitar-estudiante-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/guardar-tramitar-oferta',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'guardar-tramitar-estudiante-oferta',
+                    ],
+                ],
+            ],
+
+
             'docente-solicitudes-deposito' => [
                 'type' => Literal::class,
                 'options' => [

@@ -21,16 +21,12 @@ class EstudianteOferta extends MasterEntity
      */
     public function actualizarEstadoEstudiante($cod_oferta, $estado, $usuario)
     {
-        //var_dump($cod_oferta, $estado, $usuario);
-        //die;
         $set = ['ESTADO' => $estado];
         $where = ['COD_OFERTA' => $cod_oferta, 'USUARIO_ESTUDIANTE' => $usuario];
         try {
             return $this->update($set, $where) >= 0;
 
         } catch (\Exception $e) {
-            // var_dump($e);
-            // die;
             return false;
         }
     }
