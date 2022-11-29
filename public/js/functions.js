@@ -46,6 +46,14 @@ $(document).ready(function () {
     })
 
     $('.btn-submit-modal').click(function () {
+        var nota = $('#nota').val();
+        if (nota !== null && nota >= 0 && nota <= 10) {
+            document.solicitudForm.nota_final.value = nota;
+        } else if (nota == null || nota < 0 || nota > 10) {
+            $('#label_nota').addClass('text-danger');
+            // $('#error_modal').removeClass('hidden');
+            return;
+        }
         document.solicitudForm.submit();
     })
 
@@ -63,6 +71,13 @@ $(document).ready(function () {
 
     })
 
+    $('.btn-tramitar-estudiante-deposito').click(function () {
+        var accion = $(this).data('accion');
+        var cod = $(this).data('cod_oferta');
+        document.solicitudForm.accion.value = accion;
+        document.solicitudForm.cod_oferta.value = cod;
+
+    })
 
 });
 

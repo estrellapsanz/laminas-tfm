@@ -13,7 +13,7 @@ use Tfe\Util\Constantes;
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">Docente</li>
-        <li class="breadcrumb-item active" aria-current="page">Trabajos tutorizados</li>
+        <li class="breadcrumb-item active" aria-current="page">Trabajos tutorizados o pendientes de tutorizar</li>
     </ol>
 </nav>
 
@@ -23,7 +23,7 @@ use Tfe\Util\Constantes;
     <div class="bck-primary-ligth">
         <div class="d-flex justify-content-center">
             <p>
-            <h1><b>Trabajos tutorizados</b></h1></p>
+            <h1><b>Trabajos tutorizados o por tutorizar</b></h1></p>
         </div>
     </div>
 
@@ -58,7 +58,7 @@ use Tfe\Util\Constantes;
                 <?php foreach ($trabajos as $trabajo) { ?>
                     <tr>
                         <th><?= $trabajo['CURSO_ACADEMICO'] ?></th>
-                        <th scope="row"> <?= $trabajo['TITULO'] ?></th>
+                        <th scope="row"> <?= strtoupper($trabajo['TITULO']) ?></th>
                         <th scope="row"> <?= $trabajo['SUBTITULO'] ?></th>
                         <th> <?= $trabajo['DESCRIPCION'] ?></th>
                         <th> <?= $trabajo['NOMBRE_AREA'] ?></th>
@@ -74,7 +74,7 @@ use Tfe\Util\Constantes;
                                 else echo '<span class="badge bg-secondary text-white">Sin alumno</span>' ?>
                         </th>
                         <th> <?= '<a href="mailto:' . $trabajo['USUARIO_ESTUDIANTE'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $trabajo['NOMBRE_ESTUDIANTE'] ?></th>
-                        <th><?= random_int(5, 9) . '.' . random_int(0, 10) ?></th>
+                        <th><?php if (!empty($trabajo['USUARIO_ESTUDIANTE'])) echo random_int(5, 9) . '.' . random_int(0, 10) ?></th>
                         <th class="col-md-2">
                             <div class="d-grid gap-2">
                                 <?php if ($trabajo['ESTADO_ESTUDIANTE'] != Constantes::ESTADO_ESTUDIANTE_VALIDADO && !empty($trabajo['USUARIO_ESTUDIANTE'])) { ?>

@@ -101,7 +101,12 @@ class DocenteController extends MasterController
         $this->sesion->setUrlInSession(Constantes::RUTA_SOLICITUDES_DEPOSITO_DOCENTE);
         $login_docente = $this->sesion->offsetGet(Constantes::SESION_USUARIO_DOCENTE);
 
-        return new ViewModel();
+        $solicitudesDepósito = $this->daoService->getDocenteDAO()->getSolicitudesDeposito($login_docente);
+        /*var_dump('<pre>');
+        var_dump($solicitudesDepósito);
+        var_dump('</pre>');
+        die;*/
+        return new ViewModel(['solicitudes' => $solicitudesDepósito]);
     }
 
     /**
