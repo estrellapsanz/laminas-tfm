@@ -60,7 +60,7 @@ class Docente extends MasterEntity
     {
 
         $query = "SELECT 
-                   DEF.CURSO_ACADEMICO, DEF.USUARIO_ESTUDIANTE,
+                   DEF.CURSO_ACADEMICO, DEF.USUARIO_ESTUDIANTE,DEF.COD_SOLICITUD,DEF.OBSERVACIONES,
                    DEF.NOTA_FINAL, OFE.TITULO, DEF.ESTADO AS ESTADO_DEPOSITO,
                    P.NOMBRE_PLAN, P.COD_PLAN, A.NOMBRE_AREA, ALU.COD_PLAN, ES.NOMBRE, ES.APELLIDO2 , ES.APELLIDO1,
                    ES.USUARIO USUARIO_ESTUDIANTE, DEF.NOTA_FINAL, DEF.COD_OFERTA, DEF.RUTA_FICHERO
@@ -82,5 +82,38 @@ class Docente extends MasterEntity
                     P.COD_AREA=A.COD_AREA";
         return $this->executeQueryArray($query, [':P_USUARIO' => $usuario_docente]);
 
+    }
+
+
+    public function getMisTrabajosCalificados($usuario)
+    {
+        $query = "SELECT
+                    DEF.NOTA_FINAL,
+                    DEF.CURSO_ACADEMICO, 
+                    DEF.USUARIO_ESTUDIANTE, 
+                    OFE.TITULO, 
+                    ES.NOMBRE, 
+                    ES.APELLIDO1, 
+                    ES.APELLIDO2, 
+                    P.COD_PLAN, 
+                    P.NOMBRE_PLAN,
+                    A.NOMBRE_AREA
+                FROM
+                    TFM_SOLICITUD_DEFENSA DEF,
+                    TFM_OFERTAS OFE,
+                     TFM_ESTUDIANTE ES, 
+                     TFM_ESTUDIANTE_OFERTA ALU,
+                     TFM_PLANES P, TFM_AREA A
+                WHERE
+                    OFE.USUARIO_DOCENTE=:P_USER AND
+                    OFE.COD_OFERTA=DEF.COD_OFERTA AND
+                    DEF.NOTA_FINAL IS NOT NULL AND
+                    DEF.USUARIO_ESTUDIANTE=ES.USUARIO AND
+                    ES.USUARIO=ALU.USUARIO_ESTUDIANTE AND
+                    DEF.COD_OFERTA=OFE.COD_OFERTA AND
+                    DEF.COD_OFERTA=ALU.COD_OFERTA AND
+                    ALU.COD_PLAN=P.COD_PLAN AND
+                    P.COD_AREA=A.COD_AREA";
+        return $this->executeQueryArray($query, [':P_USER' => $usuario]);
     }
 }

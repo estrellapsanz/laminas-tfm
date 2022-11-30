@@ -169,6 +169,17 @@ return [
                 ],
             ],
 
+            'docente-guardar-tramitar-estudiante-deposito' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/guardar-tramitar-deposito',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'guardar-tramitar-estudiante-deposito',
+                    ],
+                ],
+            ],
+
 
             'docente-solicitudes-deposito' => [
                 'type' => Literal::class,
@@ -188,6 +199,17 @@ return [
                     'defaults' => [
                         'controller' => Controller\DocenteController::class,
                         'action' => 'trabajos-calificados',
+                    ],
+                ],
+            ],
+
+            'descargar-fichero' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/descargar-fichero',
+                    'defaults' => [
+                        'controller' => Controller\MasterController::class,
+                        'action' => 'descargar-fichero',
                     ],
                 ],
             ],

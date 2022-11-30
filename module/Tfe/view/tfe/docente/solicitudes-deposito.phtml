@@ -2,6 +2,9 @@
 /**
  * @var Laminas\View\Renderer\PhpRenderer $this
  */
+
+use Tfe\Util\Constantes;
+
 ?>
 
 
@@ -25,11 +28,13 @@
     </div>
 
     <br>
-    <h1>Solicitudes depósito Trabajo Final</h1>
+    <!--<h1>Solicitudes depósito Trabajo Final</h1>-->
     <div class="alert alert-default border-dark">
-        A continuación se muestran las solicitudes de depósitod realizadas por los estudiantes que tutoriza. Puede
-        autorizar, denegar o solicitar cambios sobre los trabajos. En este último caso, el estudiante verá las
-        observaciones que haga al respecto.
+        <?= $this->partial('partials/leyenda'); ?>
+        <p>
+            A continuación se muestran las solicitudes de depósitod realizadas por los estudiantes que tutoriza. Puede
+            autorizar, denegar o solicitar cambios sobre los trabajos. En este último caso, el estudiante verá las
+            observaciones que haga al respecto.</p>
     </div>
     <div class="mb-3">
 
@@ -60,71 +65,75 @@
                     <th> <?= '<a href="mailto:' . $trabajo['USUARIO_ESTUDIANTE'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $trabajo['NOMBRE'] . ' ' . $trabajo['APELLIDO1'] . ' ' . $trabajo['APELLIDO2'] ?></th>
                     <th>
                         <?php
-                        if ($trabajo['ESTADO_DEPOSITO'] == 'Denegado')
+                        if ($trabajo['ESTADO_DEPOSITO'] == Constantes::ESTADO_DEPOSITO_DENEGADO)
                             echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Depósito denegado.">Denegado</span>';
-                        else if ($trabajo['ESTADO_DEPOSITO'] == 'Autorizado')
+                        else if ($trabajo['ESTADO_DEPOSITO'] == Constantes::ESTADO_DEPOSITO_AUTORIZADO)
                             echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Trabajo autorizado.">Autorizado</span>';
-                        else if ($trabajo['ESTADO_DEPOSITO'] == 'Pendiente')
+                        else if ($trabajo['ESTADO_DEPOSITO'] == Constantes::ESTADO_DEPOSITO_PENDIENTE)
                             echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Pendiente de tramitación">Pendiente</span>';
-                        else if ($trabajo['ESTADO_DEPOSITO'] == 'Cambios solicitados')
-                            echo '<span class="badge bg-warning bg-black" data-bs-toggle="tooltip" data-bs-placement="top" title="Cambios solicitados">Cambios solicitados</span>'; ?>
+                        else if ($trabajo['ESTADO_DEPOSITO'] == Constantes::ESTADO_DEPOSITO_CAMBIOS_SOLICITADOS)
+                            echo '<span class="badge bg-warning text-black" data-bs-toggle="tooltip" data-bs-placement="top" title="Observaciones: ' . $trabajo['OBSERVACIONES'] . '">Cambios solicitados</span>'; ?>
 
                     </th>
                     <th><?= $trabajo['NOTA_FINAL'] ?></th>
                     <th>
-                        <button class="btn btn-sm btn-outline-dark">
-                            <input type="hidden" name="fichero" value="<?= $trabajo['RUTA_FICHERO'] ?>">
-                            <i class="bi bi-file-earmark-pdf">Trabajo</i>
-                        </button>
+                        <form name="downloadForm" action="<?= $this->url('descargar-fichero') ?>" method="post">
+                            <button type="submit" class="btn btn-sm btn-outline-dark">
+                                <input type="hidden" name="cod_solicitud" value="<?= $trabajo['COD_SOLICITUD'] ?>">
+                                <i class="bi bi-file-earmark-pdf">Trabajo</i>
+                            </button>
+                        </form>
                     </th>
-                    <th>
+                    <th class="text-center">
                         <div class="d-grid gap-2">
-                            <button type="button" class="btn btn-sm btn-success btn-tramitar-estudiante-deposito"
-                                    data-bs-toggle='modal'
-                                    data-bs-target="#confirmarModal"
-                                    data-accion="autorizar"
-                                    data-cod_oferta="<?= $trabajo['COD_OFERTA'] ?>"
-                            >
-                                Autorizar
-                            </button>
+                            <?php if (empty($trabajo['NOTA_FINAL']) && in_array($trabajo['ESTADO_DEPOSITO'], [Constantes::ESTADO_DEPOSITO_PENDIENTE, Constantes::ESTADO_DEPOSITO_DENEGADO])) { ?>
+                                <button type="button" class="btn btn-sm btn-success btn-tramitar-estudiante-deposito"
+                                        data-bs-toggle='modal'
+                                        data-bs-target="#confirmarModal"
+                                        data-accion="autorizar"
+                                        data-cod_solicitud="<?= $trabajo['COD_SOLICITUD'] ?>"
+                                        data-cod_oferta="<?= $trabajo['COD_OFERTA'] ?>"
+                                >
+                                    Autorizar
+                                </button>
 
-                            <button type="button" class="btn btn-sm btn-danger btn-accion"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#confirmarModal"
-                                    data-accion="denegar"
-                                    data-cod_oferta="<?= $trabajo['COD_OFERTA']; ?>"
-                            >Denegar
-                            </button>
 
-                            <button type="button" class="btn btn-sm btn-warning btn-accion "
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#confirmarModal"
-                                    data-accion="cambios"
-                                    data-cod_oferta="<?= $trabajo['COD_OFERTA']; ?>"
-                            >Solicitar cambios
-                            </button>
+                                <button type="button" class="btn btn-sm btn-danger btn-tramitar-estudiante-deposito"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmarModal"
+                                        data-accion="denegar"
+                                        data-cod_oferta="<?= $trabajo['COD_OFERTA']; ?>"
+                                        data-cod_solicitud="<?= $trabajo['COD_SOLICITUD'] ?>"
+                                >Denegar
+                                </button>
 
+                                <button type="button" class="btn btn-sm btn-warning btn-tramitar-estudiante-deposito"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmarModal"
+                                        data-accion="cambios"
+                                        data-cod_oferta="<?= $trabajo['COD_OFERTA']; ?>"
+                                        data-cod_solicitud="<?= $trabajo['COD_SOLICITUD'] ?>"
+                                >Solicitar cambios
+                                </button>
+                            <?php } ?>
                         </div>
                     </th>
                 </tr>
             <?php } ?>
             </tbody>
         </table>
-
     </div>
 
-
-    <button type="button" data-bs-toggle="modal" data-bs-target="#confirmarModal" hidden>
-        Launch modal
-    </button>
 </div>
 
 
 <?= $this->partial('partials/modal-confirmar.phtml'); ?>
 
 
-<form method="post" name="solicitudForm" action="">
+<form method="post" name="solicitudForm" action="<?= $this->url('docente-guardar-tramitar-estudiante-deposito') ?>">
     <input type="hidden" name="accion" value="">
     <input type="hidden" name="cod_oferta" value="">
+    <input type="hidden" name="cod_solicitud" value="">
     <input type="hidden" name="nota_final" value="">
+    <input type="hidden" name="observaciones" value="">
 </form>

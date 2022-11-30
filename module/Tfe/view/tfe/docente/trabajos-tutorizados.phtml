@@ -27,12 +27,15 @@ use Tfe\Util\Constantes;
         </div>
     </div>
 
+
     <br>
     <!--<h2>Trabajos tutorizados</h2>-->
     <div class="alert alert-default border-dark">
-        A continuación se muestran los trabajos tutorizados y las solicitudes de los trabajos dadas de alta. Puede
-        aceptar o denegar
-        al estudiante a través de los botones de acción.
+        <?= $this->partial('partials/leyenda'); ?>
+        <p>
+            A continuación se muestran los trabajos tutorizados y las solicitudes de los trabajos dadas de alta. Puede
+            aceptar o denegar
+            al estudiante a través de los botones de acción.</p>
     </div>
     <div class="mb-3">
         <?php if (!empty($trabajos)) { ?>

@@ -18,13 +18,61 @@ class Deposito extends MasterEntity
      * @param $estado
      * @return int
      */
-    public function actualizaEstado($cod_solicitud, $estado)
+    public function actualizaEstado($curso, $cod_solicitud, $cod_oferta, $estado)
     {
         $set = ['ESTADO' => $estado];
-        $where = ['COD_OFERTA' => $cod_solicitud];
-        return $this->update($set, $where);
+        $where = ['COD_OFERTA' => $cod_oferta, 'COD_SOLICITUD' => $cod_solicitud, 'CURSO_ACADEMICO' => $curso];
+
+        try {
+            $rs = $this->update($set, $where);
+            return $rs;
+        } catch (\Exception $e) {
+            return -1;
+        }
     }
 
+    /**
+     * @param $curso
+     * @param $cod_solicitud
+     * @param $cod_oferta
+     * @param $estado
+     * @return int
+     */
+
+    public function actualizaObservaciones($curso, $cod_solicitud, $cod_oferta, $obs)
+    {
+        $set = ['OBSERVACIONES' => $obs];
+        $where = ['COD_OFERTA' => $cod_oferta, 'COD_SOLICITUD' => $cod_solicitud, 'CURSO_ACADEMICO' => $curso];
+
+        try {
+            $rs = $this->update($set, $where);
+            return $rs;
+        } catch (\Exception $e) {
+            return -1;
+        }
+    }
+
+
+    /**
+     * @param $curso
+     * @param $cod_solicitud
+     * @param $cod_oferta
+     * @param $estado
+     * @return int
+     */
+    public function actualizaNota($curso, $cod_solicitud, $cod_oferta, $nota)
+    {
+
+        $set = ['NOTA_FINAL' => $nota];
+        $where = ['COD_OFERTA' => $cod_oferta, 'COD_SOLICITUD' => $cod_solicitud, 'CURSO_ACADEMICO' => $curso];
+
+        try {
+            $rs = $this->update($set, $where);
+            return $rs;
+        } catch (\Exception $e) {
+            return -1;
+        }
+    }
 
     /**
      * @param $curso
@@ -53,8 +101,8 @@ class Deposito extends MasterEntity
                 return -1;
 
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            die;
+            //var_dump($e->getMessage());
+            //die;
             return -1;
         }
     }
@@ -69,8 +117,18 @@ class Deposito extends MasterEntity
     public function dameMisDepositos($curso, $usuario)
     {
         $query = "SELECT * FROM TFM_SOLICITUD_DEFENSA WHERE CURSO_ACADEMICO=:P_CURSO AND USUARIO_ESTUDIANTE=:P_USUARIO";
-
         return $this->executeQueryArray($query, [':P_CURSO' => $curso, ':P_USUARIO' => $usuario]);
+    }
+
+
+    /**
+     * @param $cod_sol
+     * @return array
+     */
+    public function dameSolicitudDeposito($cod_sol)
+    {
+        $query = "SELECT * FROM TFM_SOLICITUD_DEFENSA WHERE COD_SOLICITUD=:P_COD";
+        return $this->executeQueryRow($query, [':P_COD' => $cod_sol]);
     }
 
 }
