@@ -58,9 +58,9 @@
             <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
             <select for="estudios" class="form-control" aria-label="Default select example" name="estudios">
                 <option selected>Seleccione</option>
-                <?php foreach ($this->estudiante as $estudio) { ?>
-                    <option value="<?= $estudio['COD_PLAN'] ?>#<?= $estudio['COD_AREA'] ?>>"><?= $estudio['NOMBRE_PLAN'] ?></option>
-                <?php } ?>
+                <?php //foreach ($this->estudiante as $estudio) { ?>
+                    <option value="<? //= $estudio['COD_PLAN'] ?>#<? //= $estudio['COD_AREA'] ?>>"><? //= $estudio['NOMBRE_PLAN'] ?></option>
+                <?php //} ?>
             </select>
         </div>-->
 
@@ -68,9 +68,8 @@
         <div class="mb-3">
             <label class="form-label">Trabajo para depositar</label>
             <select for="trabajo" class="form-control" aria-label="Default select example" name="cod_oferta">
-                <option selected>Seleccione</option>
-                <?php foreach ($this->misOfertas as $oferta) {
-                    var_dump($oferta); ?>
+                <option selected>Seleccione el trabajo a depositar</option>
+                <?php foreach ($this->misOfertas as $oferta) { ?>
                     <option value="<?= $oferta['COD_OFERTA']; ?>"><?= $oferta['NOMBRE_PLAN'] . ' - ' . $oferta['TITULO'] ?></option>
                 <?php } ?>
             </select>
@@ -78,7 +77,8 @@
 
         <div class="mb-3">
             <label for="descripción" class="form-label">Descripción del Trabajo</label>
-            <textarea name="descripcion" class="form-control" id="descripcion" rows="3" disabled
+            <textarea name="descripcion" placeholder="Descripción" class="form-control" id="descripcion"
+                      rows="3" disabled
                       readonly> </textarea>
         </div>
 
@@ -92,7 +92,7 @@
         <label for="idioma" class="form-label">Idioma del trabajo </label>
         <div class="mb-3">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="idioma" id="flexRadioDefault1" value="cas">
+                <input class="form-check-input" type="radio" name="idioma" id="flexRadioDefault1" value="cas" checked>
                 <label class="form-check-label" for="flexRadioDefault1">
                     Catalán
                 </label>

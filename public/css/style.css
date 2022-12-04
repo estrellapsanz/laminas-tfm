@@ -58,3 +58,13 @@ nav ol.breadcrumb {
 textarea {
     width: 100%;
 }
+
+/*JS VALIDATE ERRORS*/
+.help-block-error {
+    color: red;
+}
+
+.error-border {
+    border-color: red;
+}
+

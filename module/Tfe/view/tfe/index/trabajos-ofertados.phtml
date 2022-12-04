@@ -25,7 +25,7 @@
     </div>
 
     <br>
-    <h1>Trabajos ofertados curso <?= $curso ?></h1>
+    <!-- <h1>Trabajos ofertados curso <? //= $curso ?></h1>-->
     <div class="alert alert-info">
         A continuación se muestran los trabajos ofertados por los docentes que imparten clases en los planes de
         estudios
@@ -35,6 +35,9 @@
         contrario,
         tendrá que contactar con él mediante correo electrónico.
     </div>
+
+    <?= $this->partial('partials/leyenda_oferta'); ?>
+
     <div class="mb-3">
         <?php foreach ($this->ofertas as $area => $ofertas_area) { ?>
             <br>
@@ -57,9 +60,9 @@
                 <tbody>
                 <?php foreach ($ofertas_area as $oferta) { ?>
                     <tr>
-                        <th scope="row" class="col-md-3"> <?= $oferta['TITULO'] ?></th>
-                        <th> <?= $oferta['DESCRIPCION'] ?></th>
-                        <th> <?= '<a href="mailto:' . $oferta['USUARIO'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $oferta['NOMBRE'] . ' ' . $oferta['APELLIDO1'] . ' ' . $oferta['APELLIDO2'] ?></th>
+                        <th scope="row" class="col-md-3"> <?= strtoupper($oferta['TITULO']) ?></th>
+                        <th> <?= strtoupper($oferta['DESCRIPCION']) ?></th>
+                        <th> <?= '<a href="mailto:' . $oferta['USUARIO'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . strtoupper($oferta['NOMBRE']) . ' ' . strtoupper($oferta['APELLIDO1']) . ' ' . strtoupper($oferta['APELLIDO2']) ?></th>
                         <th> <?= $oferta['NOMBRE_AREA'] ?></th>
                         <th>
                             <?php
