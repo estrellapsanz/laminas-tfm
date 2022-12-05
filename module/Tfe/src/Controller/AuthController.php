@@ -51,7 +51,7 @@ class AuthController extends MasterController
                     $usuario = explode('@', $email);
 
                     if ($this->sesion->offsetGet(Constantes::SESION_DOCENTE))
-                        $nombre = $this->daoService->getDocenteDAO()->dameNombre(strtolower(trim($usuario[0])));
+                        $nombre = $this->daoService->getDocenteDAO()->getNombre(strtolower(trim($usuario[0])));
                     else
                         $nombre = $this->daoService->getEstudianteDAO()->getNombre(strtolower(trim($usuario[0])));
 

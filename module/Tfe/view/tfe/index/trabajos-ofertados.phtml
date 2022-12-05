@@ -66,13 +66,17 @@
                         <th> <?= $oferta['NOMBRE_AREA'] ?></th>
                         <th>
                             <?php
-                            // if ($oferta['ESTADO_ESTUDIANTE'] == 'Anulado')
-                            //     echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta anulada.">Anulada</span>';
-                            // else
-                            if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
-                                echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta validada.">Validada</span>';
-                            else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
-                                echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta pendiente de aceptación.">Pendiente</span>'; ?>
+                            if ($oferta['ESTADO_ESTUDIANTE'] == 'Denegado')
+                                echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta denegada (OBSERVACINOES DOCENTE: ' . $oferta['OBSERVACIONES_TRAMITACION']
+                                    . '">Denegada</span>';
+                            else
+                                if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
+                                    echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Oferta validada.">Validada</span>';
+                                else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
+                                    echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Oferta pendiente de aceptación.">Pendiente</span>';
+                            ?>
                         </th>
                         <th>
                             <div class="d-grid gap-2">

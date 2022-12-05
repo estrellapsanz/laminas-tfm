@@ -27,9 +27,9 @@ use Tfe\Util\Constantes;
         </div>
     </div>
     <br>
-    <?php if (empty($propuestas)) { ?>
+    <?php if (empty($propuestas) || $flg_permiso_proponer) { ?>
 
-        <form name="proponerForm" action="propuesta-oferta" method="post">
+        <form name="proponerOfertaForm" action="propuesta-oferta" method="post">
             <br>
             <h2>Proponer Trabajo</h2>
             <div class="alert alert-info" role="alert">
@@ -41,11 +41,21 @@ use Tfe\Util\Constantes;
                     otra
                     oferta asociada al mismo plan de estudios.</p>
             </div>
+
+            <!--feedback form-validation-->
+            <div class='alert alert-danger alert-dismissable fade show error-form' role='alert' hidden>
+                <b>Revise el formulario, existen campos obligatorios que no ha completado.</b>
+            </div>
+            <div class='alert alert-success alert-dismissable fade show success-form' role='alert' hidden>
+                <b>Formulario completado correctamente.</b>
+            </div>
+            <!--- -->
+
             <div class="mb-3">
                 <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
                 <select for="estudios" class="form-control" aria-label="Default select example" name="estudios"
                         required>
-                    <option selected>Seleccione el área de conocimiento</option>
+                    <option value="" selected>Seleccione el área de conocimiento</option>
                     <?php foreach ($this->estudiante as $estudio) { ?>
                         <option value="<?= $estudio['COD_PLAN'] ?>#<?= $estudio['COD_AREA'] ?>>"><?= $estudio['NOMBRE_PLAN'] ?></option>
                     <?php } ?>
@@ -69,14 +79,23 @@ use Tfe\Util\Constantes;
                               rows="3"
                               required></textarea>
                 </div>
-                <!--<div class="mb-3 form-check">
+                <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input check-normativa" name="normativa" id="normativa">
-                    <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
-                </div>-->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    <label class="form-check-label" for="normativa">He leído y acepto la normativa de TFE.</label>
+                </div>
+                <!--trigger para submit modal --->
+                <button type="button" class="btn btn-primary boton_modal" data-bs-toggle="modal" hidden
                         data-bs-target="#proponerModal">Enviar propuesta
                 </button>
+                <!-- trigger para form-validation -->
+                <button type="submit" class="btn btn-primary">Enviar propuesta
+                </button>
         </form>
+    <?php } else { ?>
+        <div class="alert alert-warning">
+            <p>Se ha detectado que ya ha propuesto una oferta que aún está pendiente de tramitar por parte de algún
+                docente. Sólo en caso de que esta sea denegada, podrá realizar otra solicitud de propuesta.</p>
+        </div>
     <?php } ?>
 
     <hr>
@@ -123,11 +142,14 @@ use Tfe\Util\Constantes;
                         else if ($trabajo['ESTADO_OFERTA'] == 'Validada')
                             echo '<span class="badge bg-success text-white">' . Constantes::ESTADO_OFERTA_VALIDADA . '</span>';
                         else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_PENDIENTE)
-                            echo '<span class="badge bg-primary text-white">' . Constantes::ESTADO_OFERTA_PENDIENTE . '</span>'; ?>
+                            echo '<span class="badge bg-primary text-white">' . Constantes::ESTADO_OFERTA_PENDIENTE . '</span>';
+                        else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_DENEGADA)
+                            echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta denegada (OBSERVACINOES DOCENTE: ' . $trabajo['OBSERVACIONES_TRAMITACION']
+                                . '">Denegada</span>'; ?>
                     </th>
                     <th class="col-md-1">
                         <div class="d-grid gap-1">
-                            <?php if (($trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_ANULADA)) { ?>
+                            <?php if (($trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_ANULADA && $trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_DENEGADA)) { ?>
                                 <button type="button" class="btn btn-sm btn-accion btn-danger"
                                         data-bs-toggle='modal'
                                         data-bs-target="#confirmarModal"

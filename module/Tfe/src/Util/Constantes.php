@@ -25,10 +25,12 @@ class Constantes
     const PARAMETRO_CURSO_ACADEMICO = 'CURSO_ACADEMICO';
 
     /*OFERTAS*/
+    const OFERTA_ELIMINAR = "Eliminar";
     const ESTADO_OFERTA_ANULADA = "Anulada";
     const ESTADO_OFERTA_VALIDADA = "Validada";
     const ESTADO_OFERTA_VIGENTE = 'Vigente';
     const ESTADO_OFERTA_PENDIENTE = 'Pendiente';
+    const ESTADO_OFERTA_DENEGADA = 'Denegada';
 
     /*ESTUDIANTE*/
     const ESTADO_ESTUDIANTE_ANULADO = "Anulado";

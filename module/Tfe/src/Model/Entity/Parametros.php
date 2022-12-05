@@ -17,7 +17,7 @@ class Parametros extends MasterEntity
      * @param $nombre_parametro
      * @return mixed
      */
-    public function dameParametroNombre($nombre_parametro)
+    public function getParametroNombre($nombre_parametro)
     {
 
         $query = "SELECT VALOR FROM TFM_PARAMETROS WHERE NOMBRE=:P_NOMBRE";

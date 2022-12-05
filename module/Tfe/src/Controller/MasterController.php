@@ -50,7 +50,7 @@ class MasterController extends AbstractActionController
 
             if (isset($post['cod_solicitud']) && !empty($post['cod_solicitud'])) {
 
-                $sol = $this->daoService->getDepositoDAO()->dameSolicitudDeposito($post['cod_solicitud']);
+                $sol = $this->daoService->getDepositoDAO()->getSolicitudDeposito($post['cod_solicitud']);
                 //PARA PRODUCCIÓN
                 $fichero = $sol['RUTA_FICHERO'];
                 // $ruta_ficheros = $this->daoService->getParametrosDAO()->dameParametroNombre(Parametro::RUTA_FICHEROS);
@@ -86,5 +86,18 @@ class MasterController extends AbstractActionController
         if (!$this->sesion->offsetExists(Constantes::SESION_NOMBRE_USUARIO))
             $this->redirect()->toRoute('desconectar');
 
+    }
+
+
+    /**
+     * @param bool $exito
+     * @return void
+     */
+    protected function informarEstadoOperacionSesion(bool $exito): void
+    {
+        if ($exito)
+            $this->sesion->setEstadoOperacion(Constantes::ESTADO_OPERACION_OK);
+        else
+            $this->sesion->setEstadoOperacion(Constantes::ESTADO_OPERACION_ERROR);
     }
 }

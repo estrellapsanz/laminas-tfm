@@ -17,7 +17,7 @@ class Estudiante extends MasterEntity
      * @param $usuario
      * @return array
      */
-    public function damePerfilEstudiante($usuario)
+    public function getPerfilEstudiante($usuario)
     {
         $query = "SELECT EXP.COD_PLAN, EXP.NUMORD, P.NOMBRE_PLAN,E.DOCUMENTO, 
                   E.NOMBRE, E.APELLIDO1, E.APELLIDO2, E.USUARIO, E.TELEFONO1,
@@ -40,7 +40,7 @@ class Estudiante extends MasterEntity
      * @param $expediente
      * @return array
      */
-    public function dameAsignaturasEstudiante($plan, $expediente)
+    public function getAsignaturasEstudiante($plan, $expediente)
     {
 
         $query = "SELECT 

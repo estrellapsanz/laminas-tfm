@@ -59,14 +59,21 @@ $(document).ready(function () {
 
         var nota = $('input[name="nota_modal"]');
         var obs_modal = $('textarea[name="observaciones_modal"]');
+        var obs_modal_denegar_oferta = $('textarea[name="observaciones_denegacion_oferta_modal"]');
 
+        //feedback tramitar deposito
         if (obs_modal !== undefined && obs_modal !== '' && !obs_modal.prop('disabled')) {
             document.solicitudForm.observaciones.value = obs_modal.val();
         }
 
+        //feedback denegar oferta
+        if (obs_modal_denegar_oferta !== undefined && obs_modal_denegar_oferta !== '' && !obs_modal_denegar_oferta.prop('disabled')) {
+            document.solicitudForm.observaciones_denegacion_oferta.value = obs_modal_denegar_oferta.val();
+        }
+
         //tramitar deposito: autorizar
         if (nota !== undefined && !nota.prop('disabled')) {
-            if (nota.val() !== null && nota.val() !== '' && nota.val() >= 0 && nota.val() <= 10) {
+            if (nota.val() !== null && nota.val() !== "" && nota.val() >= 0 && nota.val() <= 10) {
                 document.solicitudForm.nota_final.value = nota.val();
             } else {
                 $('#label_nota').addClass('text-danger');
@@ -85,19 +92,49 @@ $(document).ready(function () {
     })
 
 
-    //oferta
+    //eliminar oferta
+    $('.eliminar-oferta').click(function () {
+        var accion = $(this).data('accion');
+        var cod = $(this).data('cod');
+        document.eliminarForm.accion.value = accion;
+        document.eliminarForm.cod_oferta.value = cod;
+    })
+
+    $('.btn-submit-modal-eliminar').click(function () {
+        document.eliminarForm.submit();
+    })
+    //fin eliminar
+
+
+    $('.btn-submit-modal-deposito').click(function () {
+        document.solicitudDepositoForm.submit();
+    })
+    //fin eliminar
+
+
+    //tramitar oferta
     $('.btn-tramitar-estudiante-oferta').click(function () {
         var accion = $(this).data('accion');
         var cod = $(this).data('cod');
+        var estudiante = $(this).data('estudiante');
+
+        if (accion == 'Denegado') {
+            var modal = $('#confirmarModal');
+            if (modal !== undefined) {
+                var textarea_obs = $('textarea[name="observaciones_denegacion_oferta_modal"]', modal);
+                var div_obs = $('p#denegar_oferta_estudiante', modal);
+                textarea_obs.attr('disabled', false);
+                div_obs.attr('hidden', false);
+            }
+        }
         document.solicitudForm.estado.value = accion;
+        document.solicitudForm.estudiante.value = estudiante;
         document.solicitudForm.cod_oferta.value = cod;
     })
 
-
     $('.btn-submit-modal-proponer').click(function () {
-        document.proponerForm.submit();
+        document.proponerOfertaForm.submit();
     })
-
 
     //deposito: botones de accion
     $('.btn-tramitar-estudiante-deposito').click(function () {
@@ -144,6 +181,8 @@ $(document).ready(function () {
         $('#autorizar').attr('hidden', true);
         $('#denegar').attr('hidden', true);
         $('#cambios').attr('hidden', true);
+        $('#denegar_oferta_estudiante').attr('hidden', true);
+        $('textarea#observaciones_denegacion_oferta_modal').attr('disabled', true);
 
     })
 

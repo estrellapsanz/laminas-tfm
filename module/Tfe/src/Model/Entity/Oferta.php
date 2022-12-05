@@ -18,7 +18,7 @@ class Oferta extends MasterEntity
      * @param $estado
      * @return bool|int
      */
-    public function actualizaEstado($cod_oferta, $estado)
+    public function updateEstado($cod_oferta, $estado)
     {
         $set = ['ESTADO' => $estado];
         $where = ['COD_OFERTA' => $cod_oferta];
@@ -34,9 +34,9 @@ class Oferta extends MasterEntity
      * @return array
      * @example Devuelve las ofertas asociadas a un área concreta, junto con la inforamción del docente.
      */
-    public function dameOfertasArea($cod_area)
+    public function getOfertasArea($cod_area)
     {
-        $query = "SELECT O1.*, ALU.USUARIO_ESTUDIANTE, ALU.ESTADO AS ESTADO_ESTUDIANTE
+        $query = "SELECT O1.*, ALU.USUARIO_ESTUDIANTE, ALU.ESTADO AS ESTADO_ESTUDIANTE, ALU.OBSERVACIONES_TRAMITACION
          FROM (
          SELECT  O.DESCRIPCION, O.ESTADO, UPPER(O.TITULO) as TITULO, A.NOMBRE_AREA,
                  A.COD_AREA, D.APELLIDO1,D.APELLIDO2, D.NOMBRE,
@@ -64,17 +64,18 @@ class Oferta extends MasterEntity
     }
 
     /**
+     * Devuelve las ofertas propuestas por un estudiante
      * @param $usuario
      * @return \Laminas\Db\ResultSet\ResultSetInterface|null
      */
-    public function dameMisOfertasPropuestas($usuario)
+    public function getMisOfertasPropuestas($usuario)
     {
 
         $query = "SELECT OO.*, 
                     CONCAT(D.NOMBRE,' ',D.APELLIDO1,' ',D.APELLIDO2) AS NOMBRE_DOCENTE,
                     D.USUARIO AS USUARIO_DOCENTE
                     FROM (
-                      SELECT O.*,O.ESTADO AS ESTADO_OFERTA, ALU.COD_PLAN, P.NOMBRE_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE
+                      SELECT O.*,O.ESTADO AS ESTADO_OFERTA, ALU.COD_PLAN, P.NOMBRE_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE , ALU.OBSERVACIONES_TRAMITACION
                       FROM 
                           TFM_OFERTAS O, TFM_ESTUDIANTE_OFERTA ALU, TFM_PLANES P
                       WHERE     
@@ -107,29 +108,28 @@ class Oferta extends MasterEntity
      * @param $usuario
      * @return int|void
      */
-    public function insertaOferta($curso, $titulo, $subtitulo, $descripcion, $usuario_creacion)
+    public function insertOferta($curso, $titulo, $subtitulo, $descripcion, $usuario_creacion, $usuario_estudiante = false)
     {
 
-        //todo ver que pasa con el estado
         $data = [
             'CURSO_ACADEMICO' => $curso,
             'TITULO' => $titulo,
             'SUBTITULO' => $subtitulo,
             'DESCRIPCION' => $descripcion,
-            'ESTADO' => empty($subtitulo) ? 'Pendiente' : 'Vigente', //el docente manda subtitulo, por lo que el estado irá como Vigente
+            'ESTADO' => $usuario_estudiante ? 'Pendiente' : 'Validada',
             'USUARIO_CREACION' => $usuario_creacion,
-            'USUARIO_DOCENTE' => empty($subtitulo) ? null : $usuario_creacion
+            'USUARIO_DOCENTE' => $usuario_estudiante ? null : $usuario_creacion
         ];
+
         try {
-
             $exito = $this->insert($data);
-
+     
             if ($exito) {
                 return $this->select(
                     ['CURSO_ACADEMICO' => $curso,
                         'TITULO' => $titulo,
                         'USUARIO_CREACION' => $usuario_creacion,
-                        'ESTADO' => empty($subtitulo) ? 'Pendiente' : 'Vigente'
+                        'ESTADO' => $usuario_estudiante ? 'Pendiente' : 'Validada',
                     ])->toArray()[0]['COD_OFERTA'];
             } else
                 return -1;
@@ -139,16 +139,17 @@ class Oferta extends MasterEntity
         }
     }
 
-    public function dameOferta($cod_oferta)
+    public function getOferta($cod_oferta)
     {
         $query = "SELECT * FROM TFM_OFERTAS WHERE COD_OFERTA=:P_COD";
         return $this->executeQueryRow($query, [':P_COD' => $cod_oferta]);
     }
 
-    public function actualizaOferta($cod_oferta, $titulo, $subtitulo, $descripcion, $area)
+    public function updateOferta($cod_oferta, $titulo, $subtitulo, $descripcion, $area)
     {
 
-        $set = ['TITULO' => $titulo,
+        $set = [
+            'TITULO' => $titulo,
             'SUBTITULO' => $subtitulo,
             'DESCRIPCION' => $descripcion
         ];
@@ -156,6 +157,26 @@ class Oferta extends MasterEntity
         $where = ['COD_OFERTA' => $cod_oferta];
         return $this->update($set, $where) >= 0;
 
+    }
+
+    public function updateDocenteOferta($cod_oferta, $docente)
+    {
+
+        $set = ['USUARIO_DOCENTE' => $docente];
+
+        $where = ['COD_OFERTA' => $cod_oferta];
+        return $this->update($set, $where) >= 0;
+
+    }
+
+    public function deleteOferta($cod_oferta)
+    {
+        try {
+            $rs = $this->delete(['COD_OFERTA' => $cod_oferta]);
+            return $rs > 0;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
 

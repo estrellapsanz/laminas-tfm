@@ -14,8 +14,6 @@
     </ol>
 </nav>
 
-<?= $this->partial('partials/errores') ?>
-
 
 <div class="container-lg">
     <div class="bck-primary-ligth">
@@ -27,7 +25,7 @@
     <br>
     <form name="proponerOfertaForm" action="<?= $this->url('docente-alta-oferta') ?>" method="post">
         <br>
-        <!--<h2>Proponer Trabajo</h2>-->
+
         <?php if (!empty($oferta['COD_OFERTA'])) { ?>
             <div class="alert alert-warning" role="alert">
                 <p>Se dispone a editar una oferta de Trabajo Final.</p>
@@ -44,7 +42,7 @@
             <b>Revise el formulario, existen campos obligatorios que no ha completado.</b>
         </div>
         <div class='alert alert-success alert-dismissable fade show success-form' role='alert' hidden>
-            <b>Los datos se han grabado de forma correcta.</b>
+            <b>Formulario completado correctamente.</b>
         </div>
         <!--- -->
 
@@ -90,11 +88,14 @@
                           required><?php if (!empty($oferta)) echo $oferta['DESCRIPCION']; ?></textarea>
             </div>
 
-            <!--  <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                      data-bs-target="#docenteAltaModal">Enviar propuesta
-              </button>-->
-            <button type="submit" class="btn btn-primary">Enviar propuesta
+            <!-- boton function success form validation-->
+            <button type="button" class="btn btn-primary boton_modal" data-bs-toggle="modal"
+                    data-bs-target="#docenteAltaModal" hidden>Enviar propuesta modal
             </button>
+
+            <!-- boton trigger form-validation -->
+            <button type="submit" class="btn btn-primary">Guardar oferta</button>
+
             <input type="hidden" name="flg_editar" value="<?php if (!empty($oferta['COD_OFERTA'])) echo 1; ?>">
             <input type="hidden" name="cod_oferta"
                    value="<?php if (!empty($oferta['COD_OFERTA'])) echo $oferta['COD_OFERTA']; else null; ?>">

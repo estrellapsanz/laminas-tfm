@@ -180,6 +180,16 @@ return [
                 ],
             ],
 
+            'docente-eliminar-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/eliminar-oferta',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'eliminar-oferta',
+                    ],
+                ],
+            ],
 
             'docente-solicitudes-deposito' => [
                 'type' => Literal::class,

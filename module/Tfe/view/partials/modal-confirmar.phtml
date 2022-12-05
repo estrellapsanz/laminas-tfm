@@ -22,10 +22,14 @@
                         considera oportuno. Esta será visible para el estudiante.<br><br>
                         <textarea name="observaciones_modal" rows="2" disabled></textarea>
                     </p>
+                    <p id="denegar_oferta_estudiante" hidden>
+                        Indique observaciones.<br><br>
+                        <textarea name="observaciones_denegacion_oferta_modal" rows="2" disabled></textarea>
+                    </p>
                     <p id="autorizar" hidden>Una vez autorizado el depósito del trabajo final, no podrá solicitar
                         cambios.<br>
                         <label id="label_nota" for="nota">Nota final</label>
-                        <input type="number" min="5" max="10" step="0.1" name="nota_modal">
+                        <input type="number" min="5" max="10" step="0.1" name="nota_modal" disabled>
                     </p>
                     <span class="text-danger" hidden
                           id="error_modal">Debe indicar un valor numérico entre 5 y 10

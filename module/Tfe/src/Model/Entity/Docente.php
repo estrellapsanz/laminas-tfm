@@ -18,7 +18,7 @@ class Docente extends MasterEntity
      * @param $user
      * @return false|mixed
      */
-    public function dameNombre($user)
+    public function getNombre($user)
     {
 
         $query = "SELECT * FROM TFM_DOCENTE WHERE USUARIO=:P_USER";
@@ -33,26 +33,52 @@ class Docente extends MasterEntity
 
 
     /**
+     * Devuelve las ofertas de un docente, y las creadas por estudiantes y que aún no tienen tutor asociado
      * @param $user
      * @return array
      */
-    public function dameOfertasDocente($user)
+    public function getOfertasDocente($user)
     {
-        $query = "SELECT OFE.*, ALU.COD_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE, ALU.USUARIO_ESTUDIANTE, 
+        $query = "
+                     
+                    SELECT OFE.*, ALU.COD_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE, ALU.USUARIO_ESTUDIANTE, 
                      (SELECT A.NOMBRE_AREA FROM TFM_AREA A, TFM_PLANES P WHERE P.COD_PLAN=ALU.COD_PLAN AND P.COD_AREA=A.COD_AREA) AS NOMBRE_AREA,
                      (SELECT CONCAT(E.NOMBRE,' ',E.APELLIDO1,' ',E.APELLIDO2) FROM TFM_ESTUDIANTE E WHERE E.USUARIO=ALU.USUARIO_ESTUDIANTE) AS NOMBRE_ESTUDIANTE
                 
                      FROM 
                     (
-                        SELECT O.CURSO_ACADEMICO, O.TITULO, O.SUBTITULO, O.DESCRIPCION, O.COD_OFERTA, O.ESTADO
+                        SELECT O.CURSO_ACADEMICO, upper(O.TITULO) TITULO, upper(O.SUBTITULO) SUBTITULO, upper(O.DESCRIPCION) DESCRIPCION, O.COD_OFERTA, O.ESTADO,
+                               O.USUARIO_DOCENTE
                         FROM 
                           TFM_OFERTAS O
                         WHERE 
                               O.USUARIO_DOCENTE=:P_USER 
                     )  OFE LEFT JOIN   TFM_ESTUDIANTE_OFERTA ALU ON 
                     OFE.COD_OFERTA=ALU.COD_OFERTA
-                    ORDER BY OFE.CURSO_ACADEMICO DESC";
+                    
+                    UNION
+                     
+                     SELECT OFE.*, ALU.COD_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE, ALU.USUARIO_ESTUDIANTE, 
+                     (SELECT A.NOMBRE_AREA FROM TFM_AREA A, TFM_PLANES P WHERE P.COD_PLAN=ALU.COD_PLAN AND P.COD_AREA=A.COD_AREA) AS NOMBRE_AREA,
+                     (SELECT CONCAT(E.NOMBRE,' ',E.APELLIDO1,' ',E.APELLIDO2) FROM TFM_ESTUDIANTE E WHERE E.USUARIO=ALU.USUARIO_ESTUDIANTE) AS NOMBRE_ESTUDIANTE
+                
+                     FROM 
+                    (
+                        SELECT O.CURSO_ACADEMICO, upper(O.TITULO) TITULO, upper(O.SUBTITULO) SUBTITULO, upper(O.DESCRIPCION) DESCRIPCION, O.COD_OFERTA, O.ESTADO,  
+                               O.USUARIO_DOCENTE
+                               
+                        FROM 
+                          TFM_OFERTAS O
+                        WHERE 
+                              O.USUARIO_DOCENTE IS NULL AND
+                              O.ESTADO='Pendiente'
+                    )  OFE , TFM_ESTUDIANTE_OFERTA ALU
+                    WHERE
+                    OFE.COD_OFERTA=ALU.COD_OFERTA AND
+                    ALU.ESTADO='Pendiente'
+                    ";
         return $this->executeQueryArray($query, [':P_USER' => $user]);
+
     }
 
 

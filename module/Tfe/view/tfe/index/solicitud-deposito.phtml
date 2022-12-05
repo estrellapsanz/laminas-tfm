@@ -24,13 +24,24 @@
     </div>
     <br>
 
-    <form action="solicitud-deposito" method="post" enctype="multipart/form-data">
-
+    <form action="solicitud-deposito" name="solicitudDepositoForm" method="post" enctype="multipart/form-data">
+        <?php if (!empty($misOfertas)) { ?>
         <br>
         <h2>Solicitud de Depósito</h2>
         <div class="alert alert-info" role="alert">
             <p>Puede realizar la solicitud de depósito indicando la asignatura asociada y el plan de estudios.</p>
         </div>
+
+        <!--feedback form-validation-->
+        <div class='alert alert-danger alert-dismissable fade show error-form' role='alert' hidden>
+            <b>Revise el formulario, existen campos obligatorios que no ha completado.</b>
+        </div>
+        <div class='alert alert-success alert-dismissable fade show success-form' role='alert' hidden>
+            <b>Formulario completado correctamente.</b>
+        </div>
+        <!--- -->
+
+        <?= $this->partial('partials/errores') ?>
 
 
         <div class="mb-3">
@@ -68,7 +79,7 @@
         <div class="mb-3">
             <label class="form-label">Trabajo para depositar</label>
             <select for="trabajo" class="form-control" aria-label="Default select example" name="cod_oferta">
-                <option selected>Seleccione el trabajo a depositar</option>
+                <option value="" selected>Seleccione el trabajo a depositar</option>
                 <?php foreach ($this->misOfertas as $oferta) { ?>
                     <option value="<?= $oferta['COD_OFERTA']; ?>"><?= $oferta['NOMBRE_PLAN'] . ' - ' . $oferta['TITULO'] ?></option>
                 <?php } ?>
@@ -114,20 +125,24 @@
             <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
         </div>
 
+        <!--trigger para submit modal --->
+        <button type="button" class="btn btn-primary boton_modal" data-bs-toggle="modal" hidden
+                data-bs-target="#confirmarDepositoModal">Solicitar deposito modal
+        </button>
 
+        <!--trigger para el form-validation -->
         <button type="submit" class="btn btn-primary">Solicitar depósito</button>
     </form>
+    <?php } ?>
 
-
-    <?php if (!empty($propuestas)) { ?>
+    <?php if (!empty($misDepositos)) { ?>
         <hr>
-        <h2>Mis propuestas de Trabajos Fin de Estudios</h2>
+        <h2>Mis depósitos de Trabajos Fin de Estudios</h2>
         <br>
         <div class="alert alert-info" role="alert">
-            <p>Sólo podrá solicitar a través de la aplicación la anulación de la oferta en caso de que aún no esté
-                aceptada por
-                ningún docente. En caso contrario, tendrá que contactar con el docente por correo motivando la
-                solicitud.</p>
+            <p>Sólo en caso de que su tutor solicite cambios en el trabajo podrá ver las observaciones situando el ratón
+                en la etiqueta "Cambios solicitados". Este estado
+                le permitirá volver a subir su trabajo.</p>
         </div>
         <table class="table table-striped" id="table_extensible">
             <thead>
@@ -141,7 +156,7 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($propuestas as $trabajo) { ?>
+            <?php foreach ($misDepositos as $trabajo) { ?>
                 <tr>
                     <th scope="row"> <?= $trabajo['CURSO_ACADEMICO'] ?></th>
                     <th class="col-md-3"> <?= strtoupper($trabajo['TITULO']); ?></th>
@@ -153,22 +168,25 @@
                         <?php } ?>
                     </th>
                     <th>  <?php
-                        if ($trabajo['ESTADO_OFERTA'] == 'Anulada')
-                            echo '<span class="badge bg-danger text-white">Anulada</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == 'Validada')
-                            echo '<span class="badge bg-success text-white">Validada</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == 'Pendiente')
-                            echo '<span class="badge bg-primary text-white">Pendiente</span>'; ?>
+                        if ($trabajo['ESTADO_DEPOSITO'] == 'Denegado')
+                            echo '<span class="badge bg-danger text-white">Denegado</span>';
+                        else if ($trabajo['ESTADO_DEPOSITO'] == 'Autorizado')
+                            echo '<span class="badge bg-success text-white">Autorizado</span>';
+                        else if ($trabajo['ESTADO_DEPOSITO'] == 'Pendiente')
+                            echo '<span class="badge bg-primary text-white">Pendiente</span>';
+                        if ($trabajo['ESTADO_DEPOSITO'] == 'Cambios solicitados')
+                            echo '<span class="badge bg-warning text-black" data-bs-toggle="tooltip" data-bs-placement="top" title="Observaciones docente (' . $trabajo['OBSERVACIONES']
+                                . ')"' . '>Cambios solicitados</span>'; ?>
                     </th>
-                    <th class="col-md-1">
+                    <th class="col-md-2">
                         <div class="d-grid gap-1">
-                            <?php if (($trabajo['ESTADO_OFERTA'] <> 'Anulada')) { ?>
-                                <button type="button" class="btn btn-sm btn-accion btn-danger"
-                                        data-accion="anular"
+                            <?php if (($trabajo['ESTADO_DEPOSITO'] == 'Cambios solicitados')) { ?>
+                                <button type="button" class="btn btn-sm btn-accion btn-info"
+                                        data-accion="editar"
                                         data-flg="1"
                                         data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
                                         data-cod="<?= $trabajo['COD_OFERTA']; ?>">
-                                    Anular
+                                    Editar depósito <i class="bi bi-pencil-fill"></i>
                                 </button>
                             <?php } ?>
                         </div>
@@ -179,6 +197,8 @@
         </table>
     <?php } ?>
 </div>
+
+<?= $this->partial('partials/modal-confirmar-deposito.phtml'); ?>
 
 
 

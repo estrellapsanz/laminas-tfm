@@ -17,7 +17,7 @@ class DatosAcademicos extends MasterEntity
      * @param $cod_plan
      * @return array
      */
-    public function dameDatosPlan($cod_plan)
+    public function getDatosPlan($cod_plan)
     {
         $query = "SELECT P.COD_PLAN, P.NOMBRE_PLAN, P.COD_AREA, A.NOMBRE_AREA FROM
                   TFM_PLANES P, TFM_AREA A WHERE P.COD_PLAN=:P_PLAN AND P.COD_AREA=A.COD_AREA";
