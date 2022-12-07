@@ -32,7 +32,8 @@ class Oferta extends MasterEntity
     /**
      * @param $cod_area
      * @return array
-     * @example Devuelve las ofertas asociadas a un área concreta, junto con la inforamción del docente.
+     * @example Devuelve las ofertas asociadas a un docente que imparte en un área concreta o ofertas asociadas a un área por el docente,
+     * junto con la información del docente.
      */
     public function getOfertasArea($cod_area)
     {
@@ -43,7 +44,7 @@ class Oferta extends MasterEntity
                  D.USUARIO, P.NOMBRE_PLAN, P.COD_PLAN, O.COD_OFERTA
          FROM
              TFM_OFERTAS O ,
-             TFM_DOCENTE_PLAN  DP,
+             TFM_DOCENTE_PLAN DP,
              TFM_AREA A,
              TFM_DOCENTE D,
              TFM_PLANES P
@@ -108,11 +109,12 @@ class Oferta extends MasterEntity
      * @param $usuario
      * @return int|void
      */
-    public function insertOferta($curso, $titulo, $subtitulo, $descripcion, $usuario_creacion, $usuario_estudiante = false)
+    public function insertOferta($curso, $area, $titulo, $subtitulo, $descripcion, $usuario_creacion, $usuario_estudiante = false)
     {
 
         $data = [
             'CURSO_ACADEMICO' => $curso,
+            'COD_AREA' => $area,
             'TITULO' => $titulo,
             'SUBTITULO' => $subtitulo,
             'DESCRIPCION' => $descripcion,
@@ -123,7 +125,7 @@ class Oferta extends MasterEntity
 
         try {
             $exito = $this->insert($data);
-     
+
             if ($exito) {
                 return $this->select(
                     ['CURSO_ACADEMICO' => $curso,
@@ -149,6 +151,7 @@ class Oferta extends MasterEntity
     {
 
         $set = [
+            'COD_AREA' => $area,
             'TITULO' => $titulo,
             'SUBTITULO' => $subtitulo,
             'DESCRIPCION' => $descripcion

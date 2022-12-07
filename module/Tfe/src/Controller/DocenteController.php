@@ -44,7 +44,7 @@ class DocenteController extends MasterController
 
             //alta oferta
             if (empty($cod_oferta) && !$flg_editar) {
-                $insert = $this->daoService->getOfertaDAO()->insertOferta($curso, $titulo, $subtitulo, $descripcion, $login_docente);
+                $insert = $this->daoService->getOfertaDAO()->insertOferta($curso, $area, $titulo, $subtitulo, $descripcion, $login_docente);
                 $resultado = $insert > 0;
 
             } else {
@@ -90,6 +90,7 @@ class DocenteController extends MasterController
         $this->sesion->setUrlInSession(Constantes::RUTA_TRABAJOS_TUTORIZADOS_DOCENTE);
         $login_docente = $this->sesion->offsetGet(Constantes::SESION_USUARIO_DOCENTE);
         $trabajos = $this->daoService->getDocenteDAO()->getOfertasDocente($login_docente);
+
         return new ViewModel(['trabajos' => $trabajos]);
     }
 
@@ -132,7 +133,7 @@ class DocenteController extends MasterController
             if (isset($obs) && !empty($obs))
                 $update2 = $this->daoService->getEstudianteOfertaDAO()->updateObservacionesEstudiante($cod_oferta, $obs, $estudiante);
             else $update2 = true;
-            
+
             $update1 = $this->daoService->getEstudianteOfertaDAO()->updateEstadoEstudiante($cod_oferta, $estado_estudiante, $estudiante);
             $update3 = $this->daoService->getOfertaDAO()->updateDocenteOferta($cod_oferta, $login_docente);
             $update4 = $this->daoService->getOfertaDAO()->updateEstado($cod_oferta, $estado);

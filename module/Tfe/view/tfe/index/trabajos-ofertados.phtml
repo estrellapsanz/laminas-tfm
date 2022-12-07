@@ -52,7 +52,7 @@
                     <th scope="col">Título</th>
                     <th scope="col">Descripción</th>
                     <th scope="col">Tutor</th>
-                    <th scope="col">Área</th>
+                    <th scope="col">Plan - Área</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Acciones</th>
                 </tr>
@@ -63,24 +63,26 @@
                         <th scope="row" class="col-md-3"> <?= strtoupper($oferta['TITULO']) ?></th>
                         <th> <?= strtoupper($oferta['DESCRIPCION']) ?></th>
                         <th> <?= '<a href="mailto:' . $oferta['USUARIO'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . strtoupper($oferta['NOMBRE']) . ' ' . strtoupper($oferta['APELLIDO1']) . ' ' . strtoupper($oferta['APELLIDO2']) ?></th>
-                        <th> <?= $oferta['NOMBRE_AREA'] ?></th>
+                        <th> <?= $oferta['NOMBRE_PLAN'] . ' <i>(' . $oferta['NOMBRE_AREA'] . ')</i>' ?></th>
                         <th>
                             <?php
                             if ($oferta['ESTADO_ESTUDIANTE'] == 'Denegado')
-                                echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta denegada (OBSERVACINOES DOCENTE: ' . $oferta['OBSERVACIONES_TRAMITACION']
+                                echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta denegada (OBSERVACIONES DOCENTE: ' . $oferta['OBSERVACIONES_TRAMITACION']
                                     . '">Denegada</span>';
-                            else
-                                if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
-                                    echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Oferta validada.">Validada</span>';
-                                else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
-                                    echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip"
+                            if ($oferta['ESTADO_ESTUDIANTE'] == 'Anulado')
+                                echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta anulada por el estudiante'
+                                    . '">Anulada</span>';
+                            else if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
+                                echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Oferta validada: pendiente de solicitud de depósito.">Validada</span>';
+                            else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
+                                echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="Oferta pendiente de aceptación.">Pendiente</span>';
                             ?>
                         </th>
                         <th>
                             <div class="d-grid gap-2">
-                                <?php if ($oferta['FLG_EDITAR']) { ?>
+                                <?php if ($oferta['FLG_EDITAR'] && $oferta['ESTADO_ESTUDIANTE'] == 'Pendiente') { ?>
                                     <button type="button" class="btn btn-sm btn-danger btn-accion"
                                             data-bs-toggle='modal'
                                             data-bs-target="#confirmarModal"
@@ -90,8 +92,9 @@
                                             data-cod="<?= $oferta['COD_OFERTA']; ?>">
                                         Anular
                                     </button>
-                                <?php } else { ?>
-                                    <?php if ($this->flg_elegir_plan) { ?>
+                                <?php } else {
+                                    ?>
+                                    <?php if ($this->flg_elegir_plan && (empty($oferta['ESTADO_ESTUDIANTE']))) { ?>
                                         <button type="button" class="btn btn-sm btn-primary btn-modal-solicitar"
                                                 data-bs-toggle="modal" data-bs-target="#solicitarOferta"
                                                 data-accion="solicitar"
@@ -99,7 +102,7 @@
                                                 data-cod="<?= $oferta['COD_OFERTA']; ?>"
                                         >Solicitar
                                         </button>
-                                    <?php } else { ?>
+                                    <?php } else if (empty($oferta['ESTADO_ESTUDIANTE'])) { ?>
                                         <button type="button" class="btn btn-sm  btn-accion  btn-primary"
                                                 data-bs-toggle="modal" data-bs-target="#solicitarOferta"
                                                 data-accion="solicitar"

@@ -39,40 +39,57 @@ class Docente extends MasterEntity
      */
     public function getOfertasDocente($user)
     {
-        $query = "
-                     
-                    SELECT OFE.*, ALU.COD_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE, ALU.USUARIO_ESTUDIANTE, 
-                     (SELECT A.NOMBRE_AREA FROM TFM_AREA A, TFM_PLANES P WHERE P.COD_PLAN=ALU.COD_PLAN AND P.COD_AREA=A.COD_AREA) AS NOMBRE_AREA,
-                     (SELECT CONCAT(E.NOMBRE,' ',E.APELLIDO1,' ',E.APELLIDO2) FROM TFM_ESTUDIANTE E WHERE E.USUARIO=ALU.USUARIO_ESTUDIANTE) AS NOMBRE_ESTUDIANTE
+        $query = "  SELECT 
+                    OFE.*, 
+                    ALU.COD_PLAN,
+                    ALU.ESTADO AS ESTADO_ESTUDIANTE, 
+                    ALU.USUARIO_ESTUDIANTE, 
+                    (SELECT P.NOMBRE_PLAN FROM TFM_AREA A, TFM_PLANES P WHERE P.COD_PLAN=ALU.COD_PLAN AND P.COD_AREA=A.COD_AREA) AS NOMBRE_PLAN,        
+                    ALU.OBSERVACIONES_TRAMITACION,
+                 
+                    CASE
+                        WHEN ALU.COD_PLAN IS NOT NULL THEN  (SELECT A.NOMBRE_AREA FROM TFM_AREA A, TFM_PLANES P WHERE P.COD_PLAN=ALU.COD_PLAN AND P.COD_AREA=A.COD_AREA) 
+                        ELSE (SELECT A.NOMBRE_AREA FROM TFM_AREA A WHERE  OFE.COD_AREA=A.COD_AREA)
+                    END AS NOMBRE_AREA,
+                    (SELECT CONCAT(E.NOMBRE,' ',E.APELLIDO1,' ',E.APELLIDO2) FROM TFM_ESTUDIANTE E WHERE E.USUARIO=ALU.USUARIO_ESTUDIANTE) AS NOMBRE_ESTUDIANTE
                 
                      FROM 
                     (
                         SELECT O.CURSO_ACADEMICO, upper(O.TITULO) TITULO, upper(O.SUBTITULO) SUBTITULO, upper(O.DESCRIPCION) DESCRIPCION, O.COD_OFERTA, O.ESTADO,
-                               O.USUARIO_DOCENTE
+                               O.USUARIO_DOCENTE, O.COD_AREA
                         FROM 
                           TFM_OFERTAS O
                         WHERE 
-                              O.USUARIO_DOCENTE=:P_USER 
+                              O.USUARIO_DOCENTE=:P_USER   
                     )  OFE LEFT JOIN   TFM_ESTUDIANTE_OFERTA ALU ON 
                     OFE.COD_OFERTA=ALU.COD_OFERTA
                     
                     UNION
-                     
-                     SELECT OFE.*, ALU.COD_PLAN, ALU.ESTADO AS ESTADO_ESTUDIANTE, ALU.USUARIO_ESTUDIANTE, 
+                    
+                  
+                     SELECT
+                    OFE.*, 
+                    ALU.COD_PLAN, 
+                    ALU.ESTADO AS ESTADO_ESTUDIANTE, 
+                    ALU.USUARIO_ESTUDIANTE, 
+                    (SELECT P.NOMBRE_PLAN FROM TFM_AREA A, TFM_PLANES P WHERE P.COD_PLAN=ALU.COD_PLAN AND P.COD_AREA=A.COD_AREA) AS NOMBRE_PLAN,        
+                    ALU.OBSERVACIONES_TRAMITACION,
+            
                      (SELECT A.NOMBRE_AREA FROM TFM_AREA A, TFM_PLANES P WHERE P.COD_PLAN=ALU.COD_PLAN AND P.COD_AREA=A.COD_AREA) AS NOMBRE_AREA,
                      (SELECT CONCAT(E.NOMBRE,' ',E.APELLIDO1,' ',E.APELLIDO2) FROM TFM_ESTUDIANTE E WHERE E.USUARIO=ALU.USUARIO_ESTUDIANTE) AS NOMBRE_ESTUDIANTE
                 
                      FROM 
                     (
                         SELECT O.CURSO_ACADEMICO, upper(O.TITULO) TITULO, upper(O.SUBTITULO) SUBTITULO, upper(O.DESCRIPCION) DESCRIPCION, O.COD_OFERTA, O.ESTADO,  
-                               O.USUARIO_DOCENTE
+                               O.USUARIO_DOCENTE, O.COD_AREA
                                
                         FROM 
                           TFM_OFERTAS O
                         WHERE 
-                              O.USUARIO_DOCENTE IS NULL AND
-                              O.ESTADO='Pendiente'
-                    )  OFE , TFM_ESTUDIANTE_OFERTA ALU
+                              O.USUARIO_DOCENTE IS NULL AND 
+                              O.ESTADO='Pendiente'          
+                    )  OFE , 
+                    TFM_ESTUDIANTE_OFERTA ALU
                     WHERE
                     OFE.COD_OFERTA=ALU.COD_OFERTA AND
                     ALU.ESTADO='Pendiente'

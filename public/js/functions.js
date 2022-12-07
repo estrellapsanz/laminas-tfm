@@ -35,7 +35,6 @@ $(document).ready(function () {
         }
     })
 
-
     $('.btn-modal-solicitar').click(function () {
         var accion = $(this).data('accion');
         var cod = $(this).data('cod');
@@ -46,13 +45,11 @@ $(document).ready(function () {
         document.solicitudForm.action = 'guardar-solicitud-oferta';
     })
 
-
     $('#plan_trabajo_modal').change(function () {
         var plan = $(this).find(":selected").val();
         document.solicitudForm.plan_trabajo.value = plan;
         document.solicitudForm.action = 'guardar-solicitud-oferta';
     })
-
 
     //guardar modal confirmar: oferta y deposito
     $('.btn-submit-modal').click(function () {
@@ -91,7 +88,6 @@ $(document).ready(function () {
         document.solicitudForm.submit();
     })
 
-
     //eliminar oferta
     $('.eliminar-oferta').click(function () {
         var accion = $(this).data('accion');
@@ -110,7 +106,6 @@ $(document).ready(function () {
         document.solicitudDepositoForm.submit();
     })
     //fin eliminar
-
 
     //tramitar oferta
     $('.btn-tramitar-estudiante-oferta').click(function () {
@@ -171,7 +166,6 @@ $(document).ready(function () {
 
     })
 
-
     //al cerrar el modal
     $('.btn-modal-cerrar, .btn-close').click(function () {
         $('#label_nota').removeClass('text-danger');
@@ -186,7 +180,27 @@ $(document).ready(function () {
 
     })
 
+    $('select#trabajo_depositar').change(function () {
+        var cod_oferta = $(this).val()
+        $.ajax({
+            type: "POST",
+            url: 'get-datos-oferta',
+            data: {'cod_oferta': cod_oferta}
+        }).done(function (data) {
 
+            if (data !== undefined && data !== null) {
+                var descripcion = data['DESCRIPCION'];
+                var docente = data['DOCENTE'];
+
+                $('#descripcion').val(descripcion);
+                $('#docente').val(docente);
+            }
+        }).fail(function () {
+            console.log('error recuperando oferta');
+            alert('error');
+        });
+
+    })
 });
 
 

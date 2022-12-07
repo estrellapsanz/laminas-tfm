@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tfe\Controller;
 
 use Laminas\View\Model\ViewModel;
+use Psr\Http\Message\ResponseInterface;
 use Tfe\Util\Constantes;
 
 
@@ -76,7 +77,7 @@ class IndexController extends MasterController
             $post = $request->getPost();
             $estudios = explode('#', $post['estudios']); //plan, area
             $cod_plan = $estudios[0];
-            //$area = $estudios[1];
+            $area = $estudios[1];
             $titulo = $post['titulo'];
             $subtitulo = $post['subtitulo'];
             $descripcion = $post['descripcion'];
@@ -85,13 +86,14 @@ class IndexController extends MasterController
             $oferta_existente = $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, null, $cod_plan);
 
             if (!$oferta_existente) {
-                $cod_oferta = $this->daoService->getOfertaDAO()->insertOferta($curso, $titulo, $subtitulo, $descripcion, $usuario_logueado, true);
+                $cod_oferta = $this->daoService->getOfertaDAO()->insertOferta($curso, $area, $titulo, $subtitulo, $descripcion, $usuario_logueado, true);
 
                 if ($cod_oferta != -1) {
                     $exito = $this->daoService->getEstudianteOfertaDAO()->insertEstudianteOferta($curso, $cod_oferta, 'Pendiente', $usuario_logueado, $cod_plan);
                     $estado_operacion = $exito;
 
                 }
+
                 $this->informarEstadoOperacionSesion($estado_operacion);
             } else
                 $this->informarEstadoOperacionSesion($estado_operacion);
@@ -160,7 +162,7 @@ class IndexController extends MasterController
             }
 
             $this->informarEstadoOperacionSesion($estado_operacion);
-            
+
         }
 
 
@@ -211,6 +213,7 @@ class IndexController extends MasterController
         if (!empty($ofertas)) {
             foreach ($ofertas as &$ofertas_area) {
                 foreach ($ofertas_area as &$oferta) {
+                    //un estudiante podrá editar una oferta si la ha creado él y un docente aún no le tutoriza
                     $oferta['FLG_EDITAR'] = ($oferta['USUARIO_ESTUDIANTE'] == $usuario_logueado) && ($oferta['ESTADO_ESTUDIANTE'] != 'Anulado' && !empty($oferta['USUARIO_ESTUDIANTE'])) ? 1 : 0;
                 }
             }
@@ -243,10 +246,13 @@ class IndexController extends MasterController
 
         if ($request->isPost()) {
             $post = $request->getPost();
+
             $cod_oferta = $post['cod_oferta'];
             $accion = $post['accion'];
             $plan_trabajo = $post['plan_trabajo'];
-            $flag_pertenece = !empty($post['flg']) || $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, $cod_oferta);
+
+            //se podrá editar la oferta si pertenece al estudiante
+            $flag_pertenece = !empty($post['flg']) || $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, $cod_oferta, $plan_trabajo);
 
             if ($accion == Constantes::ACCION_ANULAR_OFERTA)
                 $nuevo_estado = Constantes::ESTADO_ESTUDIANTE_ANULADO;
@@ -276,5 +282,38 @@ class IndexController extends MasterController
                 $this->redirect()->toRoute('propuesta-oferta');
 
         }
+    }
+
+
+    public function getDatosOfertaAjaxAction()
+    {
+        $this->controlLogueado();
+        $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            $cod_oferta = $post['cod_oferta'];
+
+            //se podrá solicitar el deposito si la oferta  pertenece al estudiante
+            $flag_pertenece = $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, $cod_oferta);
+
+            if (!empty($cod_oferta) && $flag_pertenece) {
+                $oferta = $this->daoService->getOfertaDAO()->getOferta($cod_oferta);
+                $data = [
+                    'DESCRIPCIÓN' => $oferta['DESCRIPCION'],
+                    'DOCENTE' => $oferta['USUARIO_DOCENTE']
+                ];
+
+                $response->setStatusCode(200);
+                $response->setContent(json_encode($data));
+                $headers = $response->getHeaders();
+                $headers->addHeaderLine('Content-Type', 'application/json');
+                return $response;
+            }
+        }
+
     }
 }

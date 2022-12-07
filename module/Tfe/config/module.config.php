@@ -132,6 +132,17 @@ return [
                 ],
             ],
 
+            'get-datos-oferta-ajax' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/get-datos-oferta',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'get-datos-oferta-ajax',
+                    ],
+                ],
+            ],
+
             /*FIN ESTUDIANTE*/
 
             /*DOCENTE*/

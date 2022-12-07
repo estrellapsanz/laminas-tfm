@@ -23,6 +23,7 @@ var FormValidation = function () {
                 titulo: {required: msg},
                 subtitulo: {required: msg},
                 descripcion: {required: msg},
+                normativa: {required: msg}
 
             },
             rules: {
@@ -30,6 +31,7 @@ var FormValidation = function () {
                 titulo: {required: true},
                 subtitulo: {required: true},
                 descripcion: {required: true},
+                normativa: {required: true}
             },
             invalidHandler: function (event, validator) { //display error alert on form submit
                 success1.prop('hidden', true);

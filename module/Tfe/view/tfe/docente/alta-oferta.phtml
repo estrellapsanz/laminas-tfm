@@ -50,11 +50,12 @@
             <label for="area" class="form-label">Área de conocimiento</label>
             <select for="area" class="form-control" aria-label="Default select example" name="area"
                     required>
-                <option value="" selected>Seleccione el área de conocimiento</option>
+                <option value="" <?php if (empty($oferta)) echo 'selected'; ?>>Seleccione el área de conocimiento
+                </option>
                 <?php foreach ($this->areas as $area) { ?>
                     <option value="<?= $area['COD_AREA'] ?>"
                         <?php if (!empty($oferta)) { ?>
-                            <?php if ($area['COD_AREA'] == $oferta['COD_OFERTA']) echo 'selected'; ?>
+                            <?php if ($area['COD_AREA'] == $oferta['COD_AREA']) echo 'selected'; ?>
                         <?php } ?>
                     ><?= $area['NOMBRE_AREA'] ?></option>
                 <?php } ?>
