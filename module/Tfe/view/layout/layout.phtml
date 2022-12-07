@@ -42,12 +42,12 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
 <body class="d-flex flex-column h-100">
 
 <nav class="navbar fixed-top navbar-expand-lg flex-column flex-lg-row
- <?php if (!$sesion->offsetGet(Constantes::SESION_ESTUDIANTE)) echo 'navbar-default'; else echo 'navbar-dark' ?>">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="<?= $this->url('home') ?>">UOC
-            <!--<img class="img-logo" src="<?= $this->basePath('img/logo-uoc-default.png') ?>"
-                 alt="UOC-logo">-->
-        </a>
+ <?php if (!$sesion->offsetGet(Constantes::SESION_ESTUDIANTE)) echo 'navbar-default'; else echo 'navbar-default' ?>">
+
+    <div class="container-fluid justify-content-between">
+
+        <span class="fix_navbar"></span>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
             <span class="navbar-text">
                     <a class="nav-link"
                        href="<?= $this->url('login-docente') ?>">
-                    Login docente     <i class="bi bi-book"></i>
+                    Login docente <i class="bi bi-book"></i>
                     </a>
             </span>
         <?php } ?>

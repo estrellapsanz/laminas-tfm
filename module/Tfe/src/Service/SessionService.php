@@ -34,7 +34,6 @@ class SessionService implements SessionServiceInterface
 
     public function offsetUnset($key)
     {
-        var_dump($key);
         $this->getSesion()->offsetUnset($key);
     }
 

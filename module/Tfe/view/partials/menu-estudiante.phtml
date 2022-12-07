@@ -8,8 +8,13 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
 ?>
 
 <div class="collapse navbar-collapse justify-content-lg-evenly" id="navbarSupportedContent">
-    <ul class="navbar-nav">
-
+    <ul class="navbar-nav nav-pills nav-fill nav-justified flex-grow-1 pe-4">
+        <li class="nav-item">
+            <a class="navbar-brand" href="<?= $this->url('home') ?>">
+                <img class="img-logo" src="<?= $this->basePath('img/logo-uoc-default.png') ?>"
+                     alt="UOC-logo">
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_HOME_ESTUDIANTE) echo 'active'; ?>"
@@ -22,7 +27,7 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
             <a class="nav-link
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_EXPEDIENTE_ESTUDIANTE) echo 'active'; ?>"
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_EXPEDIENTE_ESTUDIANTE) echo 'aria-current="page"'; ?>
-               href="<?= $this->url('mi-expediente') ?>">Mi expediente
+               href="<?= $this->url('mi-expediente') ?>"><i class="bi bi-mortarboard-fill"></i> Mi expediente
             </a>
         </li>
 
@@ -31,7 +36,7 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
             <a class="nav-link
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_TRABAJOS_OFERTADOS) echo 'active'; ?>"
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_TRABAJOS_OFERTADOS) echo 'aria-current="page"'; ?>
-               href="<?= $this->url('trabajos-ofertados') ?>">Trabajos ofertados
+               href="<?= $this->url('trabajos-ofertados') ?>"><i class="bi bi-list-check"></i> Trabajos ofertados
             </a>
         </li>
 
@@ -39,7 +44,7 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
             <a class="nav-link
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_PROPONER_OFERTA_ESTUDIANTE) echo 'active'; ?>"
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_PROPONER_OFERTA_ESTUDIANTE) echo 'aria-current="page"'; ?>
-               href="<?= $this->url('propuesta-oferta') ?>">Proponer oferta
+               href="<?= $this->url('propuesta-oferta') ?>"><i class="bi bi-journal-bookmark-fill"></i> Proponer oferta
             </a>
         </li>
 
@@ -47,15 +52,16 @@ $sesion = new Container (Constantes::NOMBRE_SESION);
             <a class="nav-link
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_DEPOSITAR_ESTUDIANTE) echo 'active'; ?>"
                 <?php if ($sesion->offsetExists(Constantes::CURRENT_URL) && $sesion->offsetGet(Constantes::CURRENT_URL) == Constantes::RUTA_DEPOSITAR_ESTUDIANTE) echo 'aria-current="page"'; ?>
-               href="<?= $this->url('solicitud-deposito') ?>">Solicitud depósito
+               href="<?= $this->url('solicitud-deposito') ?>"><i class="bi bi-file-pdf-fill"></i> Solicitud depósito
             </a>
         </li>
 
     </ul>
 
-    <span class="navbar-text">
+    <span class="navbar-text user_info">
         <?php if ($sesion->offsetExists(Constantes::SESION_NOMBRE_USUARIO)) { ?>
-            <i><?= $sesion->offsetGet(Constantes::SESION_NOMBRE_USUARIO) . ' ' ?></i>
+            <i class="bi bi-person-square"></i>
+            <i> <?= $sesion->offsetGet(Constantes::SESION_NOMBRE_USUARIO) . ' ' ?></i>
         <?php } ?>
     </span>
     <span class="navbar-text">

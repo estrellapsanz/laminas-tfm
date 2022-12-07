@@ -39,11 +39,34 @@ nav ol.breadcrumb {
 }
 
 /*LOGO */
-.img-logo {
-    max-width: 10%;
-    margin: 2% 2% 2% 2%;
+@media (max-width: 991px) {
+    .img-logo {
+        max-width: 6%;
+        margin: 2% 2% 2% 2%;
+    }
+
+    .user_info {
+        padding-left: 0%;
+        display: none;
+    }
+
+    .fix_navbar {
+        display: none;
+    }
 }
 
+@media (min-width: 992px) {
+    .img-logo {
+        max-width: 16%;
+        margin: 2% 2% 2% 2%;
+    }
+
+    .user_info {
+        padding-right: 2%;
+        padding-left: 4%;
+    }
+
+}
 
 /*CUSTOM BUTTONS*/
 .btn-primary {
@@ -68,3 +91,8 @@ textarea {
     border-color: red;
 }
 
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: transparent;
+    border: 2px solid var(--brand-color);
+    border-radius: 5px;
+}
