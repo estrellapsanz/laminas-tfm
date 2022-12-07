@@ -23,15 +23,27 @@ class Constantes
 
     /*CONSTANTES PARA BASE DE DATOS*/
     const PARAMETRO_CURSO_ACADEMICO = 'CURSO_ACADEMICO';
+
+    /*OFERTAS*/
+    const OFERTA_ELIMINAR = "Eliminar";
     const ESTADO_OFERTA_ANULADA = "Anulada";
     const ESTADO_OFERTA_VALIDADA = "Validada";
     const ESTADO_OFERTA_VIGENTE = 'Vigente';
     const ESTADO_OFERTA_PENDIENTE = 'Pendiente';
-    const ESTADO_DENEGADA = "Denegada";
+    const ESTADO_OFERTA_DENEGADA = 'Denegada';
+
+    /*ESTUDIANTE*/
     const ESTADO_ESTUDIANTE_ANULADO = "Anulado";
     const ESTADO_ESTUDIANTE_VALIDADO = "Validado";
+    const ESTADO_ESTUDIANTE_DENEGADO = "Denegado";
     const ESTADO_ESTUDIANTE_PENDIENTE = "Pendiente";
     const ESTADO_CANCELADO = "Cancelado";
+
+    /*DEPÓSITO*/
+    const ESTADO_DEPOSITO_AUTORIZADO = 'Autorizado';
+    const ESTADO_DEPOSITO_DENEGADO = 'Denegado';
+    const ESTADO_DEPOSITO_CAMBIOS_SOLICITADOS = 'Cambios solicitados';
+    const ESTADO_DEPOSITO_PENDIENTE = 'Pendiente';
 
 
     const ERROR_LOGIN_ERRONEO = "error_login_erroneo";
@@ -62,7 +74,7 @@ class Constantes
     const NOMBRE_SESION = 'sesionTfm';
     const SESION_USUARIO = "usuario";
     const SESION_NOMBRE_USUARIO = "nombreUsuario";
-    const SESION_USUARIO_DOCENTE = "usuarioDocentes";
+    const SESION_USUARIO_DOCENTE = "usuarioDocente";
     const SESION_ESTUDIANTE = "estudiante";
     const SESION_DOCENTE = "docente";
 

@@ -54,3 +54,17 @@ nav ol.breadcrumb {
 .dt-buttons {
     margin-top: -10%;
 }
+
+textarea {
+    width: 100%;
+}
+
+/*JS VALIDATE ERRORS*/
+.help-block-error {
+    color: red;
+}
+
+.error-border {
+    border-color: red;
+}
+

@@ -20,96 +20,51 @@
     <div class="bck-primary-ligth">
         <div class="d-flex justify-content-center">
             <p>
-            <h1><b>Temas ofertados</b></h1></p>
+            <h1><b>Trabajos calificados</b></h1></p>
         </div>
     </div>
 
     <br>
-    <h1>Trabajos ofertados curso <?= $curso ?></h1>
-    <div class="alert alert-info">
-        A continuación se muestran los trabajos ofertados por los docentes que imparten clases en los planes de
-        estudios
-        del área de conocimiento de sus planes matriculados. Puede solicitar aquellos que considere interesantes
-        y
-        anular cualquier solicitud siempre que esta no se haya tramitado por parte del docente. En caso
-        contrario,
-        tendrá que contactar con él mediante correo electrónico.
+    <!--  <h1>Trabajos calificados</h1> -->
+    <div class="alert alert-default border">
+        A continuación se muestra el histórico de trabajos calificados.
     </div>
     <div class="mb-3">
-        <?php foreach ($this->ofertas as $area => $ofertas_area) { ?>
-            <br>
 
-            <?= $this->partial('partials/errores') ?>
+        <br>
 
-            <label for="estudios" class="form-label"><b> <?= $area ?></b></label>
-            <hr>
-            <table class="table table-striped" id="table_extensible">
-                <thead>
-                <tr>
-                    <th scope="col">Título</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Tutor</th>
-                    <th scope="col">Área</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($ofertas_area as $oferta) { ?>
+        <?= $this->partial('partials/errores') ?>
+
+        <hr>
+        <table class="table table-striped table-bordered table-hover" id="table_extensible">
+            <thead>
+            <tr>
+                <th scope="col">Curso</th>
+                <th scope="col">Plan</th>
+                <th scope="col">Área</th>
+                <th scope="col">Estudiante</th>
+                <th scope="col">Nota media</th>
+                <th scope="col">Nota final</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if (!empty($trabajos)) { ?>
+                <?php foreach ($trabajos as $trabajo) { ?>
                     <tr>
-                        <th scope="row" class="col-md-3"> <?= $oferta['TITULO'] ?></th>
-                        <th> <?= $oferta['DESCRIPCION'] ?></th>
-                        <th> <?= '<a href="mailto:' . $oferta['USUARIO'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $oferta['NOMBRE'] . ' ' . $oferta['APELLIDO1'] . ' ' . $oferta['APELLIDO2'] ?></th>
-                        <th> <?= $oferta['NOMBRE_AREA'] ?></th>
-                        <th>
-                            <?php
-                            // if ($oferta['ESTADO_ESTUDIANTE'] == 'Anulado')
-                            //     echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta anulada.">Anulada</span>';
-                            // else
-                            if ($oferta['ESTADO_ESTUDIANTE'] == 'Validado')
-                                echo '<span class="badge bg-success text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta validada.">Validada</span>';
-                            else if ($oferta['ESTADO_ESTUDIANTE'] == 'Pendiente')
-                                echo '<span class="badge bg-primary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta pendiente de aceptación.">Pendiente</span>'; ?>
+                        <th scope="row" class="col-md-3"> <?= $trabajo['CURSO_ACADEMICO'] ?></th>
+                        <th> <?= '(' . $trabajo['COD_PLAN'] . ') ' . $trabajo['NOMBRE_PLAN'] ?></th>
+                        <th> <?= $trabajo['NOMBRE_AREA'] ?></th>
+                        <th> <?= $trabajo['NOMBRE'] . ' ' . $trabajo['APELLIDO1'] . ' ' . $trabajo['APELLIDO2'] ?></th>
+                        <th><?= random_int(0, 10) ?>
                         </th>
-                        <th>
-                            <div class="d-grid gap-2">
-                                <?php if ($oferta['FLG_EDITAR']) { ?>
-                                    <button type="button" class="btn btn-sm btn-danger btn-accion"
-                                            data-bs-toggle='modal'
-                                            data-bs-target="#confirmarModal"
-                                            data-accion="anular"
-                                            data-plan_trabajo="<?= $oferta['COD_PLAN'] ?>"
-                                            data-flg="<?= $oferta['FLG_EDITAR']; ?>"
-                                            data-cod="<?= $oferta['COD_OFERTA']; ?>">
-                                        Anular
-                                    </button>
-                                <?php } else { ?>
-                                    <?php if ($this->flg_elegir_plan) { ?>
-                                        <button type="button" class="btn btn-sm btn-primary btn-modal-solicitar"
-                                                data-bs-toggle="modal" data-bs-target="#solicitarOferta"
-                                                data-accion="solicitar"
-                                                data-flg="<?= $oferta['FLG_EDITAR']; ?>"
-                                                data-cod="<?= $oferta['COD_OFERTA']; ?>"
-                                        >Solicitar
-                                        </button>
-                                    <?php } else { ?>
-                                        <button type="button" class="btn btn-sm  btn-accion  btn-primary"
-                                                data-bs-toggle="modal" data-bs-target="#solicitarOferta"
-                                                data-accion="solicitar"
-                                                data-flg="<?= $oferta['FLG_EDITAR']; ?>"
-                                                data-cod="<?= $oferta['COD_OFERTA']; ?>"
-                                                data-plan_trabajo=<?= $this->planes_estudiante[0]['COD_PLAN']; ?>
-                                        >Solicitar
-                                        </button>
-                                    <?php }
-                                } ?>
-                            </div>
+                        <th><?= $trabajo['NOTA_FINAL'] ?>
                         </th>
                     </tr>
-                <?php } ?>
-                </tbody>
-            </table>
-        <?php } ?>
+                <?php }
+            } ?>
+            </tbody>
+        </table>
+
     </div>
 
 

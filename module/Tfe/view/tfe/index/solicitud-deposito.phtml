@@ -23,125 +23,149 @@
         </div>
     </div>
     <br>
+    <?= $this->partial('partials/errores') ?>
 
-    <form action="solicitud-deposito" method="post" enctype="multipart/form-data">
+    <?php if (!empty($misOfertas)) { ?>
+        <form action="solicitud-deposito" name="solicitudDepositoForm" method="post" enctype="multipart/form-data">
+            <br>
+            <h2>Solicitud de Depósito</h2>
+            <div class="alert alert-info" role="alert">
+                <p>Puede realizar la solicitud de depósito indicando la asignatura asociada y el plan de estudios.</p>
+            </div>
 
-        <br>
-        <h2>Solicitud de Depósito</h2>
-        <div class="alert alert-info" role="alert">
-            <p>Puede realizar la solicitud de depósito indicando la asignatura asociada y el plan de estudios.</p>
-        </div>
+            <!--feedback form-validation-->
+            <div class='alert alert-danger alert-dismissable fade show error-form' role='alert' hidden>
+                <b>Revise el formulario, existen campos obligatorios que no ha completado.</b>
+            </div>
+            <div class='alert alert-success alert-dismissable fade show success-form' role='alert' hidden>
+                <b>Formulario completado correctamente.</b>
+            </div>
+            <!--- -->
 
 
-        <div class="mb-3">
-            <label for="name" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="name"
-                   value="<?= $this->estudiante[0]['NOMBRE'] . ' ' . $this->estudiante[0]['APELLIDO1'] . ' ' . $this->estudiante[0]['APELLIDO2'] ?>"
-                   readonly disabled>
-        </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="name"
+                       value="<?= $this->estudiante[0]['NOMBRE'] . ' ' . $this->estudiante[0]['APELLIDO1'] . ' ' . $this->estudiante[0]['APELLIDO2'] ?>"
+                       readonly disabled>
+            </div>
 
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1"
-                   placeholder="name@example.com"
-                   value="<?= $this->estudiante[0]['USUARIO'] . '@uoc.edu'; ?>" readonly disabled>
-        </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1"
+                       placeholder="name@example.com"
+                       value="<?= $this->estudiante[0]['USUARIO'] . '@uoc.edu'; ?>" readonly disabled>
+            </div>
 
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Teléfono</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1"
-                   placeholder="Teléfono1"
-                   value="<?= $this->estudiante[0]['TELEFONO1'] ?>" readonly disabled>
-        </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Teléfono</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1"
+                       placeholder="Teléfono1"
+                       value="<?= $this->estudiante[0]['TELEFONO1'] ?>" readonly disabled>
+            </div>
 
-        <!--<div class="mb-3">
+            <!--<div class="mb-3">
             <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
             <select for="estudios" class="form-control" aria-label="Default select example" name="estudios">
                 <option selected>Seleccione</option>
-                <?php foreach ($this->estudiante as $estudio) { ?>
-                    <option value="<?= $estudio['COD_PLAN'] ?>#<?= $estudio['COD_AREA'] ?>>"><?= $estudio['NOMBRE_PLAN'] ?></option>
-                <?php } ?>
+                <?php //foreach ($this->estudiante as $estudio) { ?>
+                    <option value="<? //= $estudio['COD_PLAN'] ?>#<? //= $estudio['COD_AREA'] ?>>"><? //= $estudio['NOMBRE_PLAN'] ?></option>
+                <?php //} ?>
             </select>
         </div>-->
 
 
-        <div class="mb-3">
-            <label class="form-label">Trabajo para depositar</label>
-            <select for="trabajo" class="form-control" aria-label="Default select example" name="cod_oferta">
-                <option selected>Seleccione</option>
-                <?php foreach ($this->misOfertas as $oferta) {
-                    var_dump($oferta); ?>
-                    <option value="<?= $oferta['COD_OFERTA']; ?>"><?= $oferta['NOMBRE_PLAN'] . ' - ' . $oferta['TITULO'] ?></option>
-                <?php } ?>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="descripción" class="form-label">Descripción del Trabajo</label>
-            <textarea name="descripcion" class="form-control" id="descripcion" rows="3" disabled
-                      readonly> </textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="docente" class="form-label">Docente</label>
-            <input type="docente" class="form-control" id="docente"
-                   value="" readonly disabled>
-        </div>
-
-
-        <label for="idioma" class="form-label">Idioma del trabajo </label>
-        <div class="mb-3">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="idioma" id="flexRadioDefault1" value="cas">
-                <label class="form-check-label" for="flexRadioDefault1">
-                    Catalán
-                </label>
+            <div class="mb-3">
+                <label class="form-label">Trabajo para depositar</label>
+                <select for="trabajo" class="form-control" aria-label="Default select example" name="cod_oferta"
+                        id="trabajo_depositar">
+                    <option value="" selected>Seleccione el trabajo a depositar</option>
+                    <?php foreach ($this->misOfertas as $oferta) { ?>
+                        <option value="<?= $oferta['COD_OFERTA']; ?>"><?= $oferta['NOMBRE_PLAN'] . ' - ' . $oferta['TITULO'] ?></option>
+                    <?php } ?>
+                </select>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="idioma" id="flexRadioDefault2" value="cat">
-                <label class="form-check-label" for="flexRadioDefault2">
-                    Castellano
-                </label>
+
+            <div class="mb-3">
+                <label for="descripción" class="form-label">Descripción del Trabajo</label>
+                <textarea name="descripcion" placeholder="Descripción" class="form-control" id="descripcion"
+                          rows="3" disabled
+                          readonly> </textarea>
             </div>
+
+            <div class="mb-3">
+                <label for="docente" class="form-label">Docente</label>
+                <input type="docente" class="form-control" id="docente"
+                       value="" readonly disabled>
+            </div>
+
+
+            <label for="idioma" class="form-label">Idioma del trabajo </label>
+            <div class="mb-3">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="idioma" id="flexRadioDefault1" value="cas"
+                           checked>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        Catalán
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="idioma" id="flexRadioDefault2" value="cat">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        Castellano
+                    </label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Archivo</label>
+                <input class="form-control" name="archivo" type="file" id="formFile">
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input check-normativa" name="normativa" id="normativa">
+                <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
+            </div>
+
+            <!--trigger para submit modal --->
+            <button type="button" class="btn btn-primary boton_modal" data-bs-toggle="modal" hidden
+                    data-bs-target="#confirmarDepositoModal">Solicitar deposito modal
+            </button>
+
+            <!--trigger para el form-validation -->
+            <button type="submit" class="btn btn-primary">Solicitar depósito</button>
+        </form>
+    <?php } else { ?>
+        <div class="alert alert-warning">
+            <p>No tiene ofertas asignadas que puedan ser depositadas o ya ha realizado el depósito correspondiente.</p>
         </div>
-        <div class="mb-3">
-            <label for="formFile" class="form-label">Archivo</label>
-            <input class="form-control" name="archivo" type="file" id="formFile">
-        </div>
-
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input check-normativa" name="normativa" id="normativa">
-            <label class="form-check-label" for="normativa">He leído la normativa de TFE y acepto.</label>
-        </div>
+    <?php } ?>
 
 
-        <button type="submit" class="btn btn-primary">Solicitar depósito</button>
-    </form>
-
-
-    <?php if (!empty($propuestas)) { ?>
-        <hr>
-        <h2>Mis propuestas de Trabajos Fin de Estudios</h2>
-        <br>
+    <hr>
+    <hr>
+    <h2>Mis depósitos de Trabajos Fin de Estudios</h2>
+    <br>
+    <?php if (!empty($misDepositos)) { ?>
         <div class="alert alert-info" role="alert">
-            <p>Sólo podrá solicitar a través de la aplicación la anulación de la oferta en caso de que aún no esté
-                aceptada por
-                ningún docente. En caso contrario, tendrá que contactar con el docente por correo motivando la
-                solicitud.</p>
+            <p>Sólo en caso de que su tutor solicite cambios en el trabajo podrá ver las observaciones situando el ratón
+                en la etiqueta "Cambios solicitados". Este estado
+                le permitirá volver a subir su trabajo.</p>
         </div>
-        <table class="table table-striped" id="table_extensible">
-            <thead>
-            <tr>
-                <th scope="col">Curso</th>
-                <th class="col-md-3" scope="col">Título</th>
-                <th scope="col">Plan</th>
-                <th scope="col">Docente</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($propuestas as $trabajo) { ?>
+    <?php } ?>
+    <table class="table table-striped" id="table_extensible">
+        <thead>
+        <tr>
+            <th scope="col">Curso</th>
+            <th class="col-md-3" scope="col">Título</th>
+            <th scope="col">Plan</th>
+            <th scope="col">Docente</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (!empty($misDepositos)) { ?>
+            <?php foreach ($misDepositos as $trabajo) { ?>
                 <tr>
                     <th scope="row"> <?= $trabajo['CURSO_ACADEMICO'] ?></th>
                     <th class="col-md-3"> <?= strtoupper($trabajo['TITULO']); ?></th>
@@ -153,32 +177,38 @@
                         <?php } ?>
                     </th>
                     <th>  <?php
-                        if ($trabajo['ESTADO_OFERTA'] == 'Anulada')
-                            echo '<span class="badge bg-danger text-white">Anulada</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == 'Validada')
-                            echo '<span class="badge bg-success text-white">Validada</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == 'Pendiente')
-                            echo '<span class="badge bg-primary text-white">Pendiente</span>'; ?>
+                        if ($trabajo['ESTADO_DEPOSITO'] == 'Denegado')
+                            echo '<span class="badge bg-danger text-white">Denegado</span>';
+                        else if ($trabajo['ESTADO_DEPOSITO'] == 'Autorizado')
+                            echo '<span class="badge bg-success text-white">Autorizado</span>';
+                        else if ($trabajo['ESTADO_DEPOSITO'] == 'Pendiente')
+                            echo '<span class="badge bg-primary text-white">Pendiente</span>';
+                        if ($trabajo['ESTADO_DEPOSITO'] == 'Cambios solicitados')
+                            echo '<span class="badge bg-warning text-black" data-bs-toggle="tooltip" data-bs-placement="top" title="Observaciones docente (' . $trabajo['OBSERVACIONES']
+                                . ')"' . '>Cambios solicitados</span>'; ?>
                     </th>
-                    <th class="col-md-1">
+                    <th class="col-md-2">
                         <div class="d-grid gap-1">
-                            <?php if (($trabajo['ESTADO_OFERTA'] <> 'Anulada')) { ?>
-                                <button type="button" class="btn btn-sm btn-accion btn-danger"
-                                        data-accion="anular"
+                            <?php if (($trabajo['ESTADO_DEPOSITO'] == 'Cambios solicitados')) { ?>
+                                <button type="button" class="btn btn-sm btn-accion btn-info"
+                                        data-accion="editar"
                                         data-flg="1"
                                         data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
                                         data-cod="<?= $trabajo['COD_OFERTA']; ?>">
-                                    Anular
+                                    Editar depósito <i class="bi bi-pencil-fill"></i>
                                 </button>
                             <?php } ?>
                         </div>
                     </th>
                 </tr>
             <?php } ?>
-            </tbody>
-        </table>
-    <?php } ?>
+        <?php } ?>
+        </tbody>
+    </table>
+
 </div>
+
+<?= $this->partial('partials/modal-confirmar-deposito.phtml'); ?>
 
 
 

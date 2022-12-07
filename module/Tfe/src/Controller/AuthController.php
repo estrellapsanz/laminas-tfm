@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tfe\Controller;
 
+use Laminas\Http\Header\SetCookie;
 use Laminas\View\Model\ViewModel;
 use Tfe\Model\Entity\Parametro;
 use Tfe\Model\Entity\ParametroPsico;
@@ -50,7 +51,7 @@ class AuthController extends MasterController
                     $usuario = explode('@', $email);
 
                     if ($this->sesion->offsetGet(Constantes::SESION_DOCENTE))
-                        $nombre = $this->daoService->getDocenteDAO()->dameNombre(strtolower(trim($usuario[0])));
+                        $nombre = $this->daoService->getDocenteDAO()->getNombre(strtolower(trim($usuario[0])));
                     else
                         $nombre = $this->daoService->getEstudianteDAO()->getNombre(strtolower(trim($usuario[0])));
 
@@ -129,7 +130,7 @@ class AuthController extends MasterController
     {
         $this->controlErrores();
         //Borramos la cookie
-        //$this->getResponse()->getHeaders()->addHeader(new SetCookie(Constantes::NOMBRE_COOKIE, "", time() - 1, "/", Constantes::DOMINIO_COOKIE));
+        $this->getResponse()->getHeaders()->addHeader(new SetCookie(Constantes::NOMBRE_COOKIE, "", time() - 1, "/", Constantes::DOMINIO_COOKIE));
         //Redireccionamos
         return $this->redirect()->toRoute("login");
     }

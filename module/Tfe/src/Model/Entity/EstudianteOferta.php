@@ -19,22 +19,35 @@ class EstudianteOferta extends MasterEntity
      * @param $usuario
      * @return bool|void
      */
-    public function actualizarEstadoEstudiante($cod_oferta, $estado, $usuario)
+    public function updateEstadoEstudiante($cod_oferta, $estado, $usuario)
     {
-        //var_dump($cod_oferta, $estado, $usuario);
-        //die;
         $set = ['ESTADO' => $estado];
         $where = ['COD_OFERTA' => $cod_oferta, 'USUARIO_ESTUDIANTE' => $usuario];
         try {
             return $this->update($set, $where) >= 0;
 
         } catch (\Exception $e) {
-            // var_dump($e);
-            // die;
             return false;
         }
     }
 
+    /**
+     * @param $cod_oferta
+     * @param $estado
+     * @param $usuario
+     * @return bool
+     */
+    public function updateObservacionesEstudiante($cod_oferta, $obs, $usuario)
+    {
+        $set = ['OBSERVACIONES_TRAMITACION' => $obs];
+        $where = ['COD_OFERTA' => $cod_oferta, 'USUARIO_ESTUDIANTE' => $usuario];
+        try {
+            return $this->update($set, $where) >= 0;
+
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
     /**
      * @param $curso
@@ -43,7 +56,7 @@ class EstudianteOferta extends MasterEntity
      * @param $estado
      * @return \Laminas\Db\ResultSet\ResultSetInterface|null
      */
-    public function dameAsociacionEstudianteOferta($curso, $cod_plan, $usuario, $estado = null)
+    public function getAsociacionEstudianteOferta($curso, $cod_plan, $usuario, $estado = null)
     {
 
         $query = 'SELECT * FROM TFM_ESTUDIANTE_OFERTA WHERE CURSO_ACADEMICO=:P_CURSO AND COD_PLAN=:P_COD_PLAN AND USUARIO_ESTUDIANTE=:P_USUARIO';
@@ -65,25 +78,26 @@ class EstudianteOferta extends MasterEntity
 
         } catch (\Exception $e) {
 
-            echo('<pre>');
+            /*echo('<pre>');
             var_dump($e);
             echo('</pre>');
-            die;
+            die;*/
             return null;
         }
     }
 
 
     /**
+     * Devuelve las ofertas asociadas a un estudiante que aún no han sido depositadas
      * @param $usuario
      * @param $curso
      * @return array
      */
-    public function dameMisOfertasVigentes($usuario)
+    public function getMisOfertasVigentes($usuario)
     {
 
-        $query = "SELECT OFERTAS.*, DEF.COD_SOLICITUD FROM
-    (SELECT ALU.COD_PLAN, UPPER(O.TITULO) AS TITULO, UPPER(O.DESCRIPCION) AS DESCRIPCION,
+
+        $query = "SELECT ALU.COD_PLAN, UPPER(O.TITULO) AS TITULO, UPPER(O.DESCRIPCION) AS DESCRIPCION,
             D.USUARIO AS USUARIO_DOCENTE, CONCAT(D.NOMBRE,' ', D.APELLIDO1, ' ', D.APELLIDO2) AS NOMBRE_DOCENTE,
             CONCAT(E.NOMBRE,' ', E.APELLIDO1, ' ', E.APELLIDO2) AS NOMBRE_ESTUDIANTE,
             P.NOMBRE_PLAN, P.COD_AREA, A.NOMBRE_AREA, O.COD_OFERTA, E.USUARIO AS USUARIO_ESTUDIANTE
@@ -98,15 +112,13 @@ class EstudianteOferta extends MasterEntity
              E.USUARIO=ALU.USUARIO_ESTUDIANTE AND
              ALU.USUARIO_ESTUDIANTE=:P_USUARIO AND
              P.COD_AREA=A.COD_AREA AND
-             ALU.ESTADO='Validado' AND
+             ALU.ESTADO like 'Validad%' AND
              ALU.COD_OFERTA=O.COD_OFERTA AND
-             O.ESTADO='Validada' AND
+             O.ESTADO like 'Validad%' AND
              ALU.COD_PLAN=P.COD_PLAN AND
-             O.USUARIO_DOCENTE=D.USUARIO
-    ) OFERTAS LEFT JOIN TFM_SOLICITUD_DEFENSA DEF ON
-                OFERTAS.COD_OFERTA=DEF.COD_OFERTA AND
-                (DEF.ESTADO=NULL OR DEF.ESTADO<>'Denegada') AND
-                DEF.CURSO_ACADEMICO=(SELECT VALOR FROM TFM_PARAMETROS WHERE NOMBRE='CURSO_ACADEMICO')";
+             O.USUARIO_DOCENTE=D.USUARIO AND
+             NOT EXISTS (SELECT * FROM TFM_SOLICITUD_DEFENSA WHERE COD_OFERTA=O.COD_OFERTA)
+     ";
 
         return $this->executeQueryArray($query, [':P_USUARIO' => $usuario]);
 
@@ -127,6 +139,8 @@ class EstudianteOferta extends MasterEntity
 
         else if (empty($cod_oferta) && !empty($cod_plan))
             $where = ['COD_PLAN' => $cod_plan, 'USUARIO_ESTUDIANTE' => $usuario, 'ESTADO' => ['Validado', 'Pendiente']];
+        else if (!empty($cod_oferta) && !empty($cod_plan))
+            $where = ['COD_OFERTA' => $cod_oferta, 'COD_PLAN' => $cod_plan, 'USUARIO_ESTUDIANTE' => $usuario, 'ESTADO' => ['Validado', 'Pendiente']];
 
         try {
             return !empty($this->select($where)->toArray());
@@ -145,7 +159,7 @@ class EstudianteOferta extends MasterEntity
      * @param $cod_plan
      * @return bool
      */
-    public function insertaEstudianteOferta($curso, $cod_oferta, $estado, $usuario, $cod_plan)
+    public function insertEstudianteOferta($curso, $cod_oferta, $estado, $usuario, $cod_plan)
     {
         $data = ['CURSO_ACADEMICO' => $curso, 'COD_OFERTA' => $cod_oferta, 'ESTADO' => $estado, 'USUARIO_ESTUDIANTE' => $usuario,
             'COD_PLAN' => $cod_plan];
@@ -158,6 +172,5 @@ class EstudianteOferta extends MasterEntity
             return false;
         }
     }
-
 
 }

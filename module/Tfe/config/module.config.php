@@ -132,6 +132,17 @@ return [
                 ],
             ],
 
+            'get-datos-oferta-ajax' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/get-datos-oferta',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'get-datos-oferta-ajax',
+                    ],
+                ],
+            ],
+
             /*FIN ESTUDIANTE*/
 
             /*DOCENTE*/
@@ -157,6 +168,40 @@ return [
                 ],
             ],
 
+
+            'docente-guardar-tramitar-estudiante-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/guardar-tramitar-oferta',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'guardar-tramitar-estudiante-oferta',
+                    ],
+                ],
+            ],
+
+            'docente-guardar-tramitar-estudiante-deposito' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/guardar-tramitar-deposito',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'guardar-tramitar-estudiante-deposito',
+                    ],
+                ],
+            ],
+
+            'docente-eliminar-oferta' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/eliminar-oferta',
+                    'defaults' => [
+                        'controller' => Controller\DocenteController::class,
+                        'action' => 'eliminar-oferta',
+                    ],
+                ],
+            ],
+
             'docente-solicitudes-deposito' => [
                 'type' => Literal::class,
                 'options' => [
@@ -175,6 +220,17 @@ return [
                     'defaults' => [
                         'controller' => Controller\DocenteController::class,
                         'action' => 'trabajos-calificados',
+                    ],
+                ],
+            ],
+
+            'descargar-fichero' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/docente/descargar-fichero',
+                    'defaults' => [
+                        'controller' => Controller\MasterController::class,
+                        'action' => 'descargar-fichero',
                     ],
                 ],
             ],

@@ -5,7 +5,6 @@ use Tfe\Util\Constantes;
 
 $sesion = new Container (Constantes::NOMBRE_SESION);
 
-
 if ($sesion->offsetExists(Constantes::ESTADO_OPERACION)) {
     echo "<div class='row'><div class='col-md-12'>";
 
@@ -23,6 +22,7 @@ if ($sesion->offsetExists(Constantes::ESTADO_OPERACION)) {
     }
 
     echo "</div></div>";
+   
     $sesion->offsetUnset(Constantes::ESTADO_OPERACION);
 }
 ?>
