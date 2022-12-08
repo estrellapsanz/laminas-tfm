@@ -6,7 +6,7 @@
 }
 
 
-/*CUSTOM CSS*/
+/*BARRA DE NAVEGACION*/
 
 .navbar {
     background-color: var(--brand-color);
@@ -20,10 +20,18 @@ nav ol.breadcrumb {
     margin-top: 5%;
 }
 
-.menu-active {;
+.menu-active {
     font-size: 1.1rem;
     text-decoration: underline;
 }
+
+/**MENU**/
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: transparent;
+    border: 1px solid var(--brand-color);
+    border-radius: 5px;
+}
+
 
 /*CUSTOM BACKGROUND COLORS*/
 .bck-primary-ligth {
@@ -55,6 +63,8 @@ nav ol.breadcrumb {
     }
 }
 
+
+/*LOGO*/
 @media (min-width: 992px) {
     .img-logo {
         max-width: 16%;
@@ -74,10 +84,16 @@ nav ol.breadcrumb {
     border-color: var(--brand-color);
 }
 
+/*DATATABLES*/
 .dt-buttons {
     margin-top: -10%;
 }
 
+.table#table_extensible {
+    width: 100%;
+}
+
+/*FORMS*/
 textarea {
     width: 100%;
 }
@@ -91,8 +107,3 @@ textarea {
     border-color: red;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    background-color: transparent;
-    border: 2px solid var(--brand-color);
-    border-radius: 5px;
-}

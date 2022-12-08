@@ -20,6 +20,7 @@ use Tfe\Util\Constantes;
 
 
 <div class="container-lg">
+
     <div class="bck-primary-ligth">
         <div class="d-flex justify-content-center">
             <p>
@@ -90,6 +91,7 @@ use Tfe\Util\Constantes;
                 <!-- trigger para form-validation -->
                 <button type="submit" class="btn btn-primary">Enviar propuesta
                 </button>
+            </div>
         </form>
     <?php } else { ?>
         <div class="alert alert-warning">
@@ -111,62 +113,64 @@ use Tfe\Util\Constantes;
                 solicitud.</p>
         </div>
     <?php } ?>
-
-    <table class="table table-striped table-bordered table-hover" id="table_extensible">
-        <thead>
-        <tr>
-            <th scope="col">Curso</th>
-            <th class="col-md-3" scope="col">Título</th>
-            <th scope="col">Plan</th>
-            <th scope="col">Docente</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php if (!empty($propuestas)) { ?>
-            <?php foreach ($propuestas as $trabajo) { ?>
-                <tr>
-                    <th scope="row"> <?= $trabajo['CURSO_ACADEMICO'] ?></th>
-                    <th class="col-md-3"> <?= strtoupper($trabajo['TITULO']); ?></th>
-                    <th class="col-md-3"> <?= $trabajo['NOMBRE_PLAN'] ?></th>
-                    <th><?php
-                        if (!empty($trabajo['NOMBRE_DOCENTE'])) {
-                            ?>
-                            <?= '<a href="mailto:' . $trabajo['USUARIO_DOCENTE'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $trabajo['NOMBRE_DOCENTE'] ?>
-                        <?php } ?>
-                    </th>
-                    <th>  <?php
-                        if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_ANULADA)
-                            echo '<span class="badge bg-danger text-white">' . Constantes::ESTADO_OFERTA_ANULADA . '</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == 'Validada')
-                            echo '<span class="badge bg-success text-white">' . Constantes::ESTADO_OFERTA_VALIDADA . '</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_PENDIENTE)
-                            echo '<span class="badge bg-primary text-white">' . Constantes::ESTADO_OFERTA_PENDIENTE . '</span>';
-                        else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_DENEGADA)
-                            echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta denegada (OBSERVACINOES DOCENTE: ' . $trabajo['OBSERVACIONES_TRAMITACION']
-                                . '">Denegada</span>'; ?>
-                    </th>
-                    <th class="col-md-1">
-                        <div class="d-grid gap-1">
-                            <?php if (($trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_ANULADA && $trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_DENEGADA)) { ?>
-                                <button type="button" class="btn btn-sm btn-accion btn-danger"
-                                        data-bs-toggle='modal'
-                                        data-bs-target="#confirmarModal"
-                                        data-accion="anular"
-                                        data-flg="1"
-                                        data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
-                                        data-cod="<?= $trabajo['COD_OFERTA']; ?>">
-                                    Anular
-                                </button>
+    <div class="mb-3">
+        <table class="table table-striped table-bordered table-hover" id="table_extensible" style="width: 100%">
+            <thead>
+            <tr>
+                <th scope="col">Curso</th>
+                <th scope="col">Título</th>
+                <th scope="col">Plan</th>
+                <th scope="col">Docente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if (!empty($propuestas)) { ?>
+                <?php foreach ($propuestas as $trabajo) { ?>
+                    <tr>
+                        <th scope="row" class="col-md-3"> <?= $trabajo['CURSO_ACADEMICO'] ?></th>
+                        <th> <?= strtoupper($trabajo['TITULO']); ?></th>
+                        <th> <?= $trabajo['NOMBRE_PLAN'] ?></th>
+                        <th><?php
+                            if (!empty($trabajo['NOMBRE_DOCENTE'])) {
+                                ?>
+                                <?= '<a href="mailto:' . $trabajo['USUARIO_DOCENTE'] . '@uoc.edu"><i class="fa-solid fa-envelope"></i></a> ' . $trabajo['NOMBRE_DOCENTE'] ?>
                             <?php } ?>
-                        </div>
-                    </th>
-                </tr>
-            <?php }
-        } ?>
-        </tbody>
-    </table>
+                        </th>
+                        <th>  <?php
+                            if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_ANULADA)
+                                echo '<span class="badge bg-danger text-white">' . Constantes::ESTADO_OFERTA_ANULADA . '</span>';
+                            else if ($trabajo['ESTADO_OFERTA'] == 'Validada')
+                                echo '<span class="badge bg-success text-white">' . Constantes::ESTADO_OFERTA_VALIDADA . '</span>';
+                            else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_PENDIENTE)
+                                echo '<span class="badge bg-primary text-white">' . Constantes::ESTADO_OFERTA_PENDIENTE . '</span>';
+                            else if ($trabajo['ESTADO_OFERTA'] == Constantes::ESTADO_OFERTA_DENEGADA)
+                                echo '<span class="badge bg-danger text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Oferta denegada (OBSERVACINOES DOCENTE: ' . $trabajo['OBSERVACIONES_TRAMITACION']
+                                    . '">Denegada</span>'; ?>
+                        </th>
+                        <th>
+                            <div class="d-grid gap-1">
+                                <?php if (($trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_ANULADA && $trabajo['ESTADO_OFERTA'] <> Constantes::ESTADO_OFERTA_DENEGADA)) { ?>
+                                    <button type="button" class="btn btn-sm btn-accion btn-danger"
+                                            data-bs-toggle='modal'
+                                            data-bs-target="#confirmarModal"
+                                            data-accion="anular"
+                                            data-flg="1"
+                                            data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
+                                            data-cod="<?= $trabajo['COD_OFERTA']; ?>">
+                                        Anular
+                                    </button>
+                                <?php } ?>
+                            </div>
+                        </th>
+                    </tr>
+                <?php } ?>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 <br>
 
