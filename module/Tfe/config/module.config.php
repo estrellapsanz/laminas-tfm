@@ -143,6 +143,17 @@ return [
                 ],
             ],
 
+            'get-datos-deposito-ajax' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/get-datos-deposito',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'get-datos-deposito-ajax',
+                    ],
+                ],
+            ],
+
             /*FIN ESTUDIANTE*/
 
             /*DOCENTE*/

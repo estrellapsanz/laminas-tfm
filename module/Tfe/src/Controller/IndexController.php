@@ -6,6 +6,7 @@ namespace Tfe\Controller;
 
 use Laminas\View\Model\ViewModel;
 use Psr\Http\Message\ResponseInterface;
+use Tfe\Service\DAOService;
 use Tfe\Util\Constantes;
 
 
@@ -63,13 +64,8 @@ class IndexController extends MasterController
 
         $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
         $curso = $this->daoService->getParametrosDAO()->getParametroNombre(Constantes::PARAMETRO_CURSO_ACADEMICO);
-        $perfil_estudiante = $this->daoService->getEstudianteDAO()->getPerfilEstudiante($usuario_logueado);
+        $planesMatriculados = $this->daoService->getEstudianteDAO()->getPerfilEstudiante($usuario_logueado);
         $estado_operacion = false;
-
-        /*echo('<pre>');
-        var_dump($misPropuestas);
-        echo('</pre>');
-        die;*/
 
         $request = $this->getRequest();
 
@@ -82,7 +78,7 @@ class IndexController extends MasterController
             $subtitulo = $post['subtitulo'];
             $descripcion = $post['descripcion'];
 
-            //controlamos que sólo haya una oferta creada por un estudiante asociada a ese plan, el estado en principio, distinto de Anulado Denegada
+            //RQE09: controlamos que sólo haya una oferta creada por un estudiante asociada a ese plan, el estado en principio, distinto de Anulado Denegada
             $oferta_existente = $this->daoService->getEstudianteOfertaDAO()->existeAsociacion($usuario_logueado, null, $cod_plan);
 
             if (!$oferta_existente) {
@@ -102,19 +98,21 @@ class IndexController extends MasterController
 
         $misPropuestas = $this->daoService->getOfertaDAO()->getMisOfertasPropuestas($usuario_logueado);
 
-        //solamente si las ofertas están denagadas, se permite proponer una nueva
+
+        //RQE09:  Un estudiante solo podrá proponer un trabajo por cada plan de estudios que tenga matriculado.
         $flg_permiso_proponer = true;
         if (!empty($misPropuestas)) {
             foreach ($misPropuestas as $propuesta) {
-                if ($propuesta['ESTADO'] != Constantes::ESTADO_OFERTA_DENEGADA) {
+                if ($propuesta['ESTADO'] != Constantes::ESTADO_OFERTA_DENEGADA && (sizeof($planesMatriculados) == sizeof($misPropuestas))) { // Pendiente o validada
                     $flg_permiso_proponer = false;
                 }
             }
         }
 
+
         return new ViewModel(
             [
-                'estudiante' => $perfil_estudiante,
+                'estudiante' => $planesMatriculados,
                 'propuestas' => $misPropuestas,
                 'flg_permiso_proponer' => $flg_permiso_proponer
             ]);
@@ -141,8 +139,9 @@ class IndexController extends MasterController
             $post = $request->getPost();
             $files = $request->getFiles();
             $flg_normativa = $post['normativa'];
+            $flg_editar = isset($post['flg_editar']);
 
-            if ($flg_normativa == 'on') {
+            if (!$flg_editar && $flg_normativa == 'on') {
                 $cod_oferta = $post['cod_oferta'];
                 $error_file = $files['archivo']['error'] != 0 ? 1 : 0;
 
@@ -159,6 +158,15 @@ class IndexController extends MasterController
                         $estado_operacion = true;
                     }
                 }
+            } else {
+
+                $cod_deposito = $post['cod_deposito_editar'];
+                $cod_oferta = $post['cod_oferta_editar'];
+
+                //edicion de un deposito, actualizamos estado a pendiente
+                //todo actualizar el fichero pertinente
+                $update = $this->daoService->getDepositoDAO()->updateEstado($curso, $cod_deposito, $cod_oferta, Constantes::ESTADO_DEPOSITO_PENDIENTE);
+                $estado_operacion = $update > 0;
             }
 
             $this->informarEstadoOperacionSesion($estado_operacion);
@@ -287,6 +295,7 @@ class IndexController extends MasterController
 
     public function getDatosOfertaAjaxAction()
     {
+
         $this->controlLogueado();
         $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
 
@@ -304,7 +313,39 @@ class IndexController extends MasterController
                 $oferta = $this->daoService->getOfertaDAO()->getOferta($cod_oferta);
                 $data = [
                     'DESCRIPCIÓN' => $oferta['DESCRIPCION'],
-                    'DOCENTE' => $oferta['USUARIO_DOCENTE']
+                    'DOCENTE' => $oferta['NOMBRE_DOCENTE'] . ' (' . $oferta['USUARIO_DOCENTE'] . '@uoc.edu)'
+                ];
+
+                $response->setStatusCode(200);
+                $response->setContent(json_encode($data));
+                $headers = $response->getHeaders();
+                $headers->addHeaderLine('Content-Type', 'application/json');
+                return $response;
+            }
+        }
+
+    }
+
+    public function getDatosDepositoAjaxAction()
+    {
+        $this->controlLogueado();
+        $usuario_logueado = $this->sesion->offsetGet(Constantes::SESION_USUARIO);
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            $cod_deposito = $post['cod_deposito'];
+
+            if (!empty($cod_deposito)) {
+                $deposito = $this->daoService->getDepositoDAO()->getSolicitudDeposito($cod_deposito);
+
+                $data = [
+                    'DESCRIPCIÓN' => $deposito['DESCRIPCION'],
+                    'DOCENTE' => $deposito['NOMBRE_DOCENTE'] . ' (' . $deposito['USUARIO_DOCENTE'] . '@uoc.edu)',
+                    'IDIOMA' => 'cat',
+                    'TITULO' => $deposito['TITULO']
                 ];
 
                 $response->setStatusCode(200);

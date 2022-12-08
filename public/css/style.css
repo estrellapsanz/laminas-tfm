@@ -5,9 +5,13 @@
     --bs-font-sans-serif: 'Roboto', sans-serif;
 }
 
+body {
+    /*min-height: 51.5rem;*/
+    padding-top: 2.5rem;
+}
+
 
 /*BARRA DE NAVEGACION*/
-
 .navbar {
     background-color: var(--brand-color);
 }
@@ -49,7 +53,7 @@ nav ol.breadcrumb {
 /*LOGO */
 @media (max-width: 991px) {
     .img-logo {
-        max-width: 6%;
+        max-width: 8%;
         margin: 2% 2% 2% 2%;
     }
 

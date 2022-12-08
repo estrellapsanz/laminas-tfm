@@ -133,17 +133,15 @@ class EstudianteOferta extends MasterEntity
      */
     public function existeAsociacion($usuario, $cod_oferta = null, $cod_plan = null)
     {
-
-        if (!empty($cod_oferta) && empty($cod_plan))
-            $where = ['COD_OFERTA' => $cod_oferta, 'USUARIO_ESTUDIANTE' => $usuario];
-
-        else if (empty($cod_oferta) && !empty($cod_plan))
-            $where = ['COD_PLAN' => $cod_plan, 'USUARIO_ESTUDIANTE' => $usuario, 'ESTADO' => ['Validado', 'Pendiente']];
-        else if (!empty($cod_oferta) && !empty($cod_plan))
-            $where = ['COD_OFERTA' => $cod_oferta, 'COD_PLAN' => $cod_plan, 'USUARIO_ESTUDIANTE' => $usuario, 'ESTADO' => ['Validado', 'Pendiente']];
-
+        $query = "SELECT * 
+                FROM TFM_ESTUDIANTE_OFERTA E 
+                WHERE 
+                    E.USUARIO_ESTUDIANTE=:P_USER AND 
+                    (E.COD_PLAN=:P_COD_PLAN OR :P_COD_PLAN IS NULL) AND
+                    (E.COD_OFERTA=:P_COD_OFERTA OR :P_COD_OFERTA IS NULL) AND
+                    E.ESTADO<>'Anulado'";
         try {
-            return !empty($this->select($where)->toArray());
+            return !empty($this->executeQueryRow($query, [':P_USER' => $usuario, ':P_COD_PLAN' => $cod_plan, ':P_COD_OFERTA' => $cod_oferta]));
 
         } catch (\Exception $e) {
             return false;

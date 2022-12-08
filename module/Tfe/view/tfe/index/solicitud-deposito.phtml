@@ -25,6 +25,11 @@
     <br>
     <?= $this->partial('partials/errores') ?>
 
+    <div id="editar_deposito_form" hidden>
+        <?= $this->partial('partials/editar_deposito') ?>
+        <br>
+    </div>
+
     <?php if (!empty($misOfertas)) { ?>
         <form action="solicitud-deposito" name="solicitudDepositoForm" method="post" enctype="multipart/form-data">
             <br>
@@ -63,16 +68,6 @@
                        placeholder="Teléfono1"
                        value="<?= $this->estudiante[0]['TELEFONO1'] ?>" readonly disabled>
             </div>
-
-            <!--<div class="mb-3">
-            <label for="estudios" class="form-label">Estudios asociados al trabajo</label>
-            <select for="estudios" class="form-control" aria-label="Default select example" name="estudios">
-                <option selected>Seleccione</option>
-                <?php //foreach ($this->estudiante as $estudio) { ?>
-                    <option value="<? //= $estudio['COD_PLAN'] ?>#<? //= $estudio['COD_AREA'] ?>>"><? //= $estudio['NOMBRE_PLAN'] ?></option>
-                <?php //} ?>
-            </select>
-        </div>-->
 
 
             <div class="mb-3">
@@ -135,7 +130,7 @@
             <button type="submit" class="btn btn-primary">Solicitar depósito</button>
         </form>
     <?php } else { ?>
-        <div class="alert alert-warning">
+        <div class="alert alert-warning" id="alerta_editar">
             <p>No tiene ofertas asignadas que puedan ser depositadas o ya ha realizado el depósito correspondiente.</p>
         </div>
     <?php } ?>
@@ -158,6 +153,7 @@
             <th scope="col">Plan</th>
             <th scope="col">Docente</th>
             <th scope="col">Estado</th>
+            <th scope="col">Nota</th>
             <th scope="col">Acciones</th>
         </tr>
         </thead>
@@ -185,13 +181,12 @@
                             echo '<span class="badge bg-warning text-black" data-bs-toggle="tooltip" data-bs-placement="top" title="Observaciones docente (' . $trabajo['OBSERVACIONES']
                                 . ')"' . '>Cambios solicitados</span>'; ?>
                     </th>
+                    <th><?= $trabajo['NOTA_FINAL'] ?></th>
                     <th class="col-md-2">
                         <div class="d-grid gap-1">
                             <?php if (($trabajo['ESTADO_DEPOSITO'] == 'Cambios solicitados')) { ?>
-                                <button type="button" class="btn btn-sm btn-accion btn-info"
-                                        data-accion="editar"
-                                        data-flg="1"
-                                        data-plan_trabajo="<?= $trabajo['COD_PLAN'] ?>"
+                                <button type="button" class="btn btn-sm btn-editar_deposito btn-info"
+                                        data-cod_deposito="<?= $trabajo['COD_SOLICITUD'] ?>"
                                         data-cod="<?= $trabajo['COD_OFERTA']; ?>">
                                     Editar depósito <i class="bi bi-pencil-fill"></i>
                                 </button>
@@ -205,6 +200,8 @@
     </table>
 
 </div>
+
+<?= $this->partial('partials/modal-normativa.phtml'); ?>
 
 <?= $this->partial('partials/modal-confirmar-deposito.phtml'); ?>
 
