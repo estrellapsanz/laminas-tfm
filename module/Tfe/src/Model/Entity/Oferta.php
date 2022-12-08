@@ -143,7 +143,9 @@ class Oferta extends MasterEntity
 
     public function getOferta($cod_oferta)
     {
-        $query = "SELECT * FROM TFM_OFERTAS WHERE COD_OFERTA=:P_COD";
+        $query = "SELECT OFERTAS.*, CONCAT(D.NOMBRE,' ',D.APELLIDO1,' ',D.APELLIDO2) NOMBRE_DOCENTE
+                FROM (SELECT * FROM TFM_OFERTAS O WHERE O.COD_OFERTA=:P_COD) OFERTAS 
+                LEFT JOIN TFM_DOCENTE D ON OFERTAS.USUARIO_DOCENTE=D.USUARIO ";
         return $this->executeQueryRow($query, [':P_COD' => $cod_oferta]);
     }
 

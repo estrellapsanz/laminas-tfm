@@ -134,8 +134,23 @@ class Deposito extends MasterEntity
      */
     public function getSolicitudDeposito($cod_sol)
     {
-        $query = "SELECT * FROM TFM_SOLICITUD_DEFENSA WHERE COD_SOLICITUD=:P_COD";
-        return $this->executeQueryRow($query, [':P_COD' => $cod_sol]);
+        $query = "SELECT DEP.*, 
+                  CONCAT(D.NOMBRE,' ',D.APELLIDO1,' ',D.APELLIDO2) NOMBRE_DOCENTE,
+                  D.USUARIO as USUARIO_DOCENTE, 
+                  O.TITULO, O.SUBTITULO, O.DESCRIPCION
+                  FROM 
+                      TFM_SOLICITUD_DEFENSA DEP,
+                      TFM_DOCENTE D ,
+                      TFM_OFERTAS O 
+                  WHERE 
+                    DEP.COD_SOLICITUD=:P_COD AND
+                    DEP.COD_OFERTA=O.COD_OFERTA AND
+                    O.USUARIO_DOCENTE=D.USUARIO";
+        try {
+            return $this->executeQueryRow($query, [':P_COD' => $cod_sol]);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
 }

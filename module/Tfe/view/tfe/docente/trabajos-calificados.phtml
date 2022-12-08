@@ -36,7 +36,7 @@
         <?= $this->partial('partials/errores') ?>
 
         <hr>
-        <table class="table table-striped table-bordered table-hover" id="table_extensible">
+        <table class="table table-striped table-bordered table-hover" id="table_extensible" style="width: 100%">
             <thead>
             <tr>
                 <th scope="col">Curso</th>
@@ -55,7 +55,7 @@
                         <th> <?= '(' . $trabajo['COD_PLAN'] . ') ' . $trabajo['NOMBRE_PLAN'] ?></th>
                         <th> <?= $trabajo['NOMBRE_AREA'] ?></th>
                         <th> <?= $trabajo['NOMBRE'] . ' ' . $trabajo['APELLIDO1'] . ' ' . $trabajo['APELLIDO2'] ?></th>
-                        <th><?= random_int(0, 10) ?>
+                        <th><?= random_int(5, 9) . '.' . random_int(0, 10) ?>
                         </th>
                         <th><?= $trabajo['NOTA_FINAL'] ?>
                         </th>

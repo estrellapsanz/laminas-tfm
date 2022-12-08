@@ -5,9 +5,13 @@
     --bs-font-sans-serif: 'Roboto', sans-serif;
 }
 
+body {
+    /*min-height: 51.5rem;*/
+    padding-top: 2.5rem;
+}
 
-/*CUSTOM CSS*/
 
+/*BARRA DE NAVEGACION*/
 .navbar {
     background-color: var(--brand-color);
 }
@@ -20,10 +24,18 @@ nav ol.breadcrumb {
     margin-top: 5%;
 }
 
-.menu-active {;
+.menu-active {
     font-size: 1.1rem;
     text-decoration: underline;
 }
+
+/**MENU**/
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: transparent;
+    border: 1px solid var(--brand-color);
+    border-radius: 5px;
+}
+
 
 /*CUSTOM BACKGROUND COLORS*/
 .bck-primary-ligth {
@@ -39,11 +51,36 @@ nav ol.breadcrumb {
 }
 
 /*LOGO */
-.img-logo {
-    max-width: 10%;
-    margin: 2% 2% 2% 2%;
+@media (max-width: 991px) {
+    .img-logo {
+        max-width: 8%;
+        margin: 2% 2% 2% 2%;
+    }
+
+    .user_info {
+        padding-left: 0%;
+        display: none;
+    }
+
+    .fix_navbar {
+        display: none;
+    }
 }
 
+
+/*LOGO*/
+@media (min-width: 992px) {
+    .img-logo {
+        max-width: 16%;
+        margin: 2% 2% 2% 2%;
+    }
+
+    .user_info {
+        padding-right: 2%;
+        padding-left: 4%;
+    }
+
+}
 
 /*CUSTOM BUTTONS*/
 .btn-primary {
@@ -51,10 +88,16 @@ nav ol.breadcrumb {
     border-color: var(--brand-color);
 }
 
+/*DATATABLES*/
 .dt-buttons {
     margin-top: -10%;
 }
 
+.table#table_extensible {
+    width: 100%;
+}
+
+/*FORMS*/
 textarea {
     width: 100%;
 }

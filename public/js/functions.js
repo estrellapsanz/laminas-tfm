@@ -10,7 +10,8 @@ $(document).ready(function () {
     })
 
     $('.check-normativa').click(function (e) {
-        alert('Debe leer la normativa sobre el TFM');
+        $('button#btn-modalNormativa').click();
+        //alert('Debe leer la normativa sobre el TFM');
     })
 
     $('.btn-accion').click(function () {
@@ -181,29 +182,67 @@ $(document).ready(function () {
     })
 
     $('select#trabajo_depositar').change(function () {
-        var cod_oferta = $(this).val()
-        $.ajax({
-            type: "POST",
-            url: 'get-datos-oferta',
-            data: {'cod_oferta': cod_oferta}
-        }).done(function (data) {
+        var cod_oferta = $(this).val();
+        if (cod_oferta != '' && cod_oferta != undefined) {
+            $.ajax({
+                type: "POST",
+                url: 'get-datos-oferta',
+                data: {'cod_oferta': cod_oferta}
+            }).done(function (data) {
+                if (data !== undefined && data !== null) {
+                    var descripcion = data['DESCRIPCIÓN'];
+                    var docente = data['DOCENTE'];
 
-            if (data !== undefined && data !== null) {
-                var descripcion = data['DESCRIPCION'];
-                var docente = data['DOCENTE'];
+                    $('#descripcion').val(descripcion);
+                    $('#docente').val(docente);
+                }
+            }).fail(function () {
+                console.log('error recuperando oferta');
+                alert('error');
+            });
+        }
+    })
 
-                $('#descripcion').val(descripcion);
-                $('#docente').val(docente);
-            }
-        }).fail(function () {
-            console.log('error recuperando oferta');
-            alert('error');
-        });
+
+    $('button.btn-editar_deposito').click(function () {
+
+        var cod_deposito = $(this).data('cod_deposito');
+        var cod_oferta = $(this).data('cod');
+
+        $('input#cod_deposito_editar').val(cod_deposito);
+        $('input#cod_oferta_editar').val(cod_oferta);
+
+        if (cod_deposito != '' && cod_deposito != undefined) {
+            $.ajax({
+                type: "POST",
+                url: 'get-datos-deposito',
+                data: {'cod_deposito': cod_deposito}
+            }).done(function (data) {
+                if (data !== undefined && data !== null) {
+                    var descripcion = data['DESCRIPCIÓN'];
+                    var docente = data['DOCENTE'];
+                    var idioma = data['IDIOMA'];
+                    var titulo = data['TITULO'];
+
+                    $('input#trabajo_depositado').val(titulo);
+                    $('textarea#descripcion_editar_deposito').val(descripcion);
+                    $('input#docente_editar_deposito').val(docente);
+                    $('div#alerta_editar').attr('hidden', true);
+                    //$('radio#flexRadioDefault1_editar_deposito').val(idioma);
+                    $('div#editar_deposito_form').attr('hidden', false);
+                }
+            }).fail(function () {
+                console.log('error recuperando depósito');
+                alert('error');
+            });
+
+        }
 
     })
+
 });
 
-
+//inicialización de los tooltip de Booststrap
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
