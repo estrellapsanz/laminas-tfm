@@ -211,6 +211,7 @@ $(document).ready(function () {
 
         $('input#cod_deposito_editar').val(cod_deposito);
         $('input#cod_oferta_editar').val(cod_oferta);
+     
 
         if (cod_deposito != '' && cod_deposito != undefined) {
             $.ajax({
